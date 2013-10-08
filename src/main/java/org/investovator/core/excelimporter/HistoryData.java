@@ -16,9 +16,18 @@ public class HistoryData {
     private double noOfShares;
     private double turnover;
     private String date;
+    private String stockId;
 
     public HistoryData(){
 
+    }
+
+    public String getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
     }
 
     public double getHighPrice() {
