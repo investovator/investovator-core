@@ -17,6 +17,7 @@ public class HistoryData {
     private double turnover;
     private String date;
     private String stockId;
+    private double openingPrice;
 
     public HistoryData(){
 
@@ -24,6 +25,14 @@ public class HistoryData {
 
     public String getStockId() {
         return stockId;
+    }
+
+    public double getOpeningPrice() {
+        return openingPrice;
+    }
+
+    public void setOpeningPrice(double openingPrice) {
+        this.openingPrice = openingPrice;
     }
 
     public void setStockId(String stockId) {
