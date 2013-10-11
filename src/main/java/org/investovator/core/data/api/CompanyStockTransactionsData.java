@@ -18,7 +18,7 @@
 
 package org.investovator.core.data.api;
 
-import org.investovator.core.data.exeptions.DAOException;
+import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.util.Date;
 
@@ -35,11 +35,11 @@ public class CompanyStockTransactionsData {
      * @param attributes Required attributes
      * @param numOfRows Required num of rows
      * @return {@link StockTradingData}
-     * @throws DAOException
+     * @throws DataAccessException
      */
     public StockTradingData getTradingDataOHLC (String stockId,  Date startingDate,
                                                 TradingDataAttribute[] attributes,
-                                                   int numOfRows) throws DAOException{
+                                                   int numOfRows) throws DataAccessException{
 
         return null; //TODO
     }
@@ -50,10 +50,10 @@ public class CompanyStockTransactionsData {
      * @param startingTime Ticker data starting time
      * @param numOfRows Required num of rows
      * @return {@link StockTradingData}
-     * @throws DAOException
+     * @throws DataAccessException
      */
     public StockTradingData getTradingData (String stockId, Date startingTime,
-                                            int numOfRows) throws DAOException{
+                                            int numOfRows) throws DataAccessException{
         return null; //TODO
     }
 }

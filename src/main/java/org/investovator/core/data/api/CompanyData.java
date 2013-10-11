@@ -18,6 +18,8 @@
 
 package org.investovator.core.data.api;
 
+import org.investovator.core.data.exeptions.DataAccessException;
+
 import java.util.HashMap;
 
 /**
@@ -30,7 +32,7 @@ public class CompanyData {
      *
      * @return Company StockId and Name pairs
      */
-    public HashMap<String,String> getCompanyIDsNames(){
+    public HashMap<String,String> getCompanyIDsNames() throws DataAccessException{
         return null; //TODO
     }
 
@@ -38,7 +40,7 @@ public class CompanyData {
      *
      * @return Company StockId and number of shares issued pairs
      */
-    public HashMap<String, Integer> getCompanyIDsTotalShares(){
+    public HashMap<String, Integer> getCompanyIDsTotalShares() throws DataAccessException{
         return null; //TODO
     }
 
@@ -48,7 +50,7 @@ public class CompanyData {
      * @param stockId StockId of the company
      * @return Data
      */
-    public Object getInfo(String infotype, String stockId){
+    public Object getInfo(String infotype, String stockId) throws DataAccessException{
         return null; //TODO
     }
 

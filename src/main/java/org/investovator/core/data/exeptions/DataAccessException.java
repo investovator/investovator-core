@@ -22,13 +22,13 @@ package org.investovator.core.data.exeptions;
  * @author rajith
  * @version $Revision$
  */
-public class DAOException extends Exception {
+public class DataAccessException extends Exception {
     /**
      * Make a new exception.
      *
      * @param message the error message
      */
-    public DAOException(String message) {
+    public DataAccessException(String message) {
         super(message);
     }
 }
