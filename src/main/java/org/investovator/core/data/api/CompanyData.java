@@ -31,6 +31,7 @@ public class CompanyData {
     /**
      *
      * @return Company StockId and Name pairs
+     * @throws DataAccessException
      */
     public HashMap<String,String> getCompanyIDsNames() throws DataAccessException{
         return null; //TODO
@@ -39,8 +40,29 @@ public class CompanyData {
     /**
      *
      * @return Company StockId and number of shares issued pairs
+     * @throws DataAccessException
      */
     public HashMap<String, Integer> getCompanyIDsTotalShares() throws DataAccessException{
+        return null; //TODO
+    }
+
+    /**
+     *
+     * @param stockId Company StockId
+     * @return Company Name
+     * @throws DataAccessException
+     */
+    public HashMap<String,String> getCompanyName(String stockId) throws DataAccessException{
+        return null; //TODO
+    }
+
+    /**
+     *
+     * @param stockId Company StockId
+     * @return Number of shares issued by the company
+     * @throws DataAccessException
+     */
+    public HashMap<String, Integer> getCompanyNoOfShares(String stockId) throws DataAccessException{
         return null; //TODO
     }
 
@@ -49,6 +71,7 @@ public class CompanyData {
      * @param infotype Information type required
      * @param stockId StockId of the company
      * @return Data
+     * @throws DataAccessException
      */
     public Object getInfo(String infotype, String stockId) throws DataAccessException{
         return null; //TODO
