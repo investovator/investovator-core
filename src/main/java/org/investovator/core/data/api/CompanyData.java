@@ -18,10 +18,38 @@
 
 package org.investovator.core.data.api;
 
+import java.util.HashMap;
+
 /**
  * @author rajith
  * @version $Revision$
  */
 public class CompanyData {
-    //TODO
+
+    /**
+     *
+     * @return Company StockId and Name pairs
+     */
+    public HashMap<String,String> getCompanyIDsNames(){
+        return null; //TODO
+    }
+
+    /**
+     *
+     * @return Company StockId and number of shares issued pairs
+     */
+    public HashMap<String, Integer> getCompanyIDsTotalShares(){
+        return null; //TODO
+    }
+
+    /**
+     *
+     * @param infotype Information type required
+     * @param stockId StockId of the company
+     * @return Data
+     */
+    public Object getInfo(String infotype, String stockId){
+        return null; //TODO
+    }
+
 }
