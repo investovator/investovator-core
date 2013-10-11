@@ -45,7 +45,7 @@ public class StockTradingData {
         return marketData;
     }
 
-    public HashMap<TradingDataAttribute, Float> getDayTransactionEntry(Date date){
+    public HashMap<TradingDataAttribute, Float> getTradingDataEntry(Date date){
         return marketData.get(date);
     }
 
@@ -53,7 +53,7 @@ public class StockTradingData {
         return marketData.keySet();
     }
 
-    public Float getAttributeValue(Date date, TradingDataAttribute attribute){
+    public Float getTradingDataAttributeValue(Date date, TradingDataAttribute attribute){
         return marketData.get(date).get(attribute);
     }
 }
