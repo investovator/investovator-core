@@ -30,14 +30,14 @@ public class CompanyStockTransactionsData {
 
     /**
      *
-     * @param stockId StockId
+     * @param symbol StockId
      * @param startingDate Required data starting date
      * @param attributes Required attributes
      * @param numOfRows Required num of rows
      * @return {@link StockTradingData}
      * @throws DataAccessException
      */
-    public StockTradingData getTradingDataOHLC (String stockId,  Date startingDate,
+    public StockTradingData getTradingDataOHLC (String symbol,  Date startingDate,
                                                 TradingDataAttribute[] attributes,
                                                    int numOfRows) throws DataAccessException{
 
@@ -46,13 +46,13 @@ public class CompanyStockTransactionsData {
 
     /**
      *
-     * @param stockId StockId
+     * @param symbol StockId
      * @param startingTime Ticker data starting time
      * @param numOfRows Required num of rows
      * @return {@link StockTradingData}
      * @throws DataAccessException
      */
-    public StockTradingData getTradingData (String stockId, Date startingTime,
+    public StockTradingData getTradingData (String symbol, Date startingTime,
                                             int numOfRows) throws DataAccessException{
         return null; //TODO
     }

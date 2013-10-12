@@ -48,33 +48,35 @@ public class CompanyData {
 
     /**
      *
-     * @param stockId Company StockId
+     * @param symbol Company StockId
      * @return Company Name
      * @throws DataAccessException
      */
-    public HashMap<String,String> getCompanyName(String stockId) throws DataAccessException{
+    public String getCompanyName(String symbol) throws DataAccessException{
         return null; //TODO
     }
 
     /**
      *
-     * @param stockId Company StockId
+     * @param symbol Company StockId
      * @return Number of shares issued by the company
      * @throws DataAccessException
      */
-    public HashMap<String, Integer> getCompanyNoOfShares(String stockId) throws DataAccessException{
-        return null; //TODO
+    public int getCompanyNoOfShares(String symbol) throws DataAccessException{
+        return 0; //TODO
     }
 
     /**
      *
      * @param infotype Information type required
-     * @param stockId StockId of the company
+     * @param symbol StockId of the company
      * @return Data
      * @throws DataAccessException
      */
-    public Object getInfo(String infotype, String stockId) throws DataAccessException{
+    public Object getInfo(String infotype, String symbol) throws DataAccessException{
         return null; //TODO
     }
 
+
+    //TODO data adding api
 }
