@@ -68,6 +68,10 @@ public class Portfolio implements Terms, Comparable <Portfolio> {
         shares.remove(symbol);
     }
 
+    public String getUsername(){
+        return username;
+    }
+
     /**
      *
      * @param symbol symbol of the stock
