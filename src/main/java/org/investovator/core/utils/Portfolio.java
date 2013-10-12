@@ -68,6 +68,11 @@ public class Portfolio implements Terms, Comparable <Portfolio> {
         shares.remove(symbol);
     }
 
+    /**
+     *
+     * @param symbol symbol of the stock
+     * @param quantity quantity bought
+     */
     public void boughtShares(String symbol, float quantity, float price){
         if (shares.containsKey(symbol)){
             HashMap<String, Float> stockData = shares.get(symbol);
@@ -81,6 +86,11 @@ public class Portfolio implements Terms, Comparable <Portfolio> {
         }
     }
 
+    /**
+     *
+     * @param symbol symbol of the stock
+     * @param quantity quantity sold
+     */
     public void soldShares(String symbol, float quantity){
         if (shares.get(symbol).get(QNTY) == quantity){
             removeStock(symbol);

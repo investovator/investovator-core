@@ -45,7 +45,8 @@ public class UserData {
         return null; //TODO
     }
 
-    public Portfolio getUserPortfolio(String username){
+    public Portfolio getUserPortfolio(String username)
+            throws DataAccessException {
         return null; //TODO
     }
 
