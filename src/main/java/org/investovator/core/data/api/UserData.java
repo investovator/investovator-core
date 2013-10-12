@@ -18,10 +18,35 @@
 
 package org.investovator.core.data.api;
 
+import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.utils.Portfolio;
+
+import java.util.HashMap;
+
 /**
  * @author rajith
  * @version $Revision$
  */
 public class UserData {
+
+    public void addUser(String username, String firstname,
+                        String lastname, String emailaddress, String password)
+            throws DataAccessException {
     //TODO
+    }
+
+    public String getUserPassword(String username)
+            throws DataAccessException {
+        return null; //TODO
+    }
+
+    public HashMap<String, String> getUserDetails(String username)
+            throws DataAccessException {
+        return null; //TODO
+    }
+
+    public Portfolio getUserPortfolio(String username){
+        return null; //TODO
+    }
+
 }

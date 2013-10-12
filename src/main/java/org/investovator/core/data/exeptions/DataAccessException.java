@@ -23,6 +23,7 @@ package org.investovator.core.data.exeptions;
  * @version $Revision$
  */
 public class DataAccessException extends Exception {
+
     /**
      * Make a new exception.
      *
@@ -30,5 +31,9 @@ public class DataAccessException extends Exception {
      */
     public DataAccessException(String message) {
         super(message);
+    }
+
+    public DataAccessException(Exception e){
+        super(e);
     }
 }
