@@ -18,10 +18,12 @@
 
 package org.investovator.core.data.cassandraexplorer.csvimporter;
 
+import org.investovator.core.data.cassandraexplorer.CassandraManager;
+
 /**
  * @author rajith
  * @version $Revision$
  */
-public class CassandraManagerImpl {
+public class CassandraManagerImpl implements CassandraManager{
     //TODO
 }

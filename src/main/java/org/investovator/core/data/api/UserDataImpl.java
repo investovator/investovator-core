@@ -29,22 +29,26 @@ import java.util.HashMap;
  */
 public class UserDataImpl implements UserData{
 
+    @Override
     public void addUser(String username, String firstname,
                         String lastname, String emailaddress, String password)
             throws DataAccessException {
     //TODO
     }
 
+    @Override
     public String getUserPassword(String username)
             throws DataAccessException {
         return null; //TODO
     }
 
+    @Override
     public HashMap<String, String> getUserDetails(String username)
             throws DataAccessException {
         return null; //TODO
     }
 
+    @Override
     public Portfolio getUserPortfolio(String username)
             throws DataAccessException {
         return null; //TODO

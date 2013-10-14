@@ -23,6 +23,7 @@ import org.investovator.core.data.api.utils.StockTradingData;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.exeptions.DataAccessException;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -54,4 +55,19 @@ public interface CompanyStockTransactionsData {
      */
     public StockTradingData getTradingData (String symbol, Date startingTime,
                                             int numOfRows) throws DataAccessException;
+
+    /**
+     *
+     * @param file csv file
+     * @throws DataAccessException
+     */
+    public void importCSV(File file) throws DataAccessException;
+
+    /**
+     *
+     * @param stockId Stock Id
+     * @throws DataAccessException
+     */
+    public void clearTradingData(String stockId) throws DataAccessException;
+
 }

@@ -22,6 +22,7 @@ import org.investovator.core.data.api.utils.StockTradingData;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.exeptions.DataAccessException;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -34,6 +35,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      *
      * {@inheritDoc}
      */
+    @Override
     public StockTradingData getTradingDataOHLC (String symbol,  Date startingDate,
                                                 TradingDataAttribute[] attributes,
                                                    int numOfRows) throws DataAccessException{
@@ -45,8 +47,19 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      *
      * {@inheritDoc}
      */
+    @Override
     public StockTradingData getTradingData (String symbol, Date startingTime,
                                             int numOfRows) throws DataAccessException{
         return null; //TODO
+    }
+
+    @Override
+    public void importCSV(File file) throws DataAccessException {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void clearTradingData(String stockId) throws DataAccessException {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

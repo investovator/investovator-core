@@ -48,26 +48,32 @@ public class PortfolioImpl implements Terms, Portfolio {
         return this.cashBalance - comparePortfolio.getCashBalance();
     }
 
+    @Override
     public int getCashBalance() {
         return cashBalance;
     }
 
+    @Override
     public void setCashBalance(int cashBalance) {
         this.cashBalance = cashBalance;
     }
 
+    @Override
     public HashMap<String, HashMap<String, Float>> getShares() {
         return shares;
     }
 
+    @Override
     public void setShares(HashMap<String, HashMap<String, Float>> shares) {
         this.shares = shares;
     }
 
+    @Override
     public void removeStock(String symbol){
         shares.remove(symbol);
     }
 
+    @Override
     public String getUsername(){
         return username;
     }
