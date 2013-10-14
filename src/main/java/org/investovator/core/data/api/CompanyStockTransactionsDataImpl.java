@@ -24,6 +24,7 @@ import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author rajith
@@ -48,18 +49,26 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public StockTradingData getTradingData (String symbol, Date startingTime,
-                                            int numOfRows) throws DataAccessException{
+    public HashMap<Date, Float> getTradingData(String symbol, Date startingTime,
+                                               int numOfRows) throws DataAccessException{
         return null; //TODO
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
-    public void importCSV(File file) throws DataAccessException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void importCSV(String stockId, File file) throws DataAccessException {
+        //TODO
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
     public void clearTradingData(String stockId) throws DataAccessException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //TODO
     }
 }
