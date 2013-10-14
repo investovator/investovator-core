@@ -31,7 +31,7 @@ public interface CompanyData {
     /**
      *
      * @return Company StockId and Name pairs
-     * @throws org.investovator.core.data.exeptions.DataAccessException
+     * @throws DataAccessException
      */
     public HashMap<String,String> getCompanyIDsNames() throws DataAccessException;
 
