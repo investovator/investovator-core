@@ -17,7 +17,7 @@
  */
 
 
-package org.investovator.core.utils;
+package org.investovator.core.commons.utils;
 
 import java.util.HashMap;
 

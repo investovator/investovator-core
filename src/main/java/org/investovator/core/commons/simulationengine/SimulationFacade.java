@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.simulationengine;
+package org.investovator.core.commons.simulationengine;
 
 import java.util.HashMap;
 

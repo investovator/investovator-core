@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.utils;
+package org.investovator.core.commons.utils;
 
 /**
  * @author rajith
