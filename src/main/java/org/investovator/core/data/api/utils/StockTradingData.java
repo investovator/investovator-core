@@ -37,4 +37,6 @@ public interface StockTradingData {
     public Set<Date> getDates();
 
     public Float getTradingDataAttributeValue(Date date, TradingDataAttribute attribute);
+
+    public String getStockId();
 }

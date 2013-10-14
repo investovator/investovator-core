@@ -28,32 +28,44 @@ import java.util.Set;
  */
 public class StockTradingDataImpl implements StockTradingData{
 
+    private String stockId;
     private TradingDataAttribute[] attributes;
     private HashMap<Date, HashMap<TradingDataAttribute, Float>> marketData;
 
-    public StockTradingDataImpl(TradingDataAttribute[] attributes,
+    public StockTradingDataImpl(String stockId, TradingDataAttribute[] attributes,
                        HashMap<Date, HashMap<TradingDataAttribute, Float>> marketData) {
+        this.stockId = stockId;
         this.attributes = attributes;
         this.marketData = marketData;
     }
 
+    @Override
     public TradingDataAttribute[] getAttributes() {
         return attributes;
     }
 
+    @Override
     public HashMap<Date, HashMap<TradingDataAttribute, Float>> getTradingData() {
         return marketData;
     }
 
+    @Override
     public HashMap<TradingDataAttribute, Float> getTradingDataEntry(Date date){
         return marketData.get(date);
     }
 
+    @Override
     public Set<Date> getDates(){
         return marketData.keySet();
     }
 
+    @Override
     public Float getTradingDataAttributeValue(Date date, TradingDataAttribute attribute){
         return marketData.get(date).get(attribute);
+    }
+
+    @Override
+    public String getStockId() {
+        return stockId;
     }
 }
