@@ -24,19 +24,19 @@ import java.util.HashMap;
  * @author rajith
  * @version $Revision$
  */
-public class Portfolioimpl implements Terms, Portfolio {
+public class PortfolioImpl implements Terms, Portfolio {
 
     private String username;
     private int cashBalance;
     private HashMap <String, HashMap <String, Float>> shares;
 
-    public Portfolioimpl(String username, int cashBalance){
+    public PortfolioImpl(String username, int cashBalance){
         this.username = username;
         this.cashBalance = cashBalance;
         this.shares = new HashMap<String, HashMap<String, Float>>();
     }
 
-    public Portfolioimpl(String username, int cashBalance,
+    public PortfolioImpl(String username, int cashBalance,
                      HashMap <String, HashMap <String, Float>> shares){
         this.username = username;
         this.cashBalance = cashBalance;

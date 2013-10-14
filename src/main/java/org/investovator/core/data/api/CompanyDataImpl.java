@@ -26,7 +26,7 @@ import java.util.HashMap;
  * @author rajith
  * @version $Revision$
  */
-public class CompanyDataimpl implements CompanyData{
+public class CompanyDataImpl implements CompanyData{
 
     /**
      *

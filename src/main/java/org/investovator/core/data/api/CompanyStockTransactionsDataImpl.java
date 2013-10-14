@@ -18,36 +18,35 @@
 
 package org.investovator.core.data.api;
 
+import org.investovator.core.data.api.utils.StockTradingData;
+import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.exeptions.DataAccessException;
-import org.investovator.core.utils.Portfolio;
 
-import java.util.HashMap;
+import java.util.Date;
 
 /**
  * @author rajith
  * @version $Revision$
  */
-public class UserDataimpl implements UserData{
+public class CompanyStockTransactionsDataImpl implements CompanyStockTransactionsData{
 
-    public void addUser(String username, String firstname,
-                        String lastname, String emailaddress, String password)
-            throws DataAccessException {
-    //TODO
-    }
+    /**
+     *
+     * {@inheritDoc}
+     */
+    public StockTradingData getTradingDataOHLC (String symbol,  Date startingDate,
+                                                TradingDataAttribute[] attributes,
+                                                   int numOfRows) throws DataAccessException{
 
-    public String getUserPassword(String username)
-            throws DataAccessException {
         return null; //TODO
     }
 
-    public HashMap<String, String> getUserDetails(String username)
-            throws DataAccessException {
+    /**
+     *
+     * {@inheritDoc}
+     */
+    public StockTradingData getTradingData (String symbol, Date startingTime,
+                                            int numOfRows) throws DataAccessException{
         return null; //TODO
     }
-
-    public Portfolio getUserPortfolio(String username)
-            throws DataAccessException {
-        return null; //TODO
-    }
-
 }

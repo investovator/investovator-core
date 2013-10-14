@@ -26,12 +26,12 @@ import java.util.Set;
  * @author rajith
  * @version $Revision$
  */
-public class StockTradingDataimpl implements StockTradingData{
+public class StockTradingDataImpl implements StockTradingData{
 
     private TradingDataAttribute[] attributes;
     private HashMap<Date, HashMap<TradingDataAttribute, Float>> marketData;
 
-    public StockTradingDataimpl(TradingDataAttribute[] attributes,
+    public StockTradingDataImpl(TradingDataAttribute[] attributes,
                        HashMap<Date, HashMap<TradingDataAttribute, Float>> marketData) {
         this.attributes = attributes;
         this.marketData = marketData;
