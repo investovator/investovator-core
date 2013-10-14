@@ -25,6 +25,7 @@ import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author rajith
@@ -45,23 +46,24 @@ public interface CompanyStockTransactionsData {
                                                 TradingDataAttribute[] attributes,
                                                 int numOfRows) throws DataAccessException;
 
+
     /**
      *
      * @param symbol StockId
      * @param startingTime Ticker data starting time
      * @param numOfRows Required num of rows
-     * @return {@link StockTradingData}
+     * @return HashMap containing time and transaction price
      * @throws DataAccessException
      */
-    public StockTradingData getTradingData (String symbol, Date startingTime,
+    public HashMap<Date, Float> getTradingData (String symbol, Date startingTime,
                                             int numOfRows) throws DataAccessException;
 
     /**
-     *
+     * @param stockId Stock id
      * @param file csv file
      * @throws DataAccessException
      */
-    public void importCSV(File file) throws DataAccessException;
+    public void importCSV(String stockId, File file) throws DataAccessException;
 
     /**
      *
