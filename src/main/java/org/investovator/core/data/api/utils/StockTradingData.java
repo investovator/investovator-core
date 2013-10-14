@@ -16,40 +16,25 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.investovator.core.data.api.utils;
 
-package org.investovator.core.utils;
-
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * @author rajith
  * @version $Revision$
  */
-public interface Portfolio extends Comparable <Portfolio> {
+public interface StockTradingData {
 
-    public int getCashBalance();
+    public TradingDataAttribute[] getAttributes();
 
-    public void setCashBalance(int cashBalance);
+    public HashMap<Date, HashMap<TradingDataAttribute, Float>> getTradingData();
 
-    public HashMap<String, HashMap<String, Float>> getShares();
+    public HashMap<TradingDataAttribute, Float> getTradingDataEntry(Date date);
 
-    public void setShares(HashMap<String, HashMap<String, Float>> shares);
+    public Set<Date> getDates();
 
-    public void removeStock(String symbol);
-
-    public String getUsername();
-
-    /**
-     *
-     * @param symbol symbol of the stock
-     * @param quantity quantity bought
-     */
-    public void boughtShares(String symbol, float quantity, float price);
-
-    /**
-     *
-     * @param symbol symbol of the stock
-     * @param quantity quantity sold
-     */
-    public void soldShares(String symbol, float quantity);
+    public Float getTradingDataAttributeValue(Date date, TradingDataAttribute attribute);
 }

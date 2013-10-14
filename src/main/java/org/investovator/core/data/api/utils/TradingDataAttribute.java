@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.data.api;
+package org.investovator.core.data.api.utils;
 
 /**
  * @author rajith

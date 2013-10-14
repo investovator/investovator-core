@@ -26,44 +26,48 @@ import java.util.HashMap;
  * @author rajith
  * @version $Revision$
  */
-public interface CompanyData {
+public class CompanyDataimpl implements CompanyData{
 
     /**
      *
-     * @return Company StockId and Name pairs
-     * @throws org.investovator.core.data.exeptions.DataAccessException
+     * {@inheritDoc}
      */
-    public HashMap<String,String> getCompanyIDsNames() throws DataAccessException;
+    public HashMap<String,String> getCompanyIDsNames() throws DataAccessException{
+        return null; //TODO
+    }
 
     /**
      *
-     * @return Company StockId and number of shares issued pairs
-     * @throws DataAccessException
+     * {@inheritDoc}
      */
-    public HashMap<String, Integer> getCompanyIDsTotalShares() throws DataAccessException;
+    public HashMap<String, Integer> getCompanyIDsTotalShares() throws DataAccessException{
+        return null; //TODO
+    }
 
     /**
      *
-     * @param symbol Company StockId
-     * @return Company Name
-     * @throws DataAccessException
+     * {@inheritDoc}
      */
-    public String getCompanyName(String symbol) throws DataAccessException;
+    public String getCompanyName(String symbol) throws DataAccessException{
+        return null; //TODO
+    }
 
     /**
      *
-     * @param symbol Company StockId
-     * @return Number of shares issued by the company
-     * @throws DataAccessException
+     * {@inheritDoc}
      */
-    public int getCompanyNoOfShares(String symbol) throws DataAccessException;
+    public int getCompanyNoOfShares(String symbol) throws DataAccessException{
+        return 0; //TODO
+    }
 
     /**
      *
-     * @param infotype Information type required
-     * @param symbol StockId of the company
-     * @return Data
-     * @throws DataAccessException
+     * {@inheritDoc}
      */
-    public Object getInfo(String infotype, String symbol) throws DataAccessException;
+    public Object getInfo(String infotype, String symbol) throws DataAccessException{
+        return null; //TODO
+    }
+
+
+    //TODO data adding api
 }

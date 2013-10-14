@@ -27,27 +27,15 @@ import java.util.HashMap;
  * @author rajith
  * @version $Revision$
  */
-public class UserData {
+public interface UserData {
 
     public void addUser(String username, String firstname,
                         String lastname, String emailaddress, String password)
-            throws DataAccessException {
-    //TODO
-    }
+            throws DataAccessException;
 
-    public String getUserPassword(String username)
-            throws DataAccessException {
-        return null; //TODO
-    }
+    public String getUserPassword(String username) throws DataAccessException;
 
-    public HashMap<String, String> getUserDetails(String username)
-            throws DataAccessException {
-        return null; //TODO
-    }
+    public HashMap<String, String> getUserDetails(String username) throws DataAccessException;
 
-    public Portfolio getUserPortfolio(String username)
-            throws DataAccessException {
-        return null; //TODO
-    }
-
+    public Portfolio getUserPortfolio(String username) throws DataAccessException;
 }

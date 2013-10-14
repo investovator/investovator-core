@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.data.api;
+package org.investovator.core.data.api.utils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -26,12 +26,12 @@ import java.util.Set;
  * @author rajith
  * @version $Revision$
  */
-public class StockTradingData {
+public class StockTradingDataimpl implements StockTradingData{
 
     private TradingDataAttribute[] attributes;
     private HashMap<Date, HashMap<TradingDataAttribute, Float>> marketData;
 
-    public StockTradingData(TradingDataAttribute[] attributes,
+    public StockTradingDataimpl(TradingDataAttribute[] attributes,
                        HashMap<Date, HashMap<TradingDataAttribute, Float>> marketData) {
         this.attributes = attributes;
         this.marketData = marketData;
@@ -41,7 +41,7 @@ public class StockTradingData {
         return attributes;
     }
 
-    public HashMap<Date, HashMap<TradingDataAttribute, Float>> getMarketData() {
+    public HashMap<Date, HashMap<TradingDataAttribute, Float>> getTradingData() {
         return marketData;
     }
 

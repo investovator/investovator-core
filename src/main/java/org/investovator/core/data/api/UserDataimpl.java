@@ -16,8 +16,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.investovator.core.data.api;
 
-package org.investovator.core.utils;
+import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.utils.Portfolio;
 
 import java.util.HashMap;
 
@@ -25,31 +27,27 @@ import java.util.HashMap;
  * @author rajith
  * @version $Revision$
  */
-public interface Portfolio extends Comparable <Portfolio> {
+public class UserDataimpl implements UserData{
 
-    public int getCashBalance();
+    public void addUser(String username, String firstname,
+                        String lastname, String emailaddress, String password)
+            throws DataAccessException {
+    //TODO
+    }
 
-    public void setCashBalance(int cashBalance);
+    public String getUserPassword(String username)
+            throws DataAccessException {
+        return null; //TODO
+    }
 
-    public HashMap<String, HashMap<String, Float>> getShares();
+    public HashMap<String, String> getUserDetails(String username)
+            throws DataAccessException {
+        return null; //TODO
+    }
 
-    public void setShares(HashMap<String, HashMap<String, Float>> shares);
+    public Portfolio getUserPortfolio(String username)
+            throws DataAccessException {
+        return null; //TODO
+    }
 
-    public void removeStock(String symbol);
-
-    public String getUsername();
-
-    /**
-     *
-     * @param symbol symbol of the stock
-     * @param quantity quantity bought
-     */
-    public void boughtShares(String symbol, float quantity, float price);
-
-    /**
-     *
-     * @param symbol symbol of the stock
-     * @param quantity quantity sold
-     */
-    public void soldShares(String symbol, float quantity);
 }

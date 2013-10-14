@@ -18,6 +18,9 @@
 
 package org.investovator.core.data.api;
 
+
+import org.investovator.core.data.api.utils.StockTradingData;
+import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.util.Date;
@@ -26,7 +29,7 @@ import java.util.Date;
  * @author rajith
  * @version $Revision$
  */
-public class CompanyStockTransactionsData {
+public interface CompanyStockTransactionsData {
 
     /**
      *
@@ -39,10 +42,7 @@ public class CompanyStockTransactionsData {
      */
     public StockTradingData getTradingDataOHLC (String symbol,  Date startingDate,
                                                 TradingDataAttribute[] attributes,
-                                                   int numOfRows) throws DataAccessException{
-
-        return null; //TODO
-    }
+                                                int numOfRows) throws DataAccessException;
 
     /**
      *
@@ -53,7 +53,5 @@ public class CompanyStockTransactionsData {
      * @throws DataAccessException
      */
     public StockTradingData getTradingData (String symbol, Date startingTime,
-                                            int numOfRows) throws DataAccessException{
-        return null; //TODO
-    }
+                                            int numOfRows) throws DataAccessException;
 }

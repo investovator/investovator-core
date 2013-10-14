@@ -16,40 +16,37 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.investovator.core.data.api;
 
-package org.investovator.core.utils;
+import org.investovator.core.data.api.utils.StockTradingData;
+import org.investovator.core.data.api.utils.TradingDataAttribute;
+import org.investovator.core.data.exeptions.DataAccessException;
 
-import java.util.HashMap;
+import java.util.Date;
 
 /**
  * @author rajith
  * @version $Revision$
  */
-public interface Portfolio extends Comparable <Portfolio> {
-
-    public int getCashBalance();
-
-    public void setCashBalance(int cashBalance);
-
-    public HashMap<String, HashMap<String, Float>> getShares();
-
-    public void setShares(HashMap<String, HashMap<String, Float>> shares);
-
-    public void removeStock(String symbol);
-
-    public String getUsername();
+public class CompanyStockTransactionsDataimpl implements CompanyStockTransactionsData{
 
     /**
      *
-     * @param symbol symbol of the stock
-     * @param quantity quantity bought
+     * {@inheritDoc}
      */
-    public void boughtShares(String symbol, float quantity, float price);
+    public StockTradingData getTradingDataOHLC (String symbol,  Date startingDate,
+                                                TradingDataAttribute[] attributes,
+                                                   int numOfRows) throws DataAccessException{
+
+        return null; //TODO
+    }
 
     /**
      *
-     * @param symbol symbol of the stock
-     * @param quantity quantity sold
+     * {@inheritDoc}
      */
-    public void soldShares(String symbol, float quantity);
+    public StockTradingData getTradingData (String symbol, Date startingTime,
+                                            int numOfRows) throws DataAccessException{
+        return null; //TODO
+    }
 }
