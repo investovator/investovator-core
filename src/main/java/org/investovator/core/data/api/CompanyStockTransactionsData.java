@@ -58,6 +58,9 @@ public interface CompanyStockTransactionsData {
     public HashMap<Date, Float> getTradingData (String symbol, Date startingTime,
                                             int numOfRows) throws DataAccessException;
 
+
+    /*Configuration related*/
+
     /**
      * @param stockId Stock id
      * @param file csv file
@@ -66,10 +69,23 @@ public interface CompanyStockTransactionsData {
     public void importCSV(String stockId, File file) throws DataAccessException;
 
     /**
+     * @param stockId Stock id
+     * @param file csv file
+     * @throws DataAccessException
+     */
+    public void importXls(String stockId, File file) throws DataAccessException;
+
+    /**
      *
      * @param stockId Stock Id
      * @throws DataAccessException
      */
     public void clearTradingData(String stockId) throws DataAccessException;
+
+    /**
+     * Clear Keyspace
+     * @throws DataAccessException
+     */
+    public void clearAllTradingData() throws DataAccessException;
 
 }

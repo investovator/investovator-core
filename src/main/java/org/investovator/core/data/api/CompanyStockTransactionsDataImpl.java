@@ -63,12 +63,26 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
         //TODO
     }
 
+    @Override
+    public void importXls(String stockId, File file) throws DataAccessException {
+        //TODO
+    }
+
     /**
      *
      * {@inheritDoc}
      */
     @Override
     public void clearTradingData(String stockId) throws DataAccessException {
+        //TODO
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void clearAllTradingData() throws DataAccessException {
         //TODO
     }
 }
