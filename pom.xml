@@ -7,6 +7,7 @@
     <groupId>org.investovator</groupId>
     <artifactId>investovator-core</artifactId>
     <version>0.1</version>
+    <name>investovator - Core</name>
 
     <dependencies>
         <dependency>
