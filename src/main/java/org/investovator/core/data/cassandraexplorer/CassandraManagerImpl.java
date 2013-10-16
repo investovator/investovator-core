@@ -29,8 +29,8 @@ import me.prettyprint.hector.api.mutation.Mutator;
 import org.investovator.core.data.cassandraexplorer.utils.CassandraConnector;
 import org.investovator.core.data.exeptions.DataAccessException;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 /**
  * @author rajith
@@ -38,8 +38,22 @@ import java.io.FileReader;
  */
 public class CassandraManagerImpl implements CassandraManager{
 
+    private static volatile CassandraManagerImpl cassandraManager;
+
+    public static CassandraManagerImpl getCassandraManager() {
+        if(cassandraManager == null){
+            synchronized(CassandraManagerImpl.class){
+                if(cassandraManager == null)
+                    cassandraManager = new CassandraManagerImpl();
+            }
+        }
+        return cassandraManager;
+    }
+
+    private CassandraManagerImpl(){}
+
     @Override
-    public void importCSV(String stockId, File file) throws DataAccessException {
+    public void importCSV(String stockId, FileInputStream fileInputStream) throws DataAccessException {
 
         try {
             Cluster cluster = getClusterInitialized();
@@ -51,20 +65,24 @@ public class CassandraManagerImpl implements CassandraManager{
                     .createColumnFamilyDefinition(KEYSPACE, stockId, ComparatorType.UTF8TYPE);
 
 
-            CSVReader reader = new CSVReader(new FileReader(file));
+            CSVReader reader = new CSVReader(new InputStreamReader(fileInputStream, "UTF8"));
 
             String[] labelsColumn = reader.readNext();
-            Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
 
-            String [] data;
-            while ((data = reader.readNext()) != null) {
-                for (int num = 1; num < labelsColumn.length; num ++){
-                    mutator.addInsertion(data[0], columnFamilyDef.getName(),
-                            HFactory.createStringColumn(labelsColumn[num], data[num]));
+            //Since Mutator is not thread safe
+            synchronized (this){
+                Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
+
+                String [] data;
+                while ((data = reader.readNext()) != null) {
+                    for (int num = 1; num < labelsColumn.length; num ++){
+                        mutator.addInsertion(data[0], columnFamilyDef.getName(),
+                                HFactory.createStringColumn(labelsColumn[num], data[num]));
+                    }
                 }
-            }
 
-            mutator.execute();
+                mutator.execute();
+            }
         } catch (Exception e) {
             throw new DataAccessException(e);
         }
@@ -73,7 +91,7 @@ public class CassandraManagerImpl implements CassandraManager{
     }
 
     @Override
-    public void importXls(String stockId, File file) throws DataAccessException {
+    public void importXls(String stockId, FileInputStream fileInputStream) throws DataAccessException {
         //TODO
     }
 

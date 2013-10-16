@@ -20,7 +20,7 @@ package org.investovator.core.data.cassandraexplorer;
 
 import org.investovator.core.data.exeptions.DataAccessException;
 
-import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * @author rajith
@@ -34,9 +34,9 @@ public interface CassandraManager {
 
     public static final String KEYSPACE = "investovator_Trading_data";
 
-    public void importCSV(String stockId, File file) throws DataAccessException;
+    public void importCSV(String stockId, FileInputStream fileInputStream) throws DataAccessException;
 
-    public void importXls(String stockId, File file) throws DataAccessException;
+    public void importXls(String stockId, FileInputStream fileInputStream) throws DataAccessException;
 
     public void clearColumnFamily(String stockId) throws DataAccessException;
 }

@@ -38,6 +38,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -51,7 +53,7 @@ import static org.junit.Assert.assertTrue;
 public class TestCassandraManager {
 
     @Test
-    public void testImportCSV() throws DataAccessException {
+    public void testImportCSV() throws DataAccessException, FileNotFoundException {
 
         try {
             ConfigLoader.loadProperties("src" + File.separator + "test" + File.separator
@@ -60,12 +62,12 @@ public class TestCassandraManager {
             assertFalse(e.getMessage(), true);
         }
 
-        CassandraManager cassandraManager = new CassandraManagerImpl();
+        CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
 
         File file = new File("src" + File.separator + "test" + File.separator
                 + "resources" + File.separator + "sampath_daily_test.csv");
 
-        cassandraManager.importCSV("SAMP", file);
+        cassandraManager.importCSV("SAMP", new FileInputStream(file));
 
         Cluster cluster = CassandraConnector.createCluster("admin", "admin", "localhost:9171");
 

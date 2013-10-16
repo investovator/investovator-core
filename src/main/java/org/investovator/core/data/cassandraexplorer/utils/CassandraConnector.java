@@ -57,7 +57,7 @@ public class CassandraConnector {
      * @param cluster cluster
      * @param keyspace keyspace
      */
-    public static void createKeyspaceIfNotExists(Cluster cluster, String keyspace){
+    public static synchronized void createKeyspaceIfNotExists(Cluster cluster, String keyspace){
         if(!isKeyspaceAvailable(cluster, keyspace)){
             KeyspaceDefinition definition = new ThriftKsDef(keyspace);
             cluster.addKeyspace(definition, true);
@@ -70,16 +70,11 @@ public class CassandraConnector {
      * @param keyspace keyspace
      * @param columnFamily columnFamily required
      */
-    public static void createColumnFmlyIfNotExists(Cluster cluster,String keyspace,
+    public static synchronized void createColumnFmlyIfNotExists(Cluster cluster,String keyspace,
                                                    String columnFamily){
         if(!isColumnFamilyAvailable(cluster, keyspace, columnFamily)){
             ColumnFamilyDefinition familyDefinition = new ThriftCfDef(keyspace, columnFamily);
             cluster.addColumnFamily(familyDefinition, true);
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ignored) {
-                //exception ignored
-            }
         }
     }
 
@@ -89,7 +84,7 @@ public class CassandraConnector {
      * @param keyspace Keyspace name
      * @return True if the Keyspace is available
      */
-    public static boolean isKeyspaceAvailable(Cluster cluster, String keyspace) {
+    public static synchronized boolean isKeyspaceAvailable(Cluster cluster, String keyspace) {
         return cluster.describeKeyspace(keyspace)!= null;
     }
 
@@ -100,7 +95,7 @@ public class CassandraConnector {
      * @param columnFamily Column family name
      * @return True if the column family is available
      */
-    public static boolean isColumnFamilyAvailable(Cluster cluster, String keyspace,
+    public static synchronized boolean isColumnFamilyAvailable(Cluster cluster, String keyspace,
                                                   String columnFamily){
         if(isKeyspaceAvailable(cluster, keyspace)){
             Iterator<ColumnFamilyDefinition> columnFamilyItr;
