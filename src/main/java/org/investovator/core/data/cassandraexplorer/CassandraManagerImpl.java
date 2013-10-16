@@ -38,6 +38,8 @@ import java.io.InputStreamReader;
  */
 public class CassandraManagerImpl implements CassandraManager{
 
+    private static final String CHAR_ENCODING = "UTF8";
+
     private static volatile CassandraManagerImpl cassandraManager;
 
     public static CassandraManagerImpl getCassandraManager() {
@@ -53,21 +55,21 @@ public class CassandraManagerImpl implements CassandraManager{
     private CassandraManagerImpl(){}
 
     @Override
-    public void importCSV(String stockId, FileInputStream fileInputStream) throws DataAccessException {
+    public void importCSV(String columnFamily, FileInputStream fileInputStream) throws DataAccessException {
 
         try {
             //Since Mutator is not thread safe
             synchronized (this){
                 Cluster cluster = getClusterInitialized();
                 CassandraConnector.createKeyspaceIfNotExists(cluster, KEYSPACE);
-                CassandraConnector.createColumnFmlyIfNotExists(cluster, KEYSPACE, stockId);
+                CassandraConnector.createColumnFmlyIfNotExists(cluster, KEYSPACE, columnFamily);
 
                 Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
                 ColumnFamilyDefinition columnFamilyDef = HFactory
-                        .createColumnFamilyDefinition(KEYSPACE, stockId, ComparatorType.UTF8TYPE);
+                        .createColumnFamilyDefinition(KEYSPACE, columnFamily, ComparatorType.UTF8TYPE);
 
 
-                CSVReader reader = new CSVReader(new InputStreamReader(fileInputStream, "UTF8"));
+                CSVReader reader = new CSVReader(new InputStreamReader(fileInputStream, CHAR_ENCODING));
 
                 String[] labelsColumn = reader.readNext();
 
@@ -92,13 +94,29 @@ public class CassandraManagerImpl implements CassandraManager{
     }
 
     @Override
-    public void importXls(String stockId, FileInputStream fileInputStream) throws DataAccessException {
+    public void importXls(String columnFamily, FileInputStream fileInputStream)
+            throws DataAccessException {
         //TODO
     }
 
     @Override
-    public void clearColumnFamily(String stockId)  throws DataAccessException{
+    public void truncateColumnFamily(String columnFamily)  throws DataAccessException{
+        Cluster cluster = getClusterInitialized();
+        try {
+            CassandraConnector.truncateColumnFamily(cluster, KEYSPACE, columnFamily);
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
+    }
 
+    @Override
+    public void dropColumnFamily(String columnFamily) throws DataAccessException {
+        Cluster cluster = getClusterInitialized();
+        try {
+            CassandraConnector.dropColumnFamily(cluster, KEYSPACE, columnFamily);
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
     }
 
     private Cluster getClusterInitialized() {

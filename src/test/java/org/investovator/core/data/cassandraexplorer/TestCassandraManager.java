@@ -43,7 +43,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -52,32 +53,28 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestCassandraManager {
 
+    private static String COLUMNFAMILY = "SAMP";
+    private static String USERNAME = "admin";
+    private static String PASSWORD = "admin";
+    private static String URL = "localhost:9171";
+
     @Test
     public void testImportCSV() throws DataAccessException, FileNotFoundException {
 
-        try {
-            ConfigLoader.loadProperties("src" + File.separator + "test" + File.separator
-                    + "resources" + File.separator + "resource.properties");
-        } catch (ConfigurationException e) {
-            assertFalse(e.getMessage(), true);
-        }
-
         CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
 
-        File file = new File("src" + File.separator + "test" + File.separator
-                + "resources" + File.separator + "sampath_daily_test.csv");
+        File file = new File("src" + File.separator + "test" + File.separator + "resources"
+                + File.separator + "sampath_daily_test.csv");
+        cassandraManager.importCSV(COLUMNFAMILY, new FileInputStream(file));
 
-        cassandraManager.importCSV("SAMP", new FileInputStream(file));
-
-        Cluster cluster = CassandraConnector.createCluster("admin", "admin", "localhost:9171");
+        Cluster cluster = CassandraConnector.createCluster(USERNAME, PASSWORD, URL);
 
         assertTrue(CassandraConnector.isKeyspaceAvailable(cluster, CassandraManager.KEYSPACE));
-        assertTrue(CassandraConnector.isColumnFamilyAvailable(cluster, CassandraManager.KEYSPACE, "SAMP"));
+        assertTrue(CassandraConnector.isColumnFamilyAvailable(cluster, CassandraManager.KEYSPACE, COLUMNFAMILY));
 
         Keyspace keyspace =  HFactory.createKeyspace(CassandraManager.KEYSPACE, cluster);
-
         ColumnFamilyTemplate<String, String> template =
-                new ThriftColumnFamilyTemplate<String, String> (keyspace,"SAMP",
+                new ThriftColumnFamilyTemplate<String, String> (keyspace,COLUMNFAMILY,
                         StringSerializer.get(),StringSerializer.get());
 
         ColumnFamilyResult<String, String> res = template.queryColumns("1/6/2010");
@@ -87,9 +84,40 @@ public class TestCassandraManager {
                 .contains(TradingDataAttribute.getAttribName(TradingDataAttribute.HIGH_PRICE)));
     }
 
+    @Test
+    public void testDropColumnFamily() throws DataAccessException, FileNotFoundException {
+
+        File file = new File("src" + File.separator + "test" + File.separator + "resources"
+                + File.separator + "sampath_daily_test.csv");
+
+        CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
+        cassandraManager.importCSV(COLUMNFAMILY, new FileInputStream(file));
+
+        Cluster cluster = CassandraConnector.createCluster(USERNAME, PASSWORD, URL);
+
+        assertTrue(CassandraConnector.isKeyspaceAvailable(cluster, CassandraManager.KEYSPACE));
+        assertTrue(CassandraConnector
+                .isColumnFamilyAvailable(cluster, CassandraManager.KEYSPACE, COLUMNFAMILY));
+
+        cassandraManager.truncateColumnFamily(COLUMNFAMILY);
+        assertTrue(CassandraConnector
+                .isColumnFamilyAvailable(cluster, CassandraManager.KEYSPACE, COLUMNFAMILY));
+
+        Keyspace keyspace =  HFactory.createKeyspace(CassandraManager.KEYSPACE, cluster);
+        ColumnFamilyTemplate<String, String> template =
+                new ThriftColumnFamilyTemplate<String, String> (keyspace,COLUMNFAMILY,
+                        StringSerializer.get(),StringSerializer.get());
+
+        ColumnFamilyResult<String, String> res = template.queryColumns("1/6/2010");
+        assertFalse(res.hasResults());
+    }
+
     @Before
     public void start() throws InterruptedException, TTransportException,
-            org.apache.cassandra.exceptions.ConfigurationException, IOException {
+            org.apache.cassandra.exceptions.ConfigurationException, IOException, ConfigurationException {
+
+        ConfigLoader.loadProperties("src" + File.separator + "test" + File.separator
+                + "resources" + File.separator + "resource.properties");
         EmbeddedCassandraServerHelper.startEmbeddedCassandra();
     }
 

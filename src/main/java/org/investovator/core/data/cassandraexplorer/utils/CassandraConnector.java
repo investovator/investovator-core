@@ -109,4 +109,24 @@ public class CassandraConnector {
         else return false;
     }
 
+    /**
+     *
+     * @param cluster cluster name
+     * @param keyspaceName keyspace name
+     * @param cfName column family name
+     */
+    public static void truncateColumnFamily(Cluster cluster,String keyspaceName, String cfName){
+        cluster.truncate(keyspaceName, cfName);
+    }
+
+    /**
+     *
+     * @param cluster cluster name
+     * @param keyspaceName keyspace name
+     * @param cfName column family name
+     */
+    public static void dropColumnFamily(Cluster cluster,String keyspaceName, String cfName){
+        cluster.dropColumnFamily(keyspaceName, cfName);
+    }
+
 }

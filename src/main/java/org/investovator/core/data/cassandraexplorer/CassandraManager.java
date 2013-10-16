@@ -34,9 +34,12 @@ public interface CassandraManager {
 
     public static final String KEYSPACE = "investovator_Trading_data";
 
-    public void importCSV(String stockId, FileInputStream fileInputStream) throws DataAccessException;
+    public void importCSV(String columnFamily, FileInputStream fileInputStream) throws DataAccessException;
 
-    public void importXls(String stockId, FileInputStream fileInputStream) throws DataAccessException;
+    public void importXls(String columnFamily, FileInputStream fileInputStream) throws DataAccessException;
 
-    public void clearColumnFamily(String stockId) throws DataAccessException;
+    public void truncateColumnFamily(String columnFamily) throws DataAccessException;
+
+    @Deprecated
+    public void dropColumnFamily(String columnFamily) throws DataAccessException;
 }
