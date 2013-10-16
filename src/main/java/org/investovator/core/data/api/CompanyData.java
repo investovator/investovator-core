@@ -20,6 +20,7 @@ package org.investovator.core.data.api;
 
 import org.investovator.core.data.exeptions.DataAccessException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -66,4 +67,11 @@ public interface CompanyData {
      * @throws DataAccessException
      */
     public Object getInfo(String infotype, String symbol) throws DataAccessException;
+
+    /**
+     *
+     * @return all the stock symbols
+     * @throws DataAccessException
+     */
+    public ArrayList<String> getAvailableStockIds() throws DataAccessException;
 }

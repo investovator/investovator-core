@@ -20,6 +20,7 @@ package org.investovator.core.data.api;
 
 import org.investovator.core.data.exeptions.DataAccessException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -71,6 +72,14 @@ public class CompanyDataImpl implements CompanyData{
     @Override
     public Object getInfo(String infotype, String symbol) throws DataAccessException{
         return null; //TODO
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    public ArrayList<String> getAvailableStockIds() throws DataAccessException {
+        return null;  //TODO
     }
 
 
