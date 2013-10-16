@@ -59,10 +59,12 @@ public class CassandraManagerImpl implements CassandraManager{
             String [] data;
             while ((data = reader.readNext()) != null) {
                 for (int num = 1; num < labelsColumn.length; num ++){
-                    mutator.insert(data[0], columnFamilyDef.getName(),
+                    mutator.addInsertion(data[0], columnFamilyDef.getName(),
                             HFactory.createStringColumn(labelsColumn[num], data[num]));
                 }
             }
+
+            mutator.execute();
         } catch (Exception e) {
             throw new DataAccessException(e);
         }
