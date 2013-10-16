@@ -56,21 +56,22 @@ public class CassandraManagerImpl implements CassandraManager{
     public void importCSV(String stockId, FileInputStream fileInputStream) throws DataAccessException {
 
         try {
-            Cluster cluster = getClusterInitialized();
-            CassandraConnector.createKeyspaceIfNotExists(cluster, KEYSPACE);
-            CassandraConnector.createColumnFmlyIfNotExists(cluster, KEYSPACE, stockId);
-
-            Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
-            ColumnFamilyDefinition columnFamilyDef = HFactory
-                    .createColumnFamilyDefinition(KEYSPACE, stockId, ComparatorType.UTF8TYPE);
-
-
-            CSVReader reader = new CSVReader(new InputStreamReader(fileInputStream, "UTF8"));
-
-            String[] labelsColumn = reader.readNext();
-
             //Since Mutator is not thread safe
             synchronized (this){
+                Cluster cluster = getClusterInitialized();
+                CassandraConnector.createKeyspaceIfNotExists(cluster, KEYSPACE);
+                CassandraConnector.createColumnFmlyIfNotExists(cluster, KEYSPACE, stockId);
+
+                Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
+                ColumnFamilyDefinition columnFamilyDef = HFactory
+                        .createColumnFamilyDefinition(KEYSPACE, stockId, ComparatorType.UTF8TYPE);
+
+
+                CSVReader reader = new CSVReader(new InputStreamReader(fileInputStream, "UTF8"));
+
+                String[] labelsColumn = reader.readNext();
+
+
                 Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
 
                 String [] data;
