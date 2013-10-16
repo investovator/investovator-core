@@ -37,7 +37,7 @@ public class TestConfigLoader extends TestCase {
             assertFalse(e.getMessage(), true);
         }
 
-        assertEquals("localhost:9160", System.getProperty("org.investovator.core.data.cassandra.url"));
+        assertEquals("localhost:9171", System.getProperty("org.investovator.core.data.cassandra.url"));
         assertEquals("admin", System.getProperty("org.investovator.core.data.cassandra.username"));
         assertEquals("admin", System.getProperty("org.investovator.core.data.cassandra.password"));
     }

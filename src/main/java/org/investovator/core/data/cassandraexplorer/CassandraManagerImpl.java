@@ -31,7 +31,6 @@ import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * @author rajith
@@ -54,16 +53,16 @@ public class CassandraManagerImpl implements CassandraManager{
 
             CSVReader reader = new CSVReader(new FileReader(file));
 
-            /*String[] labelsColumn = reader.readNext();
+            String[] labelsColumn = reader.readNext();
             Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
 
             String [] data;
             while ((data = reader.readNext()) != null) {
-                for (int num = 0; num < labelsColumn.length; num ++){
-                    mutator.insert(data[num], columnFamilyDef.getName(),
+                for (int num = 1; num < labelsColumn.length; num ++){
+                    mutator.insert(data[0], columnFamilyDef.getName(),
                             HFactory.createStringColumn(labelsColumn[num], data[num]));
                 }
-            }*/
+            }
         } catch (Exception e) {
             throw new DataAccessException(e);
         }

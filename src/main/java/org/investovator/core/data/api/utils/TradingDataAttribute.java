@@ -38,11 +38,11 @@ public enum TradingDataAttribute {
 
         switch (attribute) {
             case CLOSING_PRICE:
-                return "Closing";
+                return "Closing (Rs.)";
             case LOW_PRICE:
-                return "Low";
+                return "Low (Rs.)";
             case HIGH_PRICE:
-                return "High";
+                return "High (Rs.)";
             case SHARES:
                 return "Shares(No.)";
             case TURNOVER:

@@ -15,9 +15,9 @@
             <version>2.6.12</version>
         </dependency>
         <dependency>
-            <groupId>me.prettyprint</groupId>
+            <groupId>org.hectorclient</groupId>
             <artifactId>hector-core</artifactId>
-            <version>1.0-5</version>
+            <version>1.1-4</version>
         </dependency>
         <dependency>
             <groupId>net.sf.opencsv</groupId>
@@ -29,8 +29,17 @@
             <artifactId>commons-configuration</artifactId>
             <version>1.9</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.cassandraunit</groupId>
+            <artifactId>cassandra-unit</artifactId>
+            <version>1.2.0.1</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hectorclient</groupId>
+                    <artifactId>hector-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
-
-    
 </project>
