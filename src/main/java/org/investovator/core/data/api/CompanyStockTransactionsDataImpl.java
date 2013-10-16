@@ -95,6 +95,10 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
         }
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
     public void importXls(String stockId, File file) throws DataAccessException {
         //TODO
