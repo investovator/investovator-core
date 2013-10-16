@@ -20,9 +20,13 @@ package org.investovator.core.data.api;
 
 import org.investovator.core.data.api.utils.StockTradingData;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
+import org.investovator.core.data.cassandraexplorer.CassandraManager;
+import org.investovator.core.data.cassandraexplorer.CassandraManagerImpl;
 import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -31,6 +35,12 @@ import java.util.HashMap;
  * @version $Revision$
  */
 public class CompanyStockTransactionsDataImpl implements CompanyStockTransactionsData{
+
+    private CassandraManager manager;
+
+    public CompanyStockTransactionsDataImpl(){
+        manager = CassandraManagerImpl.getCassandraManager();
+    }
 
     /**
      *
@@ -49,6 +59,15 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
+    public Date[] getOHLCDataDaysRange(String symbol) {
+        return new Date[0];  //TODO
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
     public HashMap<Date, Float> getTradingData(String symbol, Date startingTime,
                                                int numOfRows) throws DataAccessException{
         return null; //TODO
@@ -59,8 +78,21 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
+    public Date[] getTradingDataDaysRange(String symbol) {
+        return new Date[0];  //TODO
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
     public void importCSV(String stockId, File file) throws DataAccessException {
-        //TODO
+        try {
+            manager.importCSV(stockId, new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new DataAccessException(e);
+        }
     }
 
     @Override
@@ -74,7 +106,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      */
     @Override
     public void clearTradingData(String stockId) throws DataAccessException {
-        //TODO
+        manager.truncateColumnFamily(stockId);
     }
 
     /**

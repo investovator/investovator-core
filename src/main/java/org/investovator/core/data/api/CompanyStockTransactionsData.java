@@ -46,6 +46,13 @@ public interface CompanyStockTransactionsData {
                                                 TradingDataAttribute[] attributes,
                                                 int numOfRows) throws DataAccessException;
 
+    /**
+     * returns available OHLC data's days range for symbol
+     * @param symbol stock id
+     * @return two element array
+     * startDay = date[0], endDay = date[1]
+     */
+    public Date[] getOHLCDataDaysRange(String symbol);
 
     /**
      *
@@ -57,6 +64,15 @@ public interface CompanyStockTransactionsData {
      */
     public HashMap<Date, Float> getTradingData (String symbol, Date startingTime,
                                             int numOfRows) throws DataAccessException;
+
+    /**
+     * returns available ticker data's days range for symbol
+     * @param symbol stock id
+     * @return two element array
+     * startDay = date[0], endDay = date[1]
+     */
+    public Date[] getTradingDataDaysRange(String symbol);
+
 
 
     /*Configuration related*/
