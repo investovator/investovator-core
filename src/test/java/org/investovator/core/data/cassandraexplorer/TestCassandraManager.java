@@ -113,7 +113,7 @@ public class TestCassandraManager {
     }
 
     @Before
-    public void start() throws InterruptedException, TTransportException,
+    public void setEnvironment() throws InterruptedException, TTransportException,
             org.apache.cassandra.exceptions.ConfigurationException, IOException, ConfigurationException {
 
         ConfigLoader.loadProperties("src" + File.separator + "test" + File.separator
@@ -122,7 +122,7 @@ public class TestCassandraManager {
     }
 
     @After
-    public void stop(){
+    public void destroy(){
         EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
     }
 }
