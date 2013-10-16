@@ -21,6 +21,7 @@ package org.investovator.core.data.api;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.commons.utils.Portfolio;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -38,4 +39,6 @@ public interface UserData {
     public HashMap<String, String> getUserDetails(String username) throws DataAccessException;
 
     public Portfolio getUserPortfolio(String username) throws DataAccessException;
+
+    public ArrayList<String> getWatchList(String username);
 }

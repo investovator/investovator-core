@@ -21,6 +21,7 @@ package org.investovator.core.data.api;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.commons.utils.Portfolio;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -52,6 +53,11 @@ public class UserDataImpl implements UserData{
     public Portfolio getUserPortfolio(String username)
             throws DataAccessException {
         return null; //TODO
+    }
+
+    @Override
+    public ArrayList<String> getWatchList(String username) {
+        return null;  //TODO
     }
 
 }
