@@ -32,15 +32,17 @@ public interface CassandraManager {
     public static final String USERNAME_KEY = "org.investovator.core.data.cassandra.username";
     public static final String PASSWORD_KEY = "org.investovator.core.data.cassandra.password";
 
+    public static final String KEYSPACE = "investovator_data";
 
-    public void importCSV(String keyspace, String columnFamily,
+
+    public void importCSV(String columnFamilyName, String rowKey, String dateFormat,
                           FileInputStream fileInputStream) throws DataAccessException;
 
-    public void importXls(String keyspace, String columnFamily,
+    public void importXls(String columnFamilyName, String rowKey, String dateFormat,
                           FileInputStream fileInputStream) throws DataAccessException;
 
-    public void truncateColumnFamily(String keyspace, String columnFamily) throws DataAccessException;
+    public void truncateColumnFamily(String columnFamily) throws DataAccessException;
 
     @Deprecated
-    public void dropColumnFamily(String keyspace, String columnFamily) throws DataAccessException;
+    public void dropColumnFamily(String columnFamily) throws DataAccessException;
 }
