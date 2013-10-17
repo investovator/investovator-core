@@ -19,10 +19,14 @@
 package org.investovator.core.data.cassandraexplorer;
 
 import au.com.bytecode.opencsv.CSVReader;
+import me.prettyprint.cassandra.serializers.DateSerializer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
+import me.prettyprint.hector.api.beans.HColumn;
+import me.prettyprint.hector.api.beans.HSuperColumn;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
+import me.prettyprint.hector.api.ddl.ColumnType;
 import me.prettyprint.hector.api.ddl.ComparatorType;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
@@ -31,6 +35,9 @@ import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * @author rajith
@@ -39,7 +46,6 @@ import java.io.InputStreamReader;
 public class CassandraManagerImpl implements CassandraManager{
 
     private static final String CHAR_ENCODING = "UTF8";
-
     private static volatile CassandraManagerImpl cassandraManager;
 
     public static CassandraManagerImpl getCassandraManager() {
@@ -55,36 +61,43 @@ public class CassandraManagerImpl implements CassandraManager{
     private CassandraManagerImpl(){}
 
     @Override
-    public void importCSV(String keyspaceName, String columnFamilyName,
+    public void importCSV(String columnFamilyName, String rowKey, String dateFormat,
                           FileInputStream fileInputStream) throws DataAccessException {
 
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         try {
+
             //Since Mutator is not thread safe
             synchronized (this){
                 Cluster cluster = getClusterInitialized();
-                CassandraConnector.createKeyspaceIfNotExists(cluster, keyspaceName);
-                CassandraConnector.createColumnFmlyIfNotExists(cluster, keyspaceName, columnFamilyName);
+                CassandraConnector.createKeyspaceIfNotExists(cluster, KEYSPACE);
+                CassandraConnector.createColumnFmlyIfNotExists(cluster, KEYSPACE, columnFamilyName);
 
-                Keyspace keyspace =  HFactory.createKeyspace(keyspaceName, cluster);
-                ColumnFamilyDefinition columnFamilyDef = HFactory
-                        .createColumnFamilyDefinition(keyspaceName, columnFamilyName, ComparatorType.UTF8TYPE);
-
+                Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
+                ColumnFamilyDefinition columnFamilyDef = HFactory.createColumnFamilyDefinition(KEYSPACE,
+                        columnFamilyName, ComparatorType.UTF8TYPE);
+                columnFamilyDef.setColumnType(ColumnType.SUPER);
 
                 CSVReader reader = new CSVReader(new InputStreamReader(fileInputStream, CHAR_ENCODING));
-
                 String[] labelsColumn = reader.readNext();
 
-
                 Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
-
                 String [] data;
-                while ((data = reader.readNext()) != null) {
-                    for (int num = 1; num < labelsColumn.length; num ++){
-                        mutator.addInsertion(data[0], columnFamilyDef.getName(),
-                                HFactory.createStringColumn(labelsColumn[num], data[num]));
-                    }
-                }
 
+                while ((data = reader.readNext()) != null) {
+                    ArrayList <HColumn<String, String>> columns = new ArrayList<HColumn<String, String>>();
+                    for (int num = 1; num < labelsColumn.length; num ++){
+                        HColumn<String, String> column = HFactory.
+                                createStringColumn(labelsColumn[num], data[num]);
+                        columns.add(column);
+                    }
+
+                    HSuperColumn<Date, String, String> superColumn = HFactory
+                            .createSuperColumn(format.parse(data[0]), columns,
+                                    DateSerializer.get(), StringSerializer.get(), StringSerializer.get());
+
+                    mutator.addInsertion(rowKey, columnFamilyDef.getName(), superColumn);
+                }
                 mutator.execute();
             }
         } catch (Exception e) {
@@ -95,26 +108,26 @@ public class CassandraManagerImpl implements CassandraManager{
     }
 
     @Override
-    public void importXls(String keyspaceName, String columnFamilyName, FileInputStream fileInputStream)
-            throws DataAccessException {
+    public void importXls(String columnFamilyName, String rowKey, String dateFormat,
+                          FileInputStream fileInputStream) throws DataAccessException {
         //TODO
     }
 
     @Override
-    public void truncateColumnFamily(String keyspaceName, String columnFamily)  throws DataAccessException{
+    public void truncateColumnFamily(String columnFamilyName)  throws DataAccessException{
         Cluster cluster = getClusterInitialized();
         try {
-            CassandraConnector.truncateColumnFamily(cluster, keyspaceName, columnFamily);
+            CassandraConnector.truncateColumnFamily(cluster, KEYSPACE, columnFamilyName);
         } catch (Exception e){
             throw new DataAccessException(e);
         }
     }
 
     @Override
-    public void dropColumnFamily(String keyspaceName, String columnFamilyName) throws DataAccessException {
+    public void dropColumnFamily(String columnFamilyName) throws DataAccessException {
         Cluster cluster = getClusterInitialized();
         try {
-            CassandraConnector.dropColumnFamily(cluster, keyspaceName, columnFamilyName);
+            CassandraConnector.dropColumnFamily(cluster, KEYSPACE, columnFamilyName);
         } catch (Exception e){
             throw new DataAccessException(e);
         }

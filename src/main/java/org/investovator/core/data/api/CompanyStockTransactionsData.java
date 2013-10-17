@@ -44,10 +44,10 @@ public interface CompanyStockTransactionsData {
         public static String getString(DataType dataType){
             switch (dataType) {
                 case OHLC:
-                    return "investovator_trading_data_ohlc";
+                    return "ohlc_data";
 
                 case TICKER:
-                    return "investovator_trading_data_ticker";
+                    return "ticker_data";
             }
             return null;
         }

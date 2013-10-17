@@ -23,6 +23,7 @@ import me.prettyprint.cassandra.service.ThriftCfDef;
 import me.prettyprint.cassandra.service.ThriftKsDef;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
+import me.prettyprint.hector.api.ddl.ColumnType;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.factory.HFactory;
 
@@ -74,6 +75,7 @@ public class CassandraConnector {
                                                    String columnFamily){
         if(!isColumnFamilyAvailable(cluster, keyspace, columnFamily)){
             ColumnFamilyDefinition familyDefinition = new ThriftCfDef(keyspace, columnFamily);
+            familyDefinition.setColumnType(ColumnType.SUPER);
             cluster.addColumnFamily(familyDefinition, true);
         }
     }

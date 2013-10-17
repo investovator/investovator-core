@@ -18,6 +18,7 @@
 
 package org.investovator.core.data.api;
 
+import org.investovator.core.data.api.utils.Constants;
 import org.investovator.core.data.api.utils.StockTradingData;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.cassandraexplorer.CassandraManager;
@@ -70,7 +71,8 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
     @Override
     public void importCSV(DataType type, String stockId, File file) throws DataAccessException {
         try {
-            manager.importCSV(DataType.getString(type), stockId, new FileInputStream(file));
+            manager.importCSV(DataType.getString(type), stockId,
+                    Constants.OHLC_DATE_FORMAT ,new FileInputStream(file));
         } catch (FileNotFoundException e) {
             throw new DataAccessException(e);
         }
@@ -91,7 +93,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      */
     @Override
     public void clearTradingData(DataType type, String stockId) throws DataAccessException {
-        manager.truncateColumnFamily(DataType.getString(type), stockId);
+        //TODO
     }
 
     /**
@@ -100,6 +102,6 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      */
     @Override
     public void clearAllTradingData(DataType type) throws DataAccessException {
-        //TODO
+        manager.truncateColumnFamily(DataType.getString(type));
     }
 }
