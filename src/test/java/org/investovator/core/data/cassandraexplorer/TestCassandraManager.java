@@ -60,13 +60,15 @@ public class TestCassandraManager {
     private static String PASSWORD = "admin";
     private static String URL = "localhost:9171";
 
+    private static String RESOURCE_DIR_PATH = "src" + File.separator + "test"
+            + File.separator + "resources" + File.separator;
+
     @Test
     public void testImportCSV() throws DataAccessException, FileNotFoundException {
 
         CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
 
-        File file = new File("src" + File.separator + "test" + File.separator + "resources"
-                + File.separator + "sampath_daily_test.csv");
+        File file = new File(RESOURCE_DIR_PATH + "sampath_daily_test.csv");
         cassandraManager
                 .importCSV(COLUMNFAMILY, ROWKEY, Constants.OHLC_DATE_FORMAT, new FileInputStream(file));
 
@@ -91,8 +93,7 @@ public class TestCassandraManager {
     @Test
     public void testTruncateColumnFamily() throws DataAccessException, FileNotFoundException {
 
-        File file = new File("src" + File.separator + "test" + File.separator + "resources"
-                + File.separator + "sampath_daily_test.csv");
+        File file = new File(RESOURCE_DIR_PATH + "sampath_daily_test.csv");
 
         CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
         cassandraManager
@@ -121,8 +122,7 @@ public class TestCassandraManager {
     public void setEnvironment() throws InterruptedException, TTransportException,
             org.apache.cassandra.exceptions.ConfigurationException, IOException, ConfigurationException {
 
-        ConfigLoader.loadProperties("src" + File.separator + "test" + File.separator
-                + "resources" + File.separator + "resource.properties");
+        ConfigLoader.loadProperties(RESOURCE_DIR_PATH + "resource.properties");
         EmbeddedCassandraServerHelper.startEmbeddedCassandra();
     }
 
