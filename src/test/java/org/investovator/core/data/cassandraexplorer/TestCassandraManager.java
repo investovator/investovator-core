@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -54,6 +53,7 @@ import static org.junit.Assert.assertTrue;
 public class TestCassandraManager {
 
     private static String COLUMNFAMILY = "SAMP";
+    private static String KEYSPACE = "test_investovator";
     private static String USERNAME = "admin";
     private static String PASSWORD = "admin";
     private static String URL = "localhost:9171";
@@ -65,14 +65,14 @@ public class TestCassandraManager {
 
         File file = new File("src" + File.separator + "test" + File.separator + "resources"
                 + File.separator + "sampath_daily_test.csv");
-        cassandraManager.importCSV(COLUMNFAMILY, new FileInputStream(file));
+        cassandraManager.importCSV(KEYSPACE, COLUMNFAMILY, new FileInputStream(file));
 
         Cluster cluster = CassandraConnector.createCluster(USERNAME, PASSWORD, URL);
 
-        assertTrue(CassandraConnector.isKeyspaceAvailable(cluster, CassandraManager.KEYSPACE));
-        assertTrue(CassandraConnector.isColumnFamilyAvailable(cluster, CassandraManager.KEYSPACE, COLUMNFAMILY));
+        assertTrue(CassandraConnector.isKeyspaceAvailable(cluster, KEYSPACE));
+        assertTrue(CassandraConnector.isColumnFamilyAvailable(cluster, KEYSPACE, COLUMNFAMILY));
 
-        Keyspace keyspace =  HFactory.createKeyspace(CassandraManager.KEYSPACE, cluster);
+        Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
         ColumnFamilyTemplate<String, String> template =
                 new ThriftColumnFamilyTemplate<String, String> (keyspace,COLUMNFAMILY,
                         StringSerializer.get(),StringSerializer.get());
@@ -91,19 +91,19 @@ public class TestCassandraManager {
                 + File.separator + "sampath_daily_test.csv");
 
         CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
-        cassandraManager.importCSV(COLUMNFAMILY, new FileInputStream(file));
+        cassandraManager.importCSV(KEYSPACE, COLUMNFAMILY, new FileInputStream(file));
 
         Cluster cluster = CassandraConnector.createCluster(USERNAME, PASSWORD, URL);
 
-        assertTrue(CassandraConnector.isKeyspaceAvailable(cluster, CassandraManager.KEYSPACE));
+        assertTrue(CassandraConnector.isKeyspaceAvailable(cluster, KEYSPACE));
         assertTrue(CassandraConnector
-                .isColumnFamilyAvailable(cluster, CassandraManager.KEYSPACE, COLUMNFAMILY));
+                .isColumnFamilyAvailable(cluster, KEYSPACE, COLUMNFAMILY));
 
-        cassandraManager.truncateColumnFamily(COLUMNFAMILY);
+        cassandraManager.truncateColumnFamily(KEYSPACE, COLUMNFAMILY);
         assertTrue(CassandraConnector
-                .isColumnFamilyAvailable(cluster, CassandraManager.KEYSPACE, COLUMNFAMILY));
+                .isColumnFamilyAvailable(cluster, KEYSPACE, COLUMNFAMILY));
 
-        Keyspace keyspace =  HFactory.createKeyspace(CassandraManager.KEYSPACE, cluster);
+        Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
         ColumnFamilyTemplate<String, String> template =
                 new ThriftColumnFamilyTemplate<String, String> (keyspace,COLUMNFAMILY,
                         StringSerializer.get(),StringSerializer.get());

@@ -55,18 +55,19 @@ public class CassandraManagerImpl implements CassandraManager{
     private CassandraManagerImpl(){}
 
     @Override
-    public void importCSV(String columnFamily, FileInputStream fileInputStream) throws DataAccessException {
+    public void importCSV(String keyspaceName, String columnFamilyName,
+                          FileInputStream fileInputStream) throws DataAccessException {
 
         try {
             //Since Mutator is not thread safe
             synchronized (this){
                 Cluster cluster = getClusterInitialized();
-                CassandraConnector.createKeyspaceIfNotExists(cluster, KEYSPACE);
-                CassandraConnector.createColumnFmlyIfNotExists(cluster, KEYSPACE, columnFamily);
+                CassandraConnector.createKeyspaceIfNotExists(cluster, keyspaceName);
+                CassandraConnector.createColumnFmlyIfNotExists(cluster, keyspaceName, columnFamilyName);
 
-                Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
+                Keyspace keyspace =  HFactory.createKeyspace(keyspaceName, cluster);
                 ColumnFamilyDefinition columnFamilyDef = HFactory
-                        .createColumnFamilyDefinition(KEYSPACE, columnFamily, ComparatorType.UTF8TYPE);
+                        .createColumnFamilyDefinition(keyspaceName, columnFamilyName, ComparatorType.UTF8TYPE);
 
 
                 CSVReader reader = new CSVReader(new InputStreamReader(fileInputStream, CHAR_ENCODING));
@@ -94,26 +95,26 @@ public class CassandraManagerImpl implements CassandraManager{
     }
 
     @Override
-    public void importXls(String columnFamily, FileInputStream fileInputStream)
+    public void importXls(String keyspaceName, String columnFamilyName, FileInputStream fileInputStream)
             throws DataAccessException {
         //TODO
     }
 
     @Override
-    public void truncateColumnFamily(String columnFamily)  throws DataAccessException{
+    public void truncateColumnFamily(String keyspaceName, String columnFamily)  throws DataAccessException{
         Cluster cluster = getClusterInitialized();
         try {
-            CassandraConnector.truncateColumnFamily(cluster, KEYSPACE, columnFamily);
+            CassandraConnector.truncateColumnFamily(cluster, keyspaceName, columnFamily);
         } catch (Exception e){
             throw new DataAccessException(e);
         }
     }
 
     @Override
-    public void dropColumnFamily(String columnFamily) throws DataAccessException {
+    public void dropColumnFamily(String keyspaceName, String columnFamilyName) throws DataAccessException {
         Cluster cluster = getClusterInitialized();
         try {
-            CassandraConnector.dropColumnFamily(cluster, KEYSPACE, columnFamily);
+            CassandraConnector.dropColumnFamily(cluster, keyspaceName, columnFamilyName);
         } catch (Exception e){
             throw new DataAccessException(e);
         }

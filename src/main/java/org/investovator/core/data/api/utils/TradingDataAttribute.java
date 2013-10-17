@@ -24,6 +24,7 @@ package org.investovator.core.data.api.utils;
  */
 public enum TradingDataAttribute {
 
+    //for OHLC data
     DAY,
     HIGH_PRICE,
     LOW_PRICE,
@@ -31,6 +32,9 @@ public enum TradingDataAttribute {
     SHARES,
     TURNOVER,
     TRADES,
+
+    //for ticker data
+    TIME,
     PRICE;
 
     /*This should be removed outside this class later*/
@@ -51,8 +55,10 @@ public enum TradingDataAttribute {
                 return "Trades(No.)";
             case DAY:
                 return "Day";
-            case PRICE:         //for ticker data
+            case PRICE:
                 return "Price";
+            case TIME:
+                return "Time";
         }
         return null;
     }

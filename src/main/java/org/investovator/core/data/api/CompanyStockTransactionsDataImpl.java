@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * @author rajith
@@ -47,9 +46,9 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public StockTradingData getTradingDataOHLC (String symbol,  Date startingDate,
-                                                TradingDataAttribute[] attributes,
-                                                   int numOfRows) throws DataAccessException{
+    public StockTradingData getTradingData (DataType type, String symbol,  Date startingDate,
+                                            TradingDataAttribute[] attributes,
+                                            int numOfRows) throws DataAccessException{
 
         return null; //TODO
     }
@@ -59,7 +58,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public Date[] getOHLCDataDaysRange(String symbol) {
+    public Date[] getDataDaysRange(DataType type, String symbol) {
         return new Date[0];  //TODO
     }
 
@@ -68,28 +67,9 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public HashMap<Date, Float> getTradingData(String symbol, Date startingTime,
-                                               int numOfRows) throws DataAccessException{
-        return null; //TODO
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    public Date[] getTradingDataDaysRange(String symbol) {
-        return new Date[0];  //TODO
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    public void importCSV(String stockId, File file) throws DataAccessException {
+    public void importCSV(DataType type, String stockId, File file) throws DataAccessException {
         try {
-            manager.importCSV(stockId, new FileInputStream(file));
+            manager.importCSV(DataType.getString(type), stockId, new FileInputStream(file));
         } catch (FileNotFoundException e) {
             throw new DataAccessException(e);
         }
@@ -100,7 +80,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public void importXls(String stockId, File file) throws DataAccessException {
+    public void importXls(DataType type, String stockId, File file) throws DataAccessException {
         //TODO
     }
 
@@ -109,8 +89,8 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public void clearTradingData(String stockId) throws DataAccessException {
-        manager.truncateColumnFamily(stockId);
+    public void clearTradingData(DataType type, String stockId) throws DataAccessException {
+        manager.truncateColumnFamily(DataType.getString(type), stockId);
     }
 
     /**
@@ -118,7 +98,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public void clearAllTradingData() throws DataAccessException {
+    public void clearAllTradingData(DataType type) throws DataAccessException {
         //TODO
     }
 }
