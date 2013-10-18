@@ -45,4 +45,6 @@ public interface CassandraManager {
 
     @Deprecated
     public void dropColumnFamily(String columnFamily) throws DataAccessException;
+
+    //TODO truncate stock data
 }
