@@ -22,6 +22,7 @@ package org.investovator.core.data.api;
 import org.investovator.core.data.api.utils.StockTradingData;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 
 import java.io.File;
 import java.util.Date;
@@ -61,11 +62,12 @@ public interface CompanyStockTransactionsData {
      *                   for ticker data valid trading attributes are TIME & PRICE only
      * @param numOfRows Required num of rows
      * @return {@link StockTradingData}
-     * @throws DataAccessException
+     * @throws DataAccessException,
+     * @throws DataNotFoundException in case of only the requested data are not found.
      */
     public StockTradingData getTradingData (DataType type, String symbol,  Date startingDate,
-                                            TradingDataAttribute[] attributes,
-                                            int numOfRows) throws DataAccessException;
+                                            TradingDataAttribute[] attributes,int numOfRows)
+            throws DataNotFoundException ,DataAccessException;
 
     /**
      * returns available OHLC data's days range for symbol

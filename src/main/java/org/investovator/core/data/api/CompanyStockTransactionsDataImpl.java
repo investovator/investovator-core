@@ -23,6 +23,7 @@ import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.cassandraexplorer.CassandraManager;
 import org.investovator.core.data.cassandraexplorer.CassandraManagerImpl;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,8 +48,8 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      */
     @Override
     public StockTradingData getTradingData (DataType type, String symbol,  Date startingDate,
-                                            TradingDataAttribute[] attributes,
-                                            int numOfRows) throws DataAccessException{
+                                            TradingDataAttribute[] attributes, int numOfRows)
+            throws DataNotFoundException, DataAccessException{
 
         return null; //TODO
     }
