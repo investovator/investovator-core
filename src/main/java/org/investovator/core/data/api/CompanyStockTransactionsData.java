@@ -59,6 +59,7 @@ public interface CompanyStockTransactionsData {
      * @param type either OHLC or Ticker
      * @param symbol StockId
      * @param startingDate Required data starting date
+     * @param endDate upper limit of date
      * @param attributes Required attributes;
      *                   for ticker data valid trading attributes are TIME & PRICE only
      * @param numOfRows Required num of rows
