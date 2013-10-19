@@ -32,6 +32,10 @@ public enum TradingDataAttribute {
     SHARES,
     TURNOVER,
     TRADES,
+    DATE_HIGH,
+    DATE_LOW,
+    DAYS_TRADED,
+    LAST_TRADED,
 
     //for ticker data
     TIME,
@@ -55,10 +59,30 @@ public enum TradingDataAttribute {
                 return "Trades(No.)";
             case DAY:
                 return "Day";
+            case DATE_HIGH:
+                return "Date High";
+            case DATE_LOW:
+                return "Date Low";
+            case DAYS_TRADED:
+                return "Days Traded";
+            case LAST_TRADED:
+                return "Last Traded";
+
             case PRICE:
                 return "Price";
             case TIME:
                 return "Time";
+        }
+        return null;
+    }
+
+    public static TradingDataAttribute fromString(String value) {
+        if (value != null) {
+            for (TradingDataAttribute attribute : TradingDataAttribute.values()) {
+                if (value.equalsIgnoreCase(TradingDataAttribute.getAttribName(attribute))) {
+                    return attribute;
+                }
+            }
         }
         return null;
     }

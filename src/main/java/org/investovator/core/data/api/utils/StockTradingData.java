@@ -18,6 +18,7 @@
 
 package org.investovator.core.data.api.utils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
@@ -28,15 +29,15 @@ import java.util.Set;
  */
 public interface StockTradingData {
 
-    public TradingDataAttribute[] getAttributes();
+    public ArrayList<TradingDataAttribute> getAttributes();
 
-    public HashMap<Date, HashMap<TradingDataAttribute, Float>> getTradingData();
+    public HashMap<Date, HashMap<TradingDataAttribute, String>> getTradingData();
 
-    public HashMap<TradingDataAttribute, Float> getTradingDataEntry(Date date);
+    public HashMap<TradingDataAttribute, String> getTradingDataEntry(Date date);
 
     public Set<Date> getDates();
 
-    public Float getTradingDataAttributeValue(Date date, TradingDataAttribute attribute);
+    public String getTradingDataAttributeValue(Date date, TradingDataAttribute attribute);
 
     public String getStockId();
 }

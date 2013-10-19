@@ -20,6 +20,7 @@ package org.investovator.core.data.api;
 
 import org.investovator.core.data.api.utils.Constants;
 import org.investovator.core.data.api.utils.StockTradingData;
+import org.investovator.core.data.api.utils.StockTradingDataImpl;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.cassandraexplorer.CassandraManager;
 import org.investovator.core.data.cassandraexplorer.CassandraManagerImpl;
@@ -29,7 +30,9 @@ import org.investovator.core.data.exeptions.DataNotFoundException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author rajith
@@ -48,11 +51,12 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public StockTradingData getTradingData (DataType type, String symbol,  Date startingDate,
-                                            TradingDataAttribute[] attributes, int numOfRows)
+    public StockTradingData getTradingData (DataType type, String symbol,  Date startingDate, Date endDate,
+                                            int numOfRows, ArrayList<TradingDataAttribute> attributes)
             throws DataNotFoundException, DataAccessException{
-
-        return null; //TODO
+        HashMap<Date, HashMap<TradingDataAttribute, String>> data =
+                manager.getData(DataType.getString(type), symbol, startingDate, endDate, numOfRows, attributes);
+        return new StockTradingDataImpl(symbol, attributes, data);
     }
 
     /**
@@ -71,8 +75,13 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
     @Override
     public void importCSV(DataType type, String stockId, File file) throws DataAccessException {
         try {
-            manager.importCSV(DataType.getString(type), stockId,
-                    Constants.OHLC_DATE_FORMAT ,new FileInputStream(file));
+            if(type == DataType.OHLC){
+                manager.importCSV(DataType.getString(type), stockId,
+                        Constants.OHLC_DATE_FORMAT ,new FileInputStream(file));
+            } else {
+                manager.importCSV(DataType.getString(type), stockId,
+                        Constants.TICKER_DATE_FORMAT ,new FileInputStream(file));
+            }
         } catch (FileNotFoundException e) {
             throw new DataAccessException(e);
         }

@@ -8,8 +8,8 @@ package org.investovator.core.data.exeptions;
  */
 public class DataNotFoundException extends Exception{
 
-    public DataNotFoundException(String message) {
-        super(message);
+    public DataNotFoundException() {
+        super("Requested data not found");         //TODO give more info
     }
 
     public DataNotFoundException(Exception e){

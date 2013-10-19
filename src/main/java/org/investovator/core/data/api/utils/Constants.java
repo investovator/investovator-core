@@ -25,5 +25,6 @@ package org.investovator.core.data.api.utils;
 public class Constants {
 
     public static final String OHLC_DATE_FORMAT = "MM/dd/yyyy";
+    public static final String TICKER_DATE_FORMAT = "MM/dd/yyyy HH:MM:SS";
 
 }

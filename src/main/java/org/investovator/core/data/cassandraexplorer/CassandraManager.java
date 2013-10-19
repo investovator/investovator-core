@@ -18,9 +18,14 @@
 
 package org.investovator.core.data.cassandraexplorer;
 
+import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author rajith
@@ -45,6 +50,12 @@ public interface CassandraManager {
 
     @Deprecated
     public void dropColumnFamily(String columnFamily) throws DataAccessException;
+
+    public HashMap<Date, HashMap<TradingDataAttribute, String>> getData(String dataType, String symbol,
+                                                                        Date startingDate, Date endDate, int numOfRows,
+                                                                        ArrayList<TradingDataAttribute> attributes)
+
+            throws DataAccessException, DataNotFoundException;
 
     //TODO truncate stock data
 }

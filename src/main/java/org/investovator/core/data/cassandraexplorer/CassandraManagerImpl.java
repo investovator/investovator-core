@@ -25,19 +25,21 @@ import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.HSuperColumn;
+import me.prettyprint.hector.api.beans.SuperSlice;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
 import me.prettyprint.hector.api.ddl.ColumnType;
 import me.prettyprint.hector.api.ddl.ComparatorType;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
+import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.cassandraexplorer.utils.CassandraConnector;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @author rajith
@@ -88,12 +90,12 @@ public class CassandraManagerImpl implements CassandraManager{
                     ArrayList <HColumn<String, String>> columns = new ArrayList<HColumn<String, String>>();
                     for (int num = 1; num < labelsColumn.length; num ++){
                         HColumn<String, String> column = HFactory.
-                                createStringColumn(labelsColumn[num], data[num]);
+                                createStringColumn((labelsColumn[num]).trim(), (data[num]).trim());
                         columns.add(column);
                     }
 
                     HSuperColumn<Date, String, String> superColumn = HFactory
-                            .createSuperColumn(format.parse(data[0]), columns,
+                            .createSuperColumn(format.parse((data[0]).trim()), columns,
                                     DateSerializer.get(), StringSerializer.get(), StringSerializer.get());
 
                     mutator.addInsertion(rowKey, columnFamilyDef.getName(), superColumn);
@@ -131,6 +133,51 @@ public class CassandraManagerImpl implements CassandraManager{
         } catch (Exception e){
             throw new DataAccessException(e);
         }
+    }
+
+    @Override
+    public HashMap<Date, HashMap<TradingDataAttribute, String>> getData(String dataType, String symbol,
+                                                                        Date startingDate, Date endDate, int numOfRows,
+                                                                        ArrayList<TradingDataAttribute> attributes)
+            throws DataAccessException, DataNotFoundException {
+
+
+        Cluster cluster = getClusterInitialized();
+        Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
+
+        if(CassandraConnector.isColumnFamilyAvailable(cluster, KEYSPACE, dataType)){
+            SuperSlice<Date, String, String> result = HFactory.createSuperSliceQuery(keyspace,
+                    StringSerializer.get(), DateSerializer.get(), StringSerializer.get(),
+                    StringSerializer.get())
+                    .setColumnFamily(dataType)
+                    .setKey(symbol)
+                    .setRange(startingDate, endDate, false, numOfRows)
+                    .execute()
+                    .get();
+
+            List<HSuperColumn<Date, String, String>> superColumns = result.getSuperColumns();
+            LinkedHashMap<Date, HashMap<TradingDataAttribute, String>> data =
+                    new LinkedHashMap<Date, HashMap<TradingDataAttribute, String>>();
+
+            for (HSuperColumn superColumn : superColumns){
+
+                List<HColumn> hColumns = superColumn.getColumns();
+                HashMap<TradingDataAttribute, String> dayTradingInfo = new HashMap<TradingDataAttribute, String>();
+                for (HColumn hColumn : hColumns){
+
+                    TradingDataAttribute cassAttrib = TradingDataAttribute.fromString((String) hColumn.getName());
+                    if(attributes.contains(cassAttrib)){
+                        dayTradingInfo.put(cassAttrib,(String) hColumn.getValue());
+                    }
+                }
+                data.put((Date)superColumn.getName(),dayTradingInfo);
+
+            }
+
+            return data;
+        } else
+            throw new DataNotFoundException();
+
     }
 
     private Cluster getClusterInitialized() {

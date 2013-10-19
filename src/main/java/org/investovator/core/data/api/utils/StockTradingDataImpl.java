@@ -18,6 +18,7 @@
 
 package org.investovator.core.data.api.utils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
@@ -29,28 +30,28 @@ import java.util.Set;
 public class StockTradingDataImpl implements StockTradingData{
 
     private String stockId;
-    private TradingDataAttribute[] attributes;
-    private HashMap<Date, HashMap<TradingDataAttribute, Float>> marketData;
+    private ArrayList<TradingDataAttribute> attributes;
+    private HashMap<Date, HashMap<TradingDataAttribute, String>> marketData;
 
-    public StockTradingDataImpl(String stockId, TradingDataAttribute[] attributes,
-                       HashMap<Date, HashMap<TradingDataAttribute, Float>> marketData) {
+    public StockTradingDataImpl(String stockId, ArrayList<TradingDataAttribute> attributes,
+                       HashMap<Date, HashMap<TradingDataAttribute, String>> marketData) {
         this.stockId = stockId;
         this.attributes = attributes;
         this.marketData = marketData;
     }
 
     @Override
-    public TradingDataAttribute[] getAttributes() {
+    public ArrayList<TradingDataAttribute> getAttributes() {
         return attributes;
     }
 
     @Override
-    public HashMap<Date, HashMap<TradingDataAttribute, Float>> getTradingData() {
+    public HashMap<Date, HashMap<TradingDataAttribute, String>> getTradingData() {
         return marketData;
     }
 
     @Override
-    public HashMap<TradingDataAttribute, Float> getTradingDataEntry(Date date){
+    public HashMap<TradingDataAttribute, String> getTradingDataEntry(Date date){
         return marketData.get(date);
     }
 
@@ -60,7 +61,7 @@ public class StockTradingDataImpl implements StockTradingData{
     }
 
     @Override
-    public Float getTradingDataAttributeValue(Date date, TradingDataAttribute attribute){
+    public String getTradingDataAttributeValue(Date date, TradingDataAttribute attribute){
         return marketData.get(date).get(attribute);
     }
 

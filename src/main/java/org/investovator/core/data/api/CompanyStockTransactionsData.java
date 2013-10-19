@@ -25,6 +25,7 @@ import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.exeptions.DataNotFoundException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -65,8 +66,8 @@ public interface CompanyStockTransactionsData {
      * @throws DataAccessException,
      * @throws DataNotFoundException in case of only the requested data are not found.
      */
-    public StockTradingData getTradingData (DataType type, String symbol,  Date startingDate,
-                                            TradingDataAttribute[] attributes,int numOfRows)
+    public StockTradingData getTradingData (DataType type, String symbol,  Date startingDate, Date endDate,
+                                            int numOfRows, ArrayList<TradingDataAttribute> attributes)
             throws DataNotFoundException ,DataAccessException;
 
     /**
@@ -75,6 +76,7 @@ public interface CompanyStockTransactionsData {
      * @param symbol stock id
      * @return two element array
      * startDay = date[0], endDay = date[1]
+     * @throws DataAccessException
      */
     public Date[] getDataDaysRange(DataType type, String symbol) throws DataAccessException;
 
