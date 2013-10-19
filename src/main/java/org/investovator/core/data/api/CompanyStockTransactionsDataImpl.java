@@ -65,7 +65,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      */
     @Override
     public Date[] getDataDaysRange(DataType type, String symbol) throws DataAccessException {
-        return new Date[0];  //TODO
+        return manager.getKeyRange(DataType.getString(type), symbol);
     }
 
     /**
@@ -77,10 +77,10 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
         try {
             if(type == DataType.OHLC){
                 manager.importCSV(DataType.getString(type), stockId,
-                        Constants.OHLC_DATE_FORMAT ,new FileInputStream(file));
+                        Constants.OHLC_DATE_FORMAT, new FileInputStream(file));
             } else {
                 manager.importCSV(DataType.getString(type), stockId,
-                        Constants.TICKER_DATE_FORMAT ,new FileInputStream(file));
+                        Constants.TICKER_DATE_FORMAT, new FileInputStream(file));
             }
         } catch (FileNotFoundException e) {
             throw new DataAccessException(e);

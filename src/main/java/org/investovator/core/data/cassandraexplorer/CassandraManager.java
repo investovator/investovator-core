@@ -54,8 +54,9 @@ public interface CassandraManager {
     public HashMap<Date, HashMap<TradingDataAttribute, String>> getData(String dataType, String symbol,
                                                                         Date startingDate, Date endDate, int numOfRows,
                                                                         ArrayList<TradingDataAttribute> attributes)
-
             throws DataAccessException, DataNotFoundException;
+
+    public Date[] getKeyRange(String dataType, String symbol);
 
     //TODO truncate stock data
 }

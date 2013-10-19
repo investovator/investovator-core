@@ -180,6 +180,11 @@ public class CassandraManagerImpl implements CassandraManager{
 
     }
 
+    @Override
+    public Date[] getKeyRange(String dataType, String symbol) {
+        return new Date[0];  //TODO
+    }
+
     private Cluster getClusterInitialized() {
         String username = System.getProperty(USERNAME_KEY);
         String password = System.getProperty(PASSWORD_KEY);
