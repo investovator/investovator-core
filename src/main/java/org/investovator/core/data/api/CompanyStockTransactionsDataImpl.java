@@ -60,7 +60,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public Date[] getDataDaysRange(DataType type, String symbol) {
+    public Date[] getDataDaysRange(DataType type, String symbol) throws DataAccessException {
         return new Date[0];  //TODO
     }
 

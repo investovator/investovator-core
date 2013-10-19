@@ -76,7 +76,7 @@ public interface CompanyStockTransactionsData {
      * @return two element array
      * startDay = date[0], endDay = date[1]
      */
-    public Date[] getDataDaysRange(DataType type, String symbol);
+    public Date[] getDataDaysRange(DataType type, String symbol) throws DataAccessException;
 
 
     /*Configuration related*/
