@@ -21,6 +21,8 @@ package org.investovator.core.data.cassandraexplorer;
 import au.com.bytecode.opencsv.CSVReader;
 import me.prettyprint.cassandra.serializers.DateSerializer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
+import me.prettyprint.cassandra.service.template.SuperCfTemplate;
+import me.prettyprint.cassandra.service.template.ThriftSuperCfTemplate;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.HColumn;
@@ -120,6 +122,21 @@ public class CassandraManagerImpl implements CassandraManager{
         Cluster cluster = getClusterInitialized();
         try {
             CassandraConnector.truncateColumnFamily(cluster, KEYSPACE, columnFamilyName);
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public void deleteRow(String columnFamily, String rowKey) throws DataAccessException {
+        try {
+            Cluster cluster = getClusterInitialized();
+            Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
+            SuperCfTemplate<String, Date, String> superCfTemplate =
+                    new ThriftSuperCfTemplate<String, Date, String>(keyspace, columnFamily,
+                            StringSerializer.get(), DateSerializer.get(), StringSerializer.get());
+
+            superCfTemplate.deleteRow(rowKey);
         } catch (Exception e){
             throw new DataAccessException(e);
         }

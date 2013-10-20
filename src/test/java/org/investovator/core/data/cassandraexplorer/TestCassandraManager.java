@@ -19,10 +19,9 @@
 package org.investovator.core.data.cassandraexplorer;
 
 
+import me.prettyprint.cassandra.serializers.DateSerializer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
-import me.prettyprint.cassandra.service.template.ColumnFamilyResult;
-import me.prettyprint.cassandra.service.template.ColumnFamilyTemplate;
-import me.prettyprint.cassandra.service.template.ThriftColumnFamilyTemplate;
+import me.prettyprint.cassandra.service.template.*;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.factory.HFactory;
@@ -124,6 +123,26 @@ public class TestCassandraManager {
 
         ColumnFamilyResult<String, String> res = template.queryColumns(ROWKEY1);
         assertFalse(res.hasResults());
+    }
+
+    @Test
+    public void testDeleteRow() throws FileNotFoundException, DataAccessException {
+
+        File file = new File(RESOURCE_DIR_PATH + FILENAME);
+        CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
+        cassandraManager.importCSV(COLUMNFAMILY, ROWKEY1, OHLC_DATE_FORMAT, new FileInputStream(file));
+
+        Cluster cluster = CassandraConnector.createCluster(USERNAME, PASSWORD, URL);
+        Keyspace keyspace =  HFactory.createKeyspace(CassandraManager.KEYSPACE, cluster);
+        SuperCfTemplate<String, Date, String> superCfTemplate =
+                new ThriftSuperCfTemplate<String, Date, String>(keyspace, COLUMNFAMILY,
+                        StringSerializer.get(), DateSerializer.get(), StringSerializer.get());
+
+        assertTrue(((superCfTemplate.querySuperColumns(ROWKEY1)).getSuperColumns()).size() > 0);
+
+        cassandraManager.deleteRow(COLUMNFAMILY, ROWKEY1);
+
+        assertTrue(((superCfTemplate.querySuperColumns(ROWKEY1)).getSuperColumns()).size() == 0);
     }
 
     @Test

@@ -48,6 +48,8 @@ public interface CassandraManager {
 
     public void truncateColumnFamily(String columnFamily) throws DataAccessException;
 
+    public void deleteRow(String columnFamily, String rowKey) throws DataAccessException;
+
     @Deprecated
     public void dropColumnFamily(String columnFamily) throws DataAccessException;
 

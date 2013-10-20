@@ -102,7 +102,7 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      */
     @Override
     public void clearTradingData(DataType type, String stockId) throws DataAccessException {
-        //TODO
+        manager.deleteRow(DataType.getString(type), stockId);
     }
 
     /**
