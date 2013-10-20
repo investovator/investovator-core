@@ -34,7 +34,6 @@ import org.investovator.core.data.cassandraexplorer.utils.CassandraConnector;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.exeptions.DataNotFoundException;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -93,8 +92,8 @@ public class TestCassandraManager {
         ColumnFamilyResult<String, String> res = template.queryColumns(ROWKEY1);
         Collection<String> resCollection =res.getColumnNames();
 
-        Assert.assertTrue(resCollection
-                .contains(TradingDataAttribute.getAttribName(TradingDataAttribute.HIGH_PRICE)));
+        assertTrue(resCollection.contains
+                (TradingDataAttribute.getAttribName(TradingDataAttribute.HIGH_PRICE)));
     }
 
     @Test
