@@ -159,19 +159,18 @@ public class CassandraManagerImpl implements CassandraManager{
             if(superColumns.size() > 0){
 
                 LinkedHashMap<Date, HashMap<TradingDataAttribute, String>> data = new LinkedHashMap<Date, HashMap<TradingDataAttribute, String>>();
-                for (HSuperColumn superColumn : superColumns){
+                for (HSuperColumn<Date, String, String> superColumn : superColumns){
 
-                    List<HColumn> hColumns = superColumn.getColumns();
+                    List<HColumn<String, String>> hColumns = superColumn.getColumns();
                     HashMap<TradingDataAttribute, String> dayTradingInfo = new HashMap<TradingDataAttribute, String>();
-                    for (HColumn hColumn : hColumns){
+                    for (HColumn<String, String> hColumn : hColumns){
 
-                        TradingDataAttribute cassAttrib = TradingDataAttribute.
-                                fromString((String) hColumn.getName());
+                        TradingDataAttribute cassAttrib = TradingDataAttribute.fromString(hColumn.getName());
                         if(attributes.contains(cassAttrib)){
-                            dayTradingInfo.put(cassAttrib,(String) hColumn.getValue());
+                            dayTradingInfo.put(cassAttrib, hColumn.getValue());
                         }
                     }
-                    data.put((Date)superColumn.getName(),dayTradingInfo);
+                    data.put(superColumn.getName(),dayTradingInfo);
                 }
                 return data;
             } else
