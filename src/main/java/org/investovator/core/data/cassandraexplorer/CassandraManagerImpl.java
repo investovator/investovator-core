@@ -155,27 +155,29 @@ public class CassandraManagerImpl implements CassandraManager{
                     .get();
 
             List<HSuperColumn<Date, String, String>> superColumns = result.getSuperColumns();
-            LinkedHashMap<Date, HashMap<TradingDataAttribute, String>> data =
-                    new LinkedHashMap<Date, HashMap<TradingDataAttribute, String>>();
 
-            for (HSuperColumn superColumn : superColumns){
+            if(superColumns.size() > 0){
 
-                List<HColumn> hColumns = superColumn.getColumns();
-                HashMap<TradingDataAttribute, String> dayTradingInfo = new HashMap<TradingDataAttribute, String>();
-                for (HColumn hColumn : hColumns){
+                LinkedHashMap<Date, HashMap<TradingDataAttribute, String>> data = new LinkedHashMap<Date, HashMap<TradingDataAttribute, String>>();
+                for (HSuperColumn superColumn : superColumns){
 
-                    TradingDataAttribute cassAttrib = TradingDataAttribute.fromString((String) hColumn.getName());
-                    if(attributes.contains(cassAttrib)){
-                        dayTradingInfo.put(cassAttrib,(String) hColumn.getValue());
+                    List<HColumn> hColumns = superColumn.getColumns();
+                    HashMap<TradingDataAttribute, String> dayTradingInfo = new HashMap<TradingDataAttribute, String>();
+                    for (HColumn hColumn : hColumns){
+
+                        TradingDataAttribute cassAttrib = TradingDataAttribute.
+                                fromString((String) hColumn.getName());
+                        if(attributes.contains(cassAttrib)){
+                            dayTradingInfo.put(cassAttrib,(String) hColumn.getValue());
+                        }
                     }
+                    data.put((Date)superColumn.getName(),dayTradingInfo);
                 }
-                data.put((Date)superColumn.getName(),dayTradingInfo);
-
-            }
-
-            return data;
+                return data;
+            } else
+                throw new DataNotFoundException();
         } else
-            throw new DataNotFoundException();
+            throw new DataAccessException("Requested ColumnFamily not available");
 
     }
 
