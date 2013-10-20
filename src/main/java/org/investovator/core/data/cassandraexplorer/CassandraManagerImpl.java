@@ -141,7 +141,6 @@ public class CassandraManagerImpl implements CassandraManager{
                                                                         ArrayList<TradingDataAttribute> attributes)
             throws DataAccessException, DataNotFoundException {
 
-
         Cluster cluster = getClusterInitialized();
         Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
 

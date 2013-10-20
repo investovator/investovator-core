@@ -30,7 +30,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.thrift.transport.TTransportException;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.investovator.core.configuration.ConfigLoader;
-import org.investovator.core.data.api.utils.Constants;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.cassandraexplorer.utils.CassandraConnector;
 import org.investovator.core.data.exeptions.DataAccessException;
@@ -51,9 +50,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author rajith
@@ -72,6 +69,8 @@ public class TestCassandraManager {
             + File.separator + "resources" + File.separator;
     private static String FILENAME = "sampath_daily_test.csv";
 
+    private static final String OHLC_DATE_FORMAT = "MM/dd/yyyy";
+
     @Test
     public void testImportCSV() throws DataAccessException, FileNotFoundException {
 
@@ -79,7 +78,7 @@ public class TestCassandraManager {
 
         File file = new File(RESOURCE_DIR_PATH + FILENAME);
         cassandraManager
-                .importCSV(COLUMNFAMILY, ROWKEY1, Constants.OHLC_DATE_FORMAT, new FileInputStream(file));
+                .importCSV(COLUMNFAMILY, ROWKEY1, OHLC_DATE_FORMAT, new FileInputStream(file));
 
         Cluster cluster = CassandraConnector.createCluster(USERNAME, PASSWORD, URL);
 
@@ -106,7 +105,7 @@ public class TestCassandraManager {
 
         CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
         cassandraManager
-                .importCSV(COLUMNFAMILY, ROWKEY1, Constants.OHLC_DATE_FORMAT, new FileInputStream(file));
+                .importCSV(COLUMNFAMILY, ROWKEY1, OHLC_DATE_FORMAT, new FileInputStream(file));
 
         Cluster cluster = CassandraConnector.createCluster(USERNAME, PASSWORD, URL);
 
@@ -135,7 +134,7 @@ public class TestCassandraManager {
         String ROWKEY2 = "AMPS";
 
         CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
-        cassandraManager.importCSV(COLUMNFAMILY, ROWKEY2, Constants.OHLC_DATE_FORMAT,
+        cassandraManager.importCSV(COLUMNFAMILY, ROWKEY2, OHLC_DATE_FORMAT,
                 new FileInputStream(file));
 
         String staringDate = "1/5/2010";
@@ -144,7 +143,7 @@ public class TestCassandraManager {
         ArrayList<TradingDataAttribute> attributes = new ArrayList<TradingDataAttribute>();
         attributes.add(TradingDataAttribute.CLOSING_PRICE);
 
-        SimpleDateFormat format = new SimpleDateFormat(Constants.OHLC_DATE_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(OHLC_DATE_FORMAT);
 
 
         HashMap<Date, HashMap<TradingDataAttribute, String>> dataValue =

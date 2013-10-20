@@ -87,10 +87,14 @@ public interface CompanyStockTransactionsData {
     /**
      * @param type either OHLC or Ticker
      * @param stockId Stock id
+     * @param dateFormat dateFormat in csv file
+     *                   ex: for OHLC data: "MM/dd/yyyy"
+     *                   ex: for Ticker data: "MM/dd/yyyy HH:MM:SS"
      * @param file csv file
      * @throws DataAccessException
      */
-    public void importCSV(DataType type, String stockId, File file) throws DataAccessException;
+    public void importCSV(DataType type, String stockId, String dateFormat, File file)
+            throws DataAccessException;
 
     /**
      * @param type either OHLC or Ticker

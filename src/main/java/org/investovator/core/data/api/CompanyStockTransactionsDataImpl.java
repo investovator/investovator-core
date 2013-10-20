@@ -18,7 +18,6 @@
 
 package org.investovator.core.data.api;
 
-import org.investovator.core.data.api.utils.Constants;
 import org.investovator.core.data.api.utils.StockTradingData;
 import org.investovator.core.data.api.utils.StockTradingDataImpl;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
@@ -73,14 +72,15 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
      * {@inheritDoc}
      */
     @Override
-    public void importCSV(DataType type, String stockId, File file) throws DataAccessException {
+    public void importCSV(DataType type, String stockId, String dateFormat, File file)
+            throws DataAccessException {
         try {
             if(type == DataType.OHLC){
                 manager.importCSV(DataType.getString(type), stockId,
-                        Constants.OHLC_DATE_FORMAT, new FileInputStream(file));
+                        dateFormat, new FileInputStream(file));
             } else {
                 manager.importCSV(DataType.getString(type), stockId,
-                        Constants.TICKER_DATE_FORMAT, new FileInputStream(file));
+                        dateFormat, new FileInputStream(file));
             }
         } catch (FileNotFoundException e) {
             throw new DataAccessException(e);
