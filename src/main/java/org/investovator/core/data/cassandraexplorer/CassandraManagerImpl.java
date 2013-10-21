@@ -52,7 +52,7 @@ public class CassandraManagerImpl implements CassandraManager{
     private static final String CHAR_ENCODING = "UTF8";
     private static volatile CassandraManagerImpl cassandraManager;
 
-    public static CassandraManagerImpl getCassandraManager() {
+    public static CassandraManager getCassandraManager() {
         if(cassandraManager == null){
             synchronized(CassandraManagerImpl.class){
                 if(cassandraManager == null)
