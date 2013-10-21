@@ -50,9 +50,19 @@ public class UserDataImpl implements UserData{
     }
 
     @Override
+    public void updateUserDetails(String username, HashMap<String, String> details) throws DataAccessException {
+        //TODO
+    }
+
+    @Override
     public Portfolio getUserPortfolio(String username)
             throws DataAccessException {
         return null; //TODO
+    }
+
+    @Override
+    public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException {
+        //TODO
     }
 
     @Override

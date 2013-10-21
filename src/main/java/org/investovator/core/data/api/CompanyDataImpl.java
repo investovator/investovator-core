@@ -43,6 +43,16 @@ public class CompanyDataImpl implements CompanyData{
      * {@inheritDoc}
      */
     @Override
+    public void addCompanyData(String symbol, String companyName, int shares)
+            throws DataAccessException {
+        //TODO
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
     public HashMap<String, Integer> getCompanyIDsTotalShares() throws DataAccessException{
         return null; //TODO
     }
@@ -72,6 +82,15 @@ public class CompanyDataImpl implements CompanyData{
     @Override
     public Object getInfo(String infotype, String symbol) throws DataAccessException{
         return null; //TODO
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void addInfo(String infotype, String symbol, Object object) throws DataAccessException {
+        //TODO
     }
 
     /**

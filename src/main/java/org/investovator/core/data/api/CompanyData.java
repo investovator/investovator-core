@@ -38,6 +38,16 @@ public interface CompanyData {
 
     /**
      *
+     * @param symbol Company stockId
+     * @param companyName Company name
+     * @param shares number of shares issued
+     * @throws DataAccessException
+     */
+    public void addCompanyData(String symbol, String companyName, int shares)
+            throws DataAccessException;
+
+    /**
+     *
      * @return Company StockId and number of shares issued pairs
      * @throws DataAccessException
      */
@@ -61,12 +71,22 @@ public interface CompanyData {
 
     /**
      *
-     * @param infotype Information type required
+     * @param infoType Information type required
      * @param symbol StockId of the company
      * @return Data
      * @throws DataAccessException
      */
-    public Object getInfo(String infotype, String symbol) throws DataAccessException;
+    public Object getInfo(String infoType, String symbol) throws DataAccessException;
+
+    /**
+     *
+     * @param infoType Information type ex: annual dividend
+     * @param symbol stockId of the company
+     * @param object data
+     * @throws DataAccessException
+     */
+    public void addInfo(String infoType, String symbol, Object object)
+            throws DataAccessException;
 
     /**
      *

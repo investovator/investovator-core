@@ -38,7 +38,12 @@ public interface UserData {
 
     public HashMap<String, String> getUserDetails(String username) throws DataAccessException;
 
+    public void updateUserDetails(String username, HashMap<String, String> details)
+            throws DataAccessException;
+
     public Portfolio getUserPortfolio(String username) throws DataAccessException;
+
+    public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException;
 
     public ArrayList<String> getWatchList(String username);
 }
