@@ -33,9 +33,9 @@ import java.util.HashMap;
  */
 public interface CassandraManager {
 
-    public static final String URL_KEY = "org.investovator.core.data.cassandra.url";
-    public static final String USERNAME_KEY = "org.investovator.core.data.cassandra.username";
-    public static final String PASSWORD_KEY = "org.investovator.core.data.cassandra.password";
+    public static final String CASS_URL_KEY = "org.investovator.core.data.cassandra.url";
+    public static final String CASS_USERNAME_KEY = "org.investovator.core.data.cassandra.username";
+    public static final String CASS_PASSWORD_KEY = "org.investovator.core.data.cassandra.password";
 
     public static final String KEYSPACE = "investovator_data";
 

@@ -203,9 +203,9 @@ public class CassandraManagerImpl implements CassandraManager{
     }
 
     private Cluster getClusterInitialized() {
-        String username = System.getProperty(USERNAME_KEY);
-        String password = System.getProperty(PASSWORD_KEY);
-        String url = System.getProperty(URL_KEY);
+        String username = System.getProperty(CASS_USERNAME_KEY);
+        String password = System.getProperty(CASS_PASSWORD_KEY);
+        String url = System.getProperty(CASS_URL_KEY);
 
         return CassandraConnector.createCluster(username, password, url);
     }
