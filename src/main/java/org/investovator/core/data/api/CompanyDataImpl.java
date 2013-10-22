@@ -80,7 +80,7 @@ public class CompanyDataImpl implements CompanyData{
      * {@inheritDoc}
      */
     @Override
-    public Object getInfo(String infotype, String symbol) throws DataAccessException{
+    public Object getInfo(String infoType, String symbol) throws DataAccessException{
         return null; //TODO
     }
 
@@ -89,7 +89,7 @@ public class CompanyDataImpl implements CompanyData{
      * {@inheritDoc}
      */
     @Override
-    public void addInfo(String infotype, String symbol, Object object) throws DataAccessException {
+    public void addInfo(String infoType, String symbol, Object object) throws DataAccessException {
         //TODO
     }
 
@@ -97,6 +97,7 @@ public class CompanyDataImpl implements CompanyData{
      *
      * {@inheritDoc}
      */
+    @Override
     public ArrayList<String> getAvailableStockIds() throws DataAccessException {
         return null;  //TODO
     }

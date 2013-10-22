@@ -18,11 +18,10 @@
 
 package org.investovator.core.data.api;
 
-import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.commons.utils.Portfolio;
+import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author rajith
@@ -31,32 +30,7 @@ import java.util.HashMap;
 public class UserDataImpl implements UserData{
 
     @Override
-    public void addUser(String username, String firstname,
-                        String lastname, String emailaddress, String password)
-            throws DataAccessException {
-    //TODO
-    }
-
-    @Override
-    public String getUserPassword(String username)
-            throws DataAccessException {
-        return null; //TODO
-    }
-
-    @Override
-    public HashMap<String, String> getUserDetails(String username)
-            throws DataAccessException {
-        return null; //TODO
-    }
-
-    @Override
-    public void updateUserDetails(String username, HashMap<String, String> details) throws DataAccessException {
-        //TODO
-    }
-
-    @Override
-    public Portfolio getUserPortfolio(String username)
-            throws DataAccessException {
+    public Portfolio getUserPortfolio(String username) throws DataAccessException {
         return null; //TODO
     }
 
@@ -66,7 +40,7 @@ public class UserDataImpl implements UserData{
     }
 
     @Override
-    public ArrayList<String> getWatchList(String username) {
+    public ArrayList<String> getWatchList(String username) throws DataAccessException {
         return null;  //TODO
     }
 
