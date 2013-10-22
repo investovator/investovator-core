@@ -1,4 +1,4 @@
-package org.investovator.core.excelimporter;
+package org.investovator.core.data.cassandraexplorer.excelimporter;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

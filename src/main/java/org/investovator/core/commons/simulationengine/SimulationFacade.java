@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.simulationengine;
+package org.investovator.core.commons.simulationengine;
 
 import java.util.HashMap;
 
@@ -37,49 +37,49 @@ public interface SimulationFacade {
     public boolean resumeSimulation();
 
     /**
+     * @param username username
      * @param initFunds initial account balance
-     * @return spawned AgentId
      */
-    public String AddUserAgent(double initFunds);
+    public void AddUserAgent(String username, double initFunds);
 
     /*User related*/
 
     /**
      *
-     * @param humanAgentId corresponding agentId
+     * @param username corresponding username
      * @param stockId security id
      * @param quantity stock quantity
      * @param isBuy buy = true, sell=false;
      * @param price single stock price
      * @return adding order successful
      */
-    public boolean putLimitOrder(String humanAgentId, String stockId, int quantity,
+    public boolean putLimitOrder(String username, String stockId, int quantity,
                                  double price, boolean isBuy);
 
     /**
      *
-     * @param humanAgentId corresponding agentId
+     * @param username corresponding username
      * @param stockId security id
      * @param quantity stock quantity
      * @param isBuy buy = true, sell=false;
      * @return adding order successful
      */
-    public boolean putMarketOrder(String humanAgentId, String stockId, int quantity,
+    public boolean putMarketOrder(String username, String stockId, int quantity,
                                   boolean isBuy);
 
     //TODO throwing an event when the orders get matched
 
     /**
      *
-     * @param humanAgentId human agent's id
+     * @param username username
      * @return HashMap containing stockId and number od stocks holding
      */
-    public HashMap<String, Integer> getUserAgentAssets(String humanAgentId);
+    public HashMap<String, Integer> getUserAgentAssets(String username);
 
     /**
      *
-     * @param humanAgentId human agent's id
+     * @param username username
      * @return human agent's funds in the simulation
      */
-    public double getUserAgentFunds(String humanAgentId);
+    public double getUserAgentFunds(String username);
 }

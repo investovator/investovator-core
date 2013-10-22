@@ -1,4 +1,4 @@
-package org.investovator.core.excelimporter;
+package org.investovator.core.data.cassandraexplorer.excelimporter;
 
 /**
  * Created with IntelliJ IDEA.

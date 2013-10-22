@@ -1,4 +1,4 @@
-package org.investovator.core.excelimporter;
+package org.investovator.core.data.cassandraexplorer.excelimporter;
 
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
