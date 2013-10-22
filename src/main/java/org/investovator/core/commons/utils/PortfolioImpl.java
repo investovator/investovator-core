@@ -27,7 +27,8 @@ import java.util.HashMap;
 public class PortfolioImpl implements Terms, Portfolio {
 
     private String username;
-    private int cashBalance;
+    private float cashBalance;
+    private float blockedCashAmount;
     private HashMap <String, HashMap <String, Float>> shares;
 
     public PortfolioImpl(String username, int cashBalance){
@@ -45,17 +46,27 @@ public class PortfolioImpl implements Terms, Portfolio {
 
     @Override
     public int compareTo(Portfolio comparePortfolio) {
-        return this.cashBalance - comparePortfolio.getCashBalance();
+        return (int) (this.cashBalance - comparePortfolio.getCashBalance());
     }
 
     @Override
-    public int getCashBalance() {
+    public float getCashBalance() {
         return cashBalance;
     }
 
     @Override
-    public void setCashBalance(int cashBalance) {
+    public void setCashBalance(float cashBalance) {
         this.cashBalance = cashBalance;
+    }
+
+    @Override
+    public void setBlockedCash(float amount) {
+       this.blockedCashAmount = amount;
+    }
+
+    @Override
+    public float getBlockedCash() {
+        return blockedCashAmount;
     }
 
     @Override
@@ -93,13 +104,14 @@ public class PortfolioImpl implements Terms, Portfolio {
             stockData.put(PRICE, price);
             shares.put(symbol, stockData);
         }
+        blockedCashAmount -= price*quantity;
     }
 
     /**
      *
      * {@inheritDoc}
      */
-    public void soldShares(String symbol, float quantity){
+    public void soldShares(String symbol, float quantity, float price){
         if (shares.get(symbol).get(QNTY) == quantity){
             removeStock(symbol);
         } else {
