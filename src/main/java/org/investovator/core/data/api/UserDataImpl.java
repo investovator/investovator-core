@@ -18,6 +18,7 @@
 
 package org.investovator.core.data.api;
 
+import org.investovator.core.commons.utils.PortfolioImpl;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.commons.utils.Portfolio;
 
@@ -57,6 +58,10 @@ public class UserDataImpl implements UserData{
     @Override
     public Portfolio getUserPortfolio(String username)
             throws DataAccessException {
+        Portfolio testUser1 = new PortfolioImpl("testUser1",100000);
+
+        if(username.equals("testUser1")) return testUser1;
+
         return null; //TODO
     }
 
@@ -67,7 +72,12 @@ public class UserDataImpl implements UserData{
 
     @Override
     public ArrayList<String> getWatchList(String username) {
-        return null;  //TODO
+        ArrayList<String> stocks = new ArrayList<String>();
+        stocks.add("GOOG");
+        stocks.add("SAMP");
+        stocks.add("IBM");
+
+        return stocks;
     }
 
 }

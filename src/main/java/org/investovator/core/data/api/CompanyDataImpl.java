@@ -98,7 +98,13 @@ public class CompanyDataImpl implements CompanyData{
      * {@inheritDoc}
      */
     public ArrayList<String> getAvailableStockIds() throws DataAccessException {
-        return null;  //TODO
+        ArrayList<String> stocks = new ArrayList<String>();
+
+        stocks.add("GOOG");
+        stocks.add("SAMP");
+        stocks.add("IBM");
+
+        return stocks;
     }
 
 
