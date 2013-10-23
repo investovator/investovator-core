@@ -47,7 +47,15 @@ public class FileManager {
         return stringBuilder.toString();
     }
 
-    public static String readFileOmitComments(String filePath, String commentPattern) throws IOException {
+    /**
+     * Reads a file a returns string content
+     * @param filePath Relative file path
+     * @param commentPattern comment patterns used
+     * @return String content of the file
+     * @throws IOException
+     */
+    public static String readFileOmitComments(String filePath, String commentPattern)
+            throws IOException {
         BufferedReader reader;
         StringBuilder stringBuilder;
         String line;

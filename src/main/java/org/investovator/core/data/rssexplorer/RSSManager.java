@@ -18,9 +18,37 @@
 
 package org.investovator.core.data.rssexplorer;
 
+import org.investovator.core.commons.utils.Portfolio;
+import org.investovator.core.data.exeptions.DataAccessException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * @author rajith
  * @version $Revision$
  */
 public interface RSSManager {
+
+    public HashMap<String,String> getCompanyIDsNames() throws DataAccessException;
+
+    public void addCompanyData(String symbol, String companyName, int shares) throws DataAccessException;
+
+    public HashMap<String, Integer> getCompanyIDsTotalShares() throws DataAccessException;
+
+    public String getCompanyName(String symbol) throws DataAccessException;
+
+    public int getCompanyNoOfShares(String symbol) throws DataAccessException;
+
+    public Object getInfo(String infoType, String symbol) throws DataAccessException;
+
+    public void addInfo(String infoType, String symbol, Object object) throws DataAccessException;
+
+    public ArrayList<String> getAvailableStockIds() throws DataAccessException;
+
+    public Portfolio getUserPortfolio(String username) throws DataAccessException;
+
+    public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException;
+
+    public ArrayList<String> getWatchList(String username) throws DataAccessException;
 }
