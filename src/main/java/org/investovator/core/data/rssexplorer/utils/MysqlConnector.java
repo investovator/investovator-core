@@ -58,7 +58,8 @@ public class MysqlConnector {
                                            int noOfShares) throws SQLException {
 
         String query =  "INSERT INTO " + MysqlConstants.COMPANY_INFO +
-                        " VALUES (?,?,?) ON DUPLICATE KEY UPDATE NAME = (?), SHARES = (?)";
+                        " VALUES (?,?,?) ON DUPLICATE KEY UPDATE "+ MysqlConstants.NAME +
+                        " = (?), " + MysqlConstants.SHARES + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
         preparedStatement.setString(1, symbol);
@@ -73,19 +74,6 @@ public class MysqlConnector {
     }
 
     public static ResultSet getAllNameId(Connection con) throws SQLException {
-
-/*        StringBuilder query = new StringBuilder("SELECT ");
-        query.append("?");
-        for (int i = 0; i < attributes.size() - 1;i++){
-            query.append(", ?");
-        }
-        query.append(" FROM ").append(tableName);
-
-        PreparedStatement preparedStatement = con.prepareStatement(query.toString());
-        for (int i = 1; i <= attributes.size(); i++){
-            preparedStatement.setString(i, attributes.get(i - 1));
-        }*/
-
         String query = "SELECT " + MysqlConstants.SYMBOL + ", " + MysqlConstants.NAME
                 + " FROM " + MysqlConstants.COMPANY_INFO;
 
@@ -124,6 +112,42 @@ public class MysqlConnector {
 
         Statement statement = con.createStatement();
         return statement.executeQuery(query);
+    }
+
+    public static ResultSet getWatchList(Connection con, String username) throws SQLException {
+        String query = "SELECT " + MysqlConstants.SYMBOL + " FROM " + MysqlConstants.WATCH_LIST
+                + " WHERE " + MysqlConstants.USERNAME + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        return preparedStatement.executeQuery();
+    }
+
+    public static void insertToWatchList(Connection con, String username, String symbol) throws SQLException {
+
+        String query =  "INSERT INTO " + MysqlConstants.WATCH_LIST +
+                        " VALUES (?,?) ON DUPLICATE KEY UPDATE " + MysqlConstants.USERNAME +
+                        " = (?), " + MysqlConstants.SYMBOL + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, symbol);
+        preparedStatement.setString(3, username);
+        preparedStatement.setString(4, symbol);
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    public static void deleteFromWatchList(Connection con, String username, String symbol) throws SQLException {
+
+        String query = "DELETE FROM " + MysqlConstants.WATCH_LIST + " WHERE " + MysqlConstants.USERNAME +
+                        " = (?) AND " + MysqlConstants.SYMBOL + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, symbol);
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
     }
 
     private MysqlConnector() throws ClassNotFoundException, IllegalAccessException,

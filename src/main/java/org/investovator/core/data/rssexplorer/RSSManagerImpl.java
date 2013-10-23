@@ -155,16 +155,38 @@ public class RSSManagerImpl implements RSSManager {
 
     @Override
     public ArrayList<String> getWatchList(String username) throws DataAccessException{
-        return null;  //TODO
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            ResultSet resultSet = MysqlConnector.getWatchList(connection, username);
+
+            ArrayList<String> data = new ArrayList<String>();
+            while (resultSet.next()){
+                data.add(resultSet.getString(MysqlConstants.SYMBOL));
+            }
+            resultSet.close();
+            return data;
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
     }
 
     @Override
     public void addToWatchList(String username, String symbol) throws DataAccessException {
-        //TODO
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.insertToWatchList(connection, username, symbol);
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
     }
 
     @Override
     public void deleteFromWatchList(String username, String symbol) throws DataAccessException {
-        //TODO
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.deleteFromWatchList(connection, username, symbol);
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
     }
 }

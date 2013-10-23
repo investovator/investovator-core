@@ -20,6 +20,8 @@ package org.investovator.core.data.api;
 
 import org.investovator.core.commons.utils.Portfolio;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.rssexplorer.RSSManager;
+import org.investovator.core.data.rssexplorer.RSSManagerImpl;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,12 @@ import java.util.ArrayList;
  * @version $Revision$
  */
 public class UserDataImpl implements UserData{
+
+    private RSSManager manager;
+
+    public UserDataImpl() throws DataAccessException {
+        manager = new RSSManagerImpl();
+    }
 
     @Override
     public Portfolio getUserPortfolio(String username) throws DataAccessException {
@@ -41,22 +49,34 @@ public class UserDataImpl implements UserData{
 
     @Override
     public ArrayList<String> getWatchList(String username) throws DataAccessException {
-        return null;  //TODO
+        return manager.getWatchList(username);
     }
 
     @Override
     public void addToWatchList(String username, String symbol) throws DataAccessException {
-        //TODO
+        manager.addToWatchList(username, symbol);
     }
 
     @Override
     public void deleteFromWatchList(String username, String symbol) throws DataAccessException {
-        //TODO
+        manager.deleteFromWatchList(username, symbol);
     }
 
     @Override
     public void updateWatchList(String username, ArrayList<String> watchList) throws DataAccessException {
-        //TODO
+        ArrayList<String> previousList = manager.getWatchList(username);
+
+        for (String id : watchList){
+            if (!previousList.contains(id)){
+                 manager.addToWatchList(username, id);
+            }
+        }
+
+        for (String id: previousList){
+            if (!watchList.contains(id)){
+                manager.deleteFromWatchList(username, id);
+            }
+        }
     }
 
 }

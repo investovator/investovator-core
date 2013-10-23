@@ -32,6 +32,7 @@ public class MysqlConstants {
     public static final String SYMBOL = "SYMBOL";
     public static final String NAME = "NAME";
     public static final String SHARES = "SHARES";
+    public static final String USERNAME = "USERNAME";
 
 
 

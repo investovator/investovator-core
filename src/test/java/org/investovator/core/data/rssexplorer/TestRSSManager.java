@@ -28,6 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -90,6 +91,34 @@ public class TestRSSManager {
         ArrayList<String> ids = manager.getAvailableStockIds();
         assertTrue(ids.contains("GOOG"));
         assertTrue(ids.contains("IBM"));
+        assertTrue(ids.contains("YHO"));
+    }
+
+    @Test
+    public void testAddDataToWatchListNRead() throws DataAccessException {
+        RSSManager manager = new RSSManagerImpl();
+        manager.addToWatchList("arun", "GOOG");
+        manager.addToWatchList("arun", "IBM");
+        manager.addToWatchList("arun", "YHO");
+
+        ArrayList<String> ids = manager.getWatchList("arun");
+        assertTrue(ids.contains("GOOG"));
+        assertTrue(ids.contains("IBM"));
+        assertTrue(ids.contains("YHO"));
+    }
+
+    @Test
+    public void testAddDataToWatchListDeleteNRead() throws DataAccessException {
+        RSSManager manager = new RSSManagerImpl();
+        manager.addToWatchList("arun", "GOOG");
+        manager.addToWatchList("arun", "IBM");
+        manager.addToWatchList("arun", "YHO");
+
+        manager.deleteFromWatchList("arun","IBM");
+
+        ArrayList<String> ids = manager.getWatchList("arun");
+        assertTrue(ids.contains("GOOG"));
+        assertFalse(ids.contains("IBM"));
         assertTrue(ids.contains("YHO"));
     }
 
