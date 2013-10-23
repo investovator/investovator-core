@@ -175,7 +175,8 @@ public class CassandraManagerImpl implements CassandraManager{
 
             if(superColumns.size() > 0){
 
-                LinkedHashMap<Date, HashMap<TradingDataAttribute, String>> data = new LinkedHashMap<Date, HashMap<TradingDataAttribute, String>>();
+                LinkedHashMap<Date, HashMap<TradingDataAttribute, String>> data =
+                        new LinkedHashMap<Date, HashMap<TradingDataAttribute, String>>();
                 for (HSuperColumn<Date, String, String> superColumn : superColumns){
 
                     List<HColumn<String, String>> hColumns = superColumn.getColumns();
@@ -198,8 +199,34 @@ public class CassandraManagerImpl implements CassandraManager{
     }
 
     @Override
-    public Date[] getKeyRange(String dataType, String symbol) {
-        return new Date[0];  //TODO
+    public Date[] getKeyRange(String dataType, String symbol) throws DataAccessException {
+
+        try {
+            Cluster cluster = getClusterInitialized();
+            Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
+
+            Date[] startNEnd = new Date[2];
+
+            if(CassandraConnector.isColumnFamilyAvailable(cluster, KEYSPACE, dataType)){
+                SuperSlice<Date, String, String> result = HFactory.createSuperSliceQuery(keyspace,
+                        StringSerializer.get(), DateSerializer.get(), StringSerializer.get(),
+                        StringSerializer.get())
+                        .setColumnFamily(dataType)
+                        .setKey(symbol)
+                        .setRange(new Date(0L), new Date(), false, Integer.MAX_VALUE)
+                        .execute()
+                        .get();
+
+                startNEnd[0] = ((result.getSuperColumns()).get(0)).getName();
+                startNEnd[1] = ((result.getSuperColumns()).get((result.getSuperColumns()).size() - 1)).getName();
+
+                return startNEnd;
+
+            }  else
+                throw new DataAccessException("Requested ColumnFamily not available");
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
     }
 
     private Cluster getClusterInitialized() {

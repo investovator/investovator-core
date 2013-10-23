@@ -172,6 +172,23 @@ public class TestCassandraManager {
                 format.parse(staringDate))).get(TradingDataAttribute.CLOSING_PRICE));
     }
 
+    @Test
+    public void testGetKeyRange() throws FileNotFoundException, DataAccessException, ParseException {
+        File file = new File(RESOURCE_DIR_PATH + FILENAME);
+
+        CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
+        cassandraManager.importCSV(COLUMNFAMILY, ROWKEY1, OHLC_DATE_FORMAT, new FileInputStream(file));
+
+        Date[] dates = cassandraManager.getKeyRange(COLUMNFAMILY, ROWKEY1);
+
+        String staringDate = "1/4/2010";
+        String endDate = "12/31/2012";
+        SimpleDateFormat format = new SimpleDateFormat(OHLC_DATE_FORMAT);
+
+        assertEquals(format.parse(staringDate), dates[0]);
+        assertEquals(format.parse(endDate), dates[1]);
+    }
+
     @Before
     public void setEnvironment() throws InterruptedException, TTransportException,
             org.apache.cassandra.exceptions.ConfigurationException, IOException, ConfigurationException {

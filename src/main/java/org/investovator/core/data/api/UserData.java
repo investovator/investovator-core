@@ -18,11 +18,10 @@
 
 package org.investovator.core.data.api;
 
-import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.commons.utils.Portfolio;
+import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author rajith
@@ -30,20 +29,9 @@ import java.util.HashMap;
  */
 public interface UserData {
 
-    public void addUser(String username, String firstname,
-                        String lastname, String emailaddress, String password)
-            throws DataAccessException;
-
-    public String getUserPassword(String username) throws DataAccessException;
-
-    public HashMap<String, String> getUserDetails(String username) throws DataAccessException;
-
-    public void updateUserDetails(String username, HashMap<String, String> details)
-            throws DataAccessException;
-
     public Portfolio getUserPortfolio(String username) throws DataAccessException;
 
     public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException;
 
-    public ArrayList<String> getWatchList(String username);
+    public ArrayList<String> getWatchList(String username) throws DataAccessException;
 }

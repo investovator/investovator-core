@@ -58,7 +58,8 @@ public interface CassandraManager {
                                                                         ArrayList<TradingDataAttribute> attributes)
             throws DataAccessException, DataNotFoundException;
 
-    public Date[] getKeyRange(String dataType, String symbol);
+    @Deprecated
+    public Date[] getKeyRange(String dataType, String symbol) throws DataAccessException;
 
     //TODO truncate stock data
 }
