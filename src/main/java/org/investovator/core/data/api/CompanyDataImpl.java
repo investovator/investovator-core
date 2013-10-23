@@ -19,6 +19,8 @@
 package org.investovator.core.data.api;
 
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.rssexplorer.RSSManager;
+import org.investovator.core.data.rssexplorer.RSSManagerImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,13 +31,19 @@ import java.util.HashMap;
  */
 public class CompanyDataImpl implements CompanyData{
 
+    private RSSManager manager;
+
+    public CompanyDataImpl() throws DataAccessException {
+        manager = new RSSManagerImpl();
+    }
+
     /**
      *
      * {@inheritDoc}
      */
     @Override
     public HashMap<String,String> getCompanyIDsNames() throws DataAccessException{
-        return null; //TODO
+        return manager.getCompanyIDsNames();
     }
 
     /**
@@ -45,7 +53,7 @@ public class CompanyDataImpl implements CompanyData{
     @Override
     public void addCompanyData(String symbol, String companyName, int shares)
             throws DataAccessException {
-        //TODO
+        manager.addCompanyData(symbol, companyName, shares);
     }
 
     /**
@@ -54,7 +62,7 @@ public class CompanyDataImpl implements CompanyData{
      */
     @Override
     public HashMap<String, Integer> getCompanyIDsTotalShares() throws DataAccessException{
-        return null; //TODO
+        return manager.getCompanyIDsTotalShares();
     }
 
     /**
@@ -63,7 +71,7 @@ public class CompanyDataImpl implements CompanyData{
      */
     @Override
     public String getCompanyName(String symbol) throws DataAccessException{
-        return null; //TODO
+        return manager.getCompanyName(symbol);
     }
 
     /**
@@ -72,7 +80,7 @@ public class CompanyDataImpl implements CompanyData{
      */
     @Override
     public int getCompanyNoOfShares(String symbol) throws DataAccessException{
-        return 0; //TODO
+        return manager.getCompanyNoOfShares(symbol);
     }
 
     /**
@@ -99,7 +107,7 @@ public class CompanyDataImpl implements CompanyData{
      */
     @Override
     public ArrayList<String> getAvailableStockIds() throws DataAccessException {
-        return null;  //TODO
+        return manager.getAvailableStockIds();
     }
 
 
