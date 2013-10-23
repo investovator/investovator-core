@@ -44,4 +44,19 @@ public class UserDataImpl implements UserData{
         return null;  //TODO
     }
 
+    @Override
+    public void addToWatchList(String username, String symbol) throws DataAccessException {
+        //TODO
+    }
+
+    @Override
+    public void deleteFromWatchList(String username, String symbol) throws DataAccessException {
+        //TODO
+    }
+
+    @Override
+    public void updateWatchList(String username, ArrayList<String> watchList) throws DataAccessException {
+        //TODO
+    }
+
 }

@@ -51,4 +51,8 @@ public interface RSSManager {
     public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException;
 
     public ArrayList<String> getWatchList(String username) throws DataAccessException;
+
+    public void addToWatchList(String username, String symbol) throws DataAccessException;
+
+    public void deleteFromWatchList(String username, String symbol) throws DataAccessException;
 }

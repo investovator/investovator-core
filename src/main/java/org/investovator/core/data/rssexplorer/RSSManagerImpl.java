@@ -157,4 +157,14 @@ public class RSSManagerImpl implements RSSManager {
     public ArrayList<String> getWatchList(String username) throws DataAccessException{
         return null;  //TODO
     }
+
+    @Override
+    public void addToWatchList(String username, String symbol) throws DataAccessException {
+        //TODO
+    }
+
+    @Override
+    public void deleteFromWatchList(String username, String symbol) throws DataAccessException {
+        //TODO
+    }
 }
