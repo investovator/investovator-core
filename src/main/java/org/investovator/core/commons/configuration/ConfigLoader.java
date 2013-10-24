@@ -16,29 +16,36 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.configuration;
+package org.investovator.core.commons.configuration;
 
-import junit.framework.TestCase;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 import java.io.File;
+import java.util.Iterator;
 
 /**
  * @author rajith
  * @version $Revision$
  */
-public class TestConfigLoader extends TestCase {
+public class ConfigLoader {
 
-    public void testConfigLoader(){
-        try {
-            ConfigLoader.loadProperties("src"+ File.separator + "test" + File.separator
-                    + "resources" + File.separator + "resource.properties");
-        } catch (ConfigurationException e) {
-            assertFalse(e.getMessage(), true);
+    /**
+     *
+     * @param filePath specify path to the properties file
+     * @throws ConfigurationException
+     */
+    public static void loadProperties(String filePath) throws ConfigurationException {
+
+        Configuration configuration =
+                new PropertiesConfiguration(new File(filePath).getAbsolutePath());
+
+        Iterator<String> iterator = configuration.getKeys();
+        while (iterator.hasNext()){
+            String key = iterator.next();
+            System.setProperty(key, (String) configuration.getProperty(key));
         }
-
-        assertEquals("localhost:9171", System.getProperty("org.investovator.core.data.cassandra.url"));
-        assertEquals("admin", System.getProperty("org.investovator.core.data.cassandra.username"));
-        assertEquals("admin", System.getProperty("org.investovator.core.data.cassandra.password"));
     }
+
 }

@@ -19,7 +19,7 @@
 package org.investovator.core.data.rssexplorer;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.investovator.core.configuration.ConfigLoader;
+import org.investovator.core.commons.configuration.ConfigLoader;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.rssexplorer.utils.MysqlConstants;
 import org.junit.Before;

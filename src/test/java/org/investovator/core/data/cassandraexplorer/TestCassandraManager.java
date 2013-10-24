@@ -28,7 +28,7 @@ import me.prettyprint.hector.api.factory.HFactory;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.thrift.transport.TTransportException;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
-import org.investovator.core.configuration.ConfigLoader;
+import org.investovator.core.commons.configuration.ConfigLoader;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.cassandraexplorer.utils.CassandraConnector;
 import org.investovator.core.data.exeptions.DataAccessException;
