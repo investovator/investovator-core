@@ -18,6 +18,8 @@
 
 package org.investovator.core.data.rssexplorer.utils;
 
+import org.investovator.core.commons.utils.fileutils.StringConverter;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
@@ -200,8 +202,8 @@ public class MysqlConnector {
                                                  HashMap<String, HashMap<String, Double>> portfolio)
             throws SQLException {
         createUserPortfolioIfNotExists(con, username);                       //TODO username
-        String query =  "INSERT INTO " + username.toUpperCase() + MysqlConstants.PORTFOLIO +
-                        " VALUES (?,?,?) ON DUPLICATE KEY UPDATE "+ MysqlConstants.QNTY +
+        String query =  "INSERT INTO " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
+                        MysqlConstants.PORTFOLIO + " VALUES (?,?,?) ON DUPLICATE KEY UPDATE "+ MysqlConstants.QNTY +
                         " = (?), " + MysqlConstants.PRICE + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
@@ -222,14 +224,16 @@ public class MysqlConnector {
     }
 
     public static ResultSet getUserPortfolio(Connection con,String username) throws SQLException {
-        String query = "SELECT * FROM " + username.toUpperCase() + MysqlConstants.PORTFOLIO;
+        String query = "SELECT * FROM " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
+                        MysqlConstants.PORTFOLIO;
 
         Statement statement = con.createStatement();
         return statement.executeQuery(query);
     }
 
     public static void dropUserPortfolio(Connection con,String username) throws SQLException {
-        String query = "DROP TABLE " + username.toUpperCase() + MysqlConstants.PORTFOLIO;
+        String query = "DROP TABLE " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
+                        MysqlConstants.PORTFOLIO;
 
         Statement statement = con.createStatement();
         statement.executeUpdate(query);
@@ -239,7 +243,8 @@ public class MysqlConnector {
     private static void createUserPortfolioIfNotExists(Connection con, String username) throws SQLException {
 
         String databaseName = System.getProperty(MYSQL_DB_KEY);
-        String query = "CREATE TABLE IF NOT EXISTS "+ databaseName + "." + username.toUpperCase() +
+        String query = "CREATE TABLE IF NOT EXISTS "+ databaseName + "." +
+                StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
                 MysqlConstants.PORTFOLIO + "(" +
                 MysqlConstants.SYMBOL + " varchar(5) NOT NULL, "+
                 MysqlConstants.QNTY +" double NOT NULL, "+
