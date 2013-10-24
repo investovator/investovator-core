@@ -27,20 +27,22 @@ import java.util.HashMap;
 public class PortfolioImpl implements Terms, Portfolio {
 
     private String username;
-    private float cashBalance;
-    private float blockedCashAmount;
-    private HashMap <String, HashMap <String, Float>> shares;
+    private double cashBalance;
+    private double blockedCashAmount;
+    private HashMap <String, HashMap <String, Double>> shares;
 
-    public PortfolioImpl(String username, int cashBalance){
+    public PortfolioImpl(String username, double cashBalance, double blockedCashAmount){
         this.username = username;
         this.cashBalance = cashBalance;
-        this.shares = new HashMap<String, HashMap<String, Float>>();
+        this.blockedCashAmount = blockedCashAmount;
+        this.shares = new HashMap<String, HashMap<String, Double>>();
     }
 
-    public PortfolioImpl(String username, int cashBalance,
-                     HashMap <String, HashMap <String, Float>> shares){
+    public PortfolioImpl(String username, double cashBalance, double blockedCashAmount,
+                     HashMap <String, HashMap <String, Double>> shares){
         this.username = username;
         this.cashBalance = cashBalance;
+        this.blockedCashAmount = blockedCashAmount;
         this.shares = shares;
     }
 
@@ -50,32 +52,32 @@ public class PortfolioImpl implements Terms, Portfolio {
     }
 
     @Override
-    public float getCashBalance() {
+    public double getCashBalance() {
         return cashBalance;
     }
 
     @Override
-    public void setCashBalance(float cashBalance) {
+    public void setCashBalance(double cashBalance) {
         this.cashBalance = cashBalance;
     }
 
     @Override
-    public void setBlockedCash(float amount) {
+    public void setBlockedCash(double amount) {
        this.blockedCashAmount = amount;
     }
 
     @Override
-    public float getBlockedCash() {
+    public double getBlockedCash() {
         return blockedCashAmount;
     }
 
     @Override
-    public HashMap<String, HashMap<String, Float>> getShares() {
+    public HashMap<String, HashMap<String, Double>> getShares() {
         return shares;
     }
 
     @Override
-    public void setShares(HashMap<String, HashMap<String, Float>> shares) {
+    public void setShares(HashMap<String, HashMap<String, Double>> shares) {
         this.shares = shares;
     }
 
@@ -93,13 +95,13 @@ public class PortfolioImpl implements Terms, Portfolio {
      *
      * {@inheritDoc}
      */
-    public void boughtShares(String symbol, float quantity, float price){
+    public void boughtShares(String symbol, double quantity, double price){
         if (shares.containsKey(symbol)){
-            HashMap<String, Float> stockData = shares.get(symbol);
+            HashMap<String, Double> stockData = shares.get(symbol);
             stockData.put(QNTY, stockData.get(QNTY) + quantity);
             stockData.put(PRICE, price);
         } else {
-            HashMap<String, Float> stockData = new HashMap<String, Float>();
+            HashMap<String, Double> stockData = new HashMap<String, Double>();
             stockData.put(QNTY, quantity);
             stockData.put(PRICE, price);
             shares.put(symbol, stockData);
@@ -111,11 +113,11 @@ public class PortfolioImpl implements Terms, Portfolio {
      *
      * {@inheritDoc}
      */
-    public void soldShares(String symbol, float quantity, float price){
+    public void soldShares(String symbol, double quantity, double price){
         if (shares.get(symbol).get(QNTY) == quantity){
             removeStock(symbol);
         } else {
-            HashMap<String, Float> stockData = shares.get(symbol);
+            HashMap<String, Double> stockData = shares.get(symbol);
             stockData.put(QNTY, stockData.get(QNTY) - quantity);
         }
     }

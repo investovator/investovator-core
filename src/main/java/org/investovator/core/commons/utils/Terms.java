@@ -36,4 +36,7 @@ public interface Terms {
     public static final String LAST_NAME = "LASTNAME";
     public static final String EMAIL = "EMAIL";
 
+    public static final String VALUE = "VALUE";
+    public static final String BLOCKED_VALUE = "BLOCKED_VALUE";
+
 }

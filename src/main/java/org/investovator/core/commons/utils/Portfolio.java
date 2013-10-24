@@ -27,17 +27,17 @@ import java.util.HashMap;
  */
 public interface Portfolio extends Comparable <Portfolio> {
 
-    public float getCashBalance();
+    public double getCashBalance();
 
-    public void setCashBalance(float cashBalance);
+    public void setCashBalance(double cashBalance);
 
-    public void setBlockedCash(float amount);
+    public void setBlockedCash(double amount);
 
-    public float getBlockedCash();
+    public double getBlockedCash();
 
-    public HashMap<String, HashMap<String, Float>> getShares();
+    public HashMap<String, HashMap<String, Double>> getShares();
 
-    public void setShares(HashMap<String, HashMap<String, Float>> shares);
+    public void setShares(HashMap<String, HashMap<String, Double>> shares);
 
     public void removeStock(String symbol);
 
@@ -48,12 +48,12 @@ public interface Portfolio extends Comparable <Portfolio> {
      * @param symbol symbol of the stock
      * @param quantity quantity bought
      */
-    public void boughtShares(String symbol, float quantity, float price);
+    public void boughtShares(String symbol, double quantity, double price);
 
     /**
      *
      * @param symbol symbol of the stock
      * @param quantity quantity sold
      */
-    public void soldShares(String symbol, float quantity, float price);
+    public void soldShares(String symbol, double quantity, double price);
 }
