@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS investovator_data.WATCH_LIST (
 -- Table to store users' stock watchlist ids
 CREATE TABLE IF NOT EXISTS investovator_data.PORTFOLIO_VALUES (
   USERNAME varchar(20) NOT NULL,
-  VALUE float (15)  NOT NULL,
+  VALUE double NOT NULL,
+  BLOCKED_VALUE double NOT NULL,
   PRIMARY KEY (USERNAME)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

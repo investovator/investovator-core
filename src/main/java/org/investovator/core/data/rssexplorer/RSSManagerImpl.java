@@ -18,7 +18,6 @@
 
 package org.investovator.core.data.rssexplorer;
 
-import org.investovator.core.commons.utils.Portfolio;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.rssexplorer.utils.MysqlConnector;
 import org.investovator.core.data.rssexplorer.utils.MysqlConstants;
@@ -144,13 +143,102 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public Portfolio getUserPortfolio(String username) throws DataAccessException {
-        return null;  //TODO
+    public HashMap<String, HashMap<String, Double>> getUserPortfolio(String username) throws DataAccessException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            ResultSet resultSet = MysqlConnector.getUserPortfolio(connection, username);
+
+            HashMap<String, HashMap<String, Double>> data = new HashMap<String, HashMap<String, Double>>();
+            while (resultSet.next()){
+                HashMap<String, Double> values = new HashMap<String, Double>();
+                values.put(MysqlConstants.QNTY, resultSet.getDouble(MysqlConstants.QNTY));
+                values.put(MysqlConstants.PRICE, resultSet.getDouble(MysqlConstants.PRICE));
+                data.put(resultSet.getString(MysqlConstants.SYMBOL), values);
+            }
+            resultSet.close();
+            return data;
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
     }
 
     @Override
-    public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException {
-        //TODO
+    public void updateUserPortfolio(String username, HashMap<String, HashMap<String, Double>> portfolio)
+            throws DataAccessException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.bulkInsertToUserPortfolio(connection, username, portfolio);
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public void deleteUserPortfolio(String username) throws DataAccessException{
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.dropUserPortfolio(connection, username);
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public void updatePortfolioValue(String username, double value, double blockedValue) throws DataAccessException{
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.addToPortfolioValues(connection, username, value, blockedValue);
+        } catch (Exception e){
+             throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public HashMap<String, Double> getPortfolioValue(String username) throws DataAccessException{
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            ResultSet resultSet = MysqlConnector.getValueFromPortfolioValues(connection, username);
+
+            HashMap<String, Double> data = new HashMap<String, Double>();
+            while (resultSet.next()){
+                data.put(MysqlConstants.VALUE, resultSet.getDouble(MysqlConstants.VALUE));
+                data.put(MysqlConstants.BLOCKED_VALUE, resultSet.getDouble(MysqlConstants.BLOCKED_VALUE));
+            }
+            resultSet.close();
+            return data;
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public HashMap<String, HashMap<String, Double>> getAllPortfolioValues() throws DataAccessException{
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            ResultSet resultSet = MysqlConnector.getAllValuesFromPortfolioValues(connection);
+
+            HashMap<String, HashMap<String, Double>> data = new HashMap<String, HashMap<String, Double>>();
+            while (resultSet.next()){
+                HashMap<String, Double> values = new HashMap<String, Double>();
+                values.put(MysqlConstants.VALUE, resultSet.getDouble(MysqlConstants.VALUE));
+                values.put(MysqlConstants.BLOCKED_VALUE, resultSet.getDouble(MysqlConstants.BLOCKED_VALUE));
+                data.put(resultSet.getString(MysqlConstants.USERNAME), values);
+            }
+            resultSet.close();
+            return data;
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public void deletePortfolioValue(String username) throws DataAccessException{
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.deleteValueFrmPortfolioValues(connection, username);
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
     }
 
     @Override

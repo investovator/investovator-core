@@ -18,7 +18,6 @@
 
 package org.investovator.core.data.rssexplorer;
 
-import org.investovator.core.commons.utils.Portfolio;
 import org.investovator.core.data.exeptions.DataAccessException;
 
 import java.util.ArrayList;
@@ -46,9 +45,20 @@ public interface RSSManager {
 
     public ArrayList<String> getAvailableStockIds() throws DataAccessException;
 
-    public Portfolio getUserPortfolio(String username) throws DataAccessException;
+    public HashMap<String, HashMap<String, Double>> getUserPortfolio(String username) throws DataAccessException;
 
-    public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException;
+    public void updateUserPortfolio(String username, HashMap<String, HashMap<String, Double>> portfolio)
+            throws DataAccessException;
+
+    public void deleteUserPortfolio(String username) throws DataAccessException;
+
+    public void updatePortfolioValue(String username, double value, double blockedValue) throws DataAccessException;
+
+    public HashMap<String, Double> getPortfolioValue(String username) throws DataAccessException;
+
+    public HashMap<String, HashMap<String, Double>> getAllPortfolioValues() throws DataAccessException;
+
+    public void deletePortfolioValue(String username) throws DataAccessException;
 
     public ArrayList<String> getWatchList(String username) throws DataAccessException;
 

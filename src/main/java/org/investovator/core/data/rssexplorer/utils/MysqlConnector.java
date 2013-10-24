@@ -20,6 +20,7 @@ package org.investovator.core.data.rssexplorer.utils;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.HashMap;
 
 /**
  * @author rajith
@@ -148,6 +149,106 @@ public class MysqlConnector {
         preparedStatement.setString(2, symbol);
         preparedStatement.executeUpdate();
         preparedStatement.close();
+    }
+
+    public static void addToPortfolioValues(Connection con, String username, double value, double blockedValue)
+            throws SQLException {
+        String query =  "INSERT INTO " + MysqlConstants.PORTFOLIO_VALUES +
+                        " VALUES (?,?,?) ON DUPLICATE KEY UPDATE " + MysqlConstants.VALUE +
+                        " = (?), " + MysqlConstants.BLOCKED_VALUE + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        preparedStatement.setDouble(2, value);
+        preparedStatement.setDouble(3, blockedValue);
+        preparedStatement.setDouble(4, value);
+        preparedStatement.setDouble(5, blockedValue);
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    public static ResultSet getValueFromPortfolioValues(Connection con, String username)
+            throws SQLException {
+        String query = "SELECT " + MysqlConstants.VALUE +", "+ MysqlConstants.BLOCKED_VALUE +
+                       " FROM " + MysqlConstants.PORTFOLIO_VALUES +
+                       " WHERE " + MysqlConstants.USERNAME + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        return preparedStatement.executeQuery();
+    }
+
+    public static ResultSet getAllValuesFromPortfolioValues(Connection con) throws SQLException {
+        String query = "SELECT * FROM " + MysqlConstants.PORTFOLIO_VALUES;
+
+        Statement statement = con.createStatement();
+        return statement.executeQuery(query);
+    }
+
+    public static void deleteValueFrmPortfolioValues(Connection con, String username)
+            throws SQLException {
+        String query = "DELETE FROM " + MysqlConstants.PORTFOLIO_VALUES + " WHERE "
+                + MysqlConstants.USERNAME + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    public static void bulkInsertToUserPortfolio(Connection con, String username,
+                                                 HashMap<String, HashMap<String, Double>> portfolio)
+            throws SQLException {
+        createUserPortfolioIfNotExists(con, username);                       //TODO username
+        String query =  "INSERT INTO " + username.toUpperCase() + MysqlConstants.PORTFOLIO +
+                        " VALUES (?,?,?) ON DUPLICATE KEY UPDATE "+ MysqlConstants.QNTY +
+                        " = (?), " + MysqlConstants.PRICE + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+
+        for(String symbol : portfolio.keySet()){
+            HashMap<String, Double> values = portfolio.get(symbol);
+
+            preparedStatement.setString(1, symbol);
+            preparedStatement.setDouble(2, values.get(MysqlConstants.QNTY));
+            preparedStatement.setDouble(3, values.get(MysqlConstants.PRICE));
+            preparedStatement.setDouble(4, values.get(MysqlConstants.QNTY));
+            preparedStatement.setDouble(5, values.get(MysqlConstants.PRICE));
+
+            preparedStatement.addBatch();
+        }
+        preparedStatement.executeBatch();
+        preparedStatement.close();
+    }
+
+    public static ResultSet getUserPortfolio(Connection con,String username) throws SQLException {
+        String query = "SELECT * FROM " + username.toUpperCase() + MysqlConstants.PORTFOLIO;
+
+        Statement statement = con.createStatement();
+        return statement.executeQuery(query);
+    }
+
+    public static void dropUserPortfolio(Connection con,String username) throws SQLException {
+        String query = "DROP TABLE " + username.toUpperCase() + MysqlConstants.PORTFOLIO;
+
+        Statement statement = con.createStatement();
+        statement.executeUpdate(query);
+        statement.close();
+    }
+
+    private static void createUserPortfolioIfNotExists(Connection con, String username) throws SQLException {
+
+        String databaseName = System.getProperty(MYSQL_DB_KEY);
+        String query = "CREATE TABLE IF NOT EXISTS "+ databaseName + "." + username.toUpperCase() +
+                MysqlConstants.PORTFOLIO + "(" +
+                MysqlConstants.SYMBOL + " varchar(5) NOT NULL, "+
+                MysqlConstants.QNTY +" double NOT NULL, "+
+                MysqlConstants.PRICE +" double NOT NULL, PRIMARY KEY ("+
+                MysqlConstants.SYMBOL +")) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+        Statement statement = con.createStatement();
+        statement.executeUpdate(query);
+        statement.close();
     }
 
     private MysqlConnector() throws ClassNotFoundException, IllegalAccessException,

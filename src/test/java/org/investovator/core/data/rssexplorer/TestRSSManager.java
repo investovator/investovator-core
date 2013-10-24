@@ -21,6 +21,7 @@ package org.investovator.core.data.rssexplorer;
 import org.apache.commons.configuration.ConfigurationException;
 import org.investovator.core.configuration.ConfigLoader;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.rssexplorer.utils.MysqlConstants;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -120,6 +121,79 @@ public class TestRSSManager {
         assertTrue(ids.contains("GOOG"));
         assertFalse(ids.contains("IBM"));
         assertTrue(ids.contains("YHO"));
+    }
+
+    @Test
+    public void testUpdatePortfolioAndAssert() throws DataAccessException {
+        RSSManager manager = new RSSManagerImpl();
+        HashMap<String, HashMap<String, Double>> portfolio = new HashMap<String, HashMap<String, Double>>();
+        HashMap<String, Double> values = new HashMap<String, Double>();
+
+        values.put(MysqlConstants.QNTY, 1224.0);
+        values.put(MysqlConstants.PRICE, 25.0);
+        portfolio.put("GOOG", values);
+
+        values = new HashMap<String, Double>();
+
+        values.put(MysqlConstants.QNTY, 1243.0);
+        values.put(MysqlConstants.PRICE, 23.0);
+        portfolio.put("YHO", values);
+
+        manager.updateUserPortfolio("Saman", portfolio);
+
+        portfolio = manager.getUserPortfolio("Saman");
+
+        assertTrue((portfolio.get("GOOG")).get(MysqlConstants.PRICE) == 25.0);
+        assertTrue((portfolio.get("GOOG")).get(MysqlConstants.QNTY) == 1224.0);
+        assertTrue((portfolio.get("YHO")).get(MysqlConstants.PRICE) == 23.0);
+        assertTrue((portfolio.get("YHO")).get(MysqlConstants.QNTY) == 1243.0);
+    }
+
+    @Test
+    public void testDeletePortfolioAndAssert() throws DataAccessException {
+        RSSManager manager = new RSSManagerImpl();
+        HashMap<String, HashMap<String, Double>> portfolio = new HashMap<String, HashMap<String, Double>>();
+        HashMap<String, Double> values = new HashMap<String, Double>();
+
+        values.put(MysqlConstants.QNTY, 1224.0);
+        values.put(MysqlConstants.PRICE, 25.0);
+        portfolio.put("GOOG", values);
+
+        values = new HashMap<String, Double>();
+
+        values.put(MysqlConstants.QNTY, 1243.0);
+        values.put(MysqlConstants.PRICE, 23.0);
+        portfolio.put("YHO", values);
+
+        manager.updateUserPortfolio("Saman", portfolio);
+        manager.deleteUserPortfolio("Saman");
+
+        try {
+            manager.getUserPortfolio("Saman");
+        } catch (DataAccessException e){
+            if(e.getMessage().contains("Table 'investovator_data.SAMAN_PORTFOLIO' doesn't exist")){
+                assertTrue(true);
+            } else
+                throw new DataAccessException(e);
+        }
+    }
+
+    @Test
+    public void addPortfolioValuesAndAssert() throws DataAccessException {
+        RSSManager manager = new RSSManagerImpl();
+        manager.updatePortfolioValue("saman", 1342.3, 123.5);
+        manager.updatePortfolioValue("arun", 12425.2, 234.6);
+
+        assertTrue((manager.getPortfolioValue("saman")).get(MysqlConstants.VALUE)==1342.3);
+        assertTrue((manager.getPortfolioValue("saman")).get(MysqlConstants.BLOCKED_VALUE)==123.5);
+
+        HashMap<String, HashMap<String, Double>> portfolioValues = manager.getAllPortfolioValues();
+        assertTrue((portfolioValues.get("saman")).get(MysqlConstants.VALUE)==1342.3);
+        assertTrue((portfolioValues.get("arun")).get(MysqlConstants.VALUE)==12425.2);
+
+        manager.deletePortfolioValue("arun");
+        portfolioValues = manager.getAllPortfolioValues();
+        assertFalse(portfolioValues.containsKey("arun"));
     }
 
     @Before

@@ -19,11 +19,14 @@
 package org.investovator.core.data.api;
 
 import org.investovator.core.commons.utils.Portfolio;
+import org.investovator.core.commons.utils.PortfolioImpl;
+import org.investovator.core.commons.utils.Terms;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.rssexplorer.RSSManager;
 import org.investovator.core.data.rssexplorer.RSSManagerImpl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author rajith
@@ -39,12 +42,15 @@ public class UserDataImpl implements UserData{
 
     @Override
     public Portfolio getUserPortfolio(String username) throws DataAccessException {
-        return null; //TODO
+        HashMap <String, HashMap<String, Double>> shares = manager.getUserPortfolio(username);
+        HashMap <String, Double> values = manager.getPortfolioValue(username);
+        return new PortfolioImpl(username, values.get(Terms.VALUE), values.get(Terms.BLOCKED_VALUE), shares);
     }
 
     @Override
     public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException {
-        //TODO
+        manager.updatePortfolioValue(username, portfolio.getCashBalance(), portfolio.getBlockedCash());
+        manager.updateUserPortfolio(username, portfolio.getShares());
     }
 
     @Override

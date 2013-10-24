@@ -33,7 +33,10 @@ public class MysqlConstants {
     public static final String NAME = "NAME";
     public static final String SHARES = "SHARES";
     public static final String USERNAME = "USERNAME";
+    public static final String VALUE = "VALUE";
+    public static final String BLOCKED_VALUE = "BLOCKED_VALUE";
+    public static final String PRICE = "PRICE";
+    public static final String QNTY = "QUANTITY";
 
-
-
+    public static final String PORTFOLIO = "_PORTFOLIO";
 }
