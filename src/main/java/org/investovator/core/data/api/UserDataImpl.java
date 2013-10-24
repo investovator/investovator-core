@@ -32,10 +32,12 @@ import java.util.HashMap;
 public class UserDataImpl implements UserData{
 
 
+    Portfolio testUser1 = new PortfolioImpl("testUser1",100000);
+
     @Override
     public Portfolio getUserPortfolio(String username)
             throws DataAccessException {
-        Portfolio testUser1 = new PortfolioImpl("testUser1",100000);
+
 
         if(username.equals("testUser1")) return testUser1;
 
@@ -45,6 +47,7 @@ public class UserDataImpl implements UserData{
     @Override
     public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException {
         //TODO
+        if(username.equals("testUser1")) testUser1 = portfolio;
     }
 
     @Override
