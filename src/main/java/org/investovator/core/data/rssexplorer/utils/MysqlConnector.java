@@ -201,7 +201,7 @@ public class MysqlConnector {
     public static void bulkInsertToUserPortfolio(Connection con, String username,
                                                  HashMap<String, HashMap<String, Double>> portfolio)
             throws SQLException {
-        createUserPortfolioIfNotExists(con, username);                       //TODO username
+        createUserPortfolioIfNotExists(con, username);
         String query =  "INSERT INTO " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
                         MysqlConstants.PORTFOLIO + " VALUES (?,?,?) ON DUPLICATE KEY UPDATE "+ MysqlConstants.QNTY +
                         " = (?), " + MysqlConstants.PRICE + " = (?)";
