@@ -18,7 +18,9 @@
 
 package org.investovator.core.data.rssexplorer;
 
+import org.investovator.core.data.api.utils.CompanyInfo;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,9 +41,9 @@ public interface RSSManager {
 
     public int getCompanyNoOfShares(String symbol) throws DataAccessException;
 
-    public Object getInfo(String infoType, String symbol) throws DataAccessException;
+    public String getInfo(CompanyInfo infoType, String symbol) throws DataAccessException, DataNotFoundException;
 
-    public void addInfo(String infoType, String symbol, Object object) throws DataAccessException;
+    public void addInfo(CompanyInfo infoType, String symbol, String value) throws DataAccessException;
 
     public ArrayList<String> getAvailableStockIds() throws DataAccessException;
 

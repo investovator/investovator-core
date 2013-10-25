@@ -18,7 +18,9 @@
 
 package org.investovator.core.data.rssexplorer;
 
+import org.investovator.core.data.api.utils.CompanyInfo;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 import org.investovator.core.data.rssexplorer.utils.MysqlConnector;
 import org.investovator.core.data.rssexplorer.utils.MysqlConstants;
 
@@ -116,13 +118,32 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public Object getInfo(String infoType, String symbol) throws DataAccessException {
-        return null;  //TODO
+    public String getInfo(CompanyInfo infoType, String symbol) throws DataAccessException, DataNotFoundException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            ResultSet resultSet = MysqlConnector.getCompanyInfo(connection,
+                    CompanyInfo.getAttribName(infoType), symbol);
+            resultSet.next();
+            String value = resultSet.getString(MysqlConstants.VALUE);
+            resultSet.close();
+            return value;
+        } catch (Exception e) {
+            if(e.getMessage().contains("Illegal operation on empty result set.")){
+               throw new DataNotFoundException(CompanyInfo.getAttribName(infoType)
+                       + "information not available for " + symbol);
+            } else
+                throw new DataAccessException(e);
+        }
     }
 
     @Override
-    public void addInfo(String infoType, String symbol, Object object) throws DataAccessException {
-        //TODO
+    public void addInfo(CompanyInfo infoType, String symbol, String value) throws DataAccessException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.addToCompanyInfo(connection, CompanyInfo.getAttribName(infoType), symbol, value);
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
     }
 
     @Override

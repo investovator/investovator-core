@@ -18,7 +18,9 @@
 
 package org.investovator.core.data.api;
 
+import org.investovator.core.data.api.utils.CompanyInfo;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 import org.investovator.core.data.rssexplorer.RSSManager;
 import org.investovator.core.data.rssexplorer.RSSManagerImpl;
 
@@ -88,8 +90,8 @@ public class CompanyDataImpl implements CompanyData{
      * {@inheritDoc}
      */
     @Override
-    public Object getInfo(String infoType, String symbol) throws DataAccessException{
-        return null; //TODO
+    public String getInfo(CompanyInfo infoType, String symbol) throws DataAccessException, DataNotFoundException {
+        return manager.getInfo(infoType, symbol);
     }
 
     /**
@@ -97,8 +99,8 @@ public class CompanyDataImpl implements CompanyData{
      * {@inheritDoc}
      */
     @Override
-    public void addInfo(String infoType, String symbol, Object object) throws DataAccessException {
-        //TODO
+    public void addInfo(CompanyInfo infoType, String symbol, String value) throws DataAccessException {
+        manager.addInfo(infoType, symbol, value);
     }
 
     /**
@@ -110,6 +112,4 @@ public class CompanyDataImpl implements CompanyData{
         return manager.getAvailableStockIds();
     }
 
-
-    //TODO data adding api
 }

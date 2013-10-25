@@ -61,5 +61,4 @@ public interface CassandraManager {
     @Deprecated
     public Date[] getKeyRange(String dataType, String symbol) throws DataAccessException;
 
-    //TODO truncate stock data
 }

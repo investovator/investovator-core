@@ -240,6 +240,43 @@ public class MysqlConnector {
         statement.close();
     }
 
+    public static ResultSet getCompanyInfo(Connection con,String table, String symbol) throws SQLException {
+        String query = "SELECT " + MysqlConstants.VALUE +" FROM " +
+                        (StringConverter.keepOnlyAlphaNumeric(table)).toUpperCase() + " WHERE " +
+                        MysqlConstants.SYMBOL + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, symbol);
+        return preparedStatement.executeQuery();
+    }
+
+    public static void addToCompanyInfo(Connection con,String table, String symbol, String value) throws SQLException {
+        createCompanyInfoTableIfNotExists(con, table);
+
+        String query =  "INSERT INTO " + (StringConverter.keepOnlyAlphaNumeric(table)).toUpperCase() +
+                        " VALUES (?,?) ON DUPLICATE KEY UPDATE " + MysqlConstants.VALUE + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, symbol);
+        preparedStatement.setString(2, value);
+        preparedStatement.setString(3, value);
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    private static void createCompanyInfoTableIfNotExists(Connection con, String table) throws SQLException {
+
+        String databaseName = System.getProperty(MYSQL_DB_KEY);
+        String query = "CREATE TABLE IF NOT EXISTS " + databaseName + "." +
+                        (StringConverter.keepOnlyAlphaNumeric(table)).toUpperCase() +
+                       " (" + MysqlConstants.SYMBOL + " varchar(5) NOT NULL, " + MysqlConstants.VALUE +
+                       " varchar(200)  NOT NULL, PRIMARY KEY ("+
+                        MysqlConstants.SYMBOL +")) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        Statement statement = con.createStatement();
+        statement.executeUpdate(query);
+        statement.close();
+    }
+
     private static void createUserPortfolioIfNotExists(Connection con, String username) throws SQLException {
 
         String databaseName = System.getProperty(MYSQL_DB_KEY);

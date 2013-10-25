@@ -18,7 +18,9 @@
 
 package org.investovator.core.data.api;
 
+import org.investovator.core.data.api.utils.CompanyInfo;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,18 +77,18 @@ public interface CompanyData {
      * @param symbol StockId of the company
      * @return Data
      * @throws DataAccessException
+     * @throws DataNotFoundException
      */
-    public Object getInfo(String infoType, String symbol) throws DataAccessException;
+    public String getInfo(CompanyInfo infoType, String symbol) throws DataAccessException, DataNotFoundException;
 
     /**
      *
      * @param infoType Information type ex: annual dividend
      * @param symbol stockId of the company
-     * @param object data
+     * @param value data
      * @throws DataAccessException
      */
-    public void addInfo(String infoType, String symbol, Object object)
-            throws DataAccessException;
+    public void addInfo(CompanyInfo infoType, String symbol, String value) throws DataAccessException;
 
     /**
      *

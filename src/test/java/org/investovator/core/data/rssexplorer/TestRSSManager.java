@@ -20,7 +20,9 @@ package org.investovator.core.data.rssexplorer;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.investovator.core.commons.configuration.ConfigLoader;
+import org.investovator.core.data.api.utils.CompanyInfo;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 import org.investovator.core.data.rssexplorer.utils.MysqlConstants;
 import org.junit.Before;
 import org.junit.Test;
@@ -115,7 +117,7 @@ public class TestRSSManager {
         manager.addToWatchList("arun", "IBM");
         manager.addToWatchList("arun", "YHO");
 
-        manager.deleteFromWatchList("arun","IBM");
+        manager.deleteFromWatchList("arun", "IBM");
 
         ArrayList<String> ids = manager.getWatchList("arun");
         assertTrue(ids.contains("GOOG"));
@@ -194,6 +196,15 @@ public class TestRSSManager {
         manager.deletePortfolioValue("arun");
         portfolioValues = manager.getAllPortfolioValues();
         assertFalse(portfolioValues.containsKey("arun"));
+    }
+
+    @Test
+    public void addCompanyInfoNAssert() throws DataAccessException, DataNotFoundException {
+        RSSManager manager = new RSSManagerImpl();
+
+        manager.addInfo(CompanyInfo.DEBT, "GOOG", "123.5");
+        String temp = String.valueOf(manager.getInfo(CompanyInfo.DEBT, "GOOG"));
+        assertTrue(Double.valueOf(temp) == 123.5);
     }
 
     @Before

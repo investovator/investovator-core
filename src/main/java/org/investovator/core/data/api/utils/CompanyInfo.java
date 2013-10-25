@@ -16,26 +16,38 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.data.rssexplorer.utils;
+package org.investovator.core.data.api.utils;
 
 /**
  * @author rajith
  * @version $Revision$
  */
-public class MysqlConstants {
+public enum CompanyInfo {
 
-    public static final String COMPANY_INFO = "COMPANY_INFO";
-    public static final String WATCH_LIST = "WATCH_LIST";
-    public static final String PORTFOLIO_VALUES = "PORTFOLIO_VALUES";
+    DIVIDEND,
+    DEBT;
 
-    public static final String SYMBOL = "SYMBOL";
-    public static final String NAME = "NAME";
-    public static final String SHARES = "SHARES";
-    public static final String USERNAME = "USERNAME";
-    public static final String VALUE = "VALUE";
-    public static final String BLOCKED_VALUE = "BLOCKED_VALUE";
-    public static final String PRICE = "PRICE";
-    public static final String QNTY = "QUANTITY";
 
-    public static final String PORTFOLIO = "_PORTFOLIO";
+    /*This should be removed outside this class later*/
+    public static String getAttribName(CompanyInfo companyInfo) {
+
+        switch (companyInfo) {
+            case DIVIDEND:
+                return "Dividend";
+            case DEBT:
+                return "Debt";
+        }
+        return null;
+    }
+
+    public static TradingDataAttribute fromString(String value) {
+        if (value != null) {
+            for (TradingDataAttribute attribute : TradingDataAttribute.values()) {
+                if (value.equalsIgnoreCase(TradingDataAttribute.getAttribName(attribute))) {
+                    return attribute;
+                }
+            }
+        }
+        return null;
+    }
 }
