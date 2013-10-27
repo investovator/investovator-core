@@ -98,8 +98,13 @@ public class PortfolioImpl implements Terms, Portfolio {
     public void boughtShares(String symbol, double quantity, double price){
         if (shares.containsKey(symbol)){
             HashMap<String, Double> stockData = shares.get(symbol);
-            stockData.put(QNTY, stockData.get(QNTY) + quantity);
-            stockData.put(PRICE, price);
+            double oldQty = stockData.get(QNTY);
+            double oldPrice = stockData.get(PRICE);
+            /*Average of the prices*/
+            double newPrice = ((quantity * price) + (oldQty * oldPrice)) / (quantity + oldQty);
+
+            stockData.put(QNTY, oldQty + quantity);
+            stockData.put(PRICE, newPrice);
         } else {
             HashMap<String, Double> stockData = new HashMap<String, Double>();
             stockData.put(QNTY, quantity);
