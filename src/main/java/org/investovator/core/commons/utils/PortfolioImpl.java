@@ -125,5 +125,6 @@ public class PortfolioImpl implements Terms, Portfolio {
             HashMap<String, Double> stockData = shares.get(symbol);
             stockData.put(QNTY, stockData.get(QNTY) - quantity);
         }
+        cashBalance += quantity * price;
     }
 }
