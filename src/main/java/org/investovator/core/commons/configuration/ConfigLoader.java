@@ -44,7 +44,12 @@ public class ConfigLoader {
         Iterator<String> iterator = configuration.getKeys();
         while (iterator.hasNext()){
             String key = iterator.next();
-            System.setProperty(key, (String) configuration.getProperty(key));
+            String[] properties = configuration.getStringArray(key);
+            StringBuilder value = new StringBuilder(properties[0]);
+            for(int i = 1; i < properties.length; i++){
+               value.append(",").append(properties[i]);
+            }
+            System.setProperty(key, value.toString());
         }
     }
 
