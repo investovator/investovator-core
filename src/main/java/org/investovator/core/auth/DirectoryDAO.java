@@ -31,10 +31,27 @@ import java.util.HashMap;
  */
 public interface DirectoryDAO {
 
+    /**
+     * Check authentication of a user
+     * @param credentials credentials
+     * @return authenticated = true, else false
+     * @throws AuthenticationException
+     */
     public boolean authenticate(SimpleCredentials credentials) throws AuthenticationException;
 
-    public HashMap<String, String> getUserAttributes(SimpleCredentials credentials)
-            throws AuthenticationException, AuthorizationException;
+    /**
+     * Authentication and getting user attributes
+     * @param credentials credentials
+     * @return user attributes
+     * @throws AuthenticationException
+     */
+    public HashMap<String, String> bindUser(SimpleCredentials credentials) throws AuthenticationException;
 
+    /**
+     * Search all the users registered for the game
+     * @return List of users
+     * @throws AuthenticationException
+     * @throws AuthorizationException
+     */
     public ArrayList<String> getAllUsers() throws AuthenticationException, AuthorizationException;
 }

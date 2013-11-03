@@ -20,6 +20,7 @@ package org.investovator.core.auth;
 
 import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.entry.DefaultAttribute;
+import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.entry.StringValue;
 import org.apache.directory.api.ldap.model.message.*;
 import org.apache.directory.api.ldap.model.name.Dn;
@@ -38,15 +39,18 @@ import java.util.HashMap;
  */
 public class DirectoryDAOImpl implements DirectoryDAO {
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
     public boolean authenticate(SimpleCredentials credentials) throws AuthenticationException {
 
         LdapConnection connection = LdapUtils.getLdapConnection();
-
         try {
             Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_PEOPLE_KEY));
             String username = LdapUtils.UID_STRING + credentials.getUserID();
-
+            connection.bind();
             EntryCursor cursor = connection.search(baseDN, "(" + username + ")", SearchScope.SUBTREE, "*");
             if(cursor.next()){
                 BindRequest bindRequest = new BindRequestImpl();
@@ -65,21 +69,78 @@ public class DirectoryDAOImpl implements DirectoryDAO {
         }
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
-    public HashMap<String, String> getUserAttributes(SimpleCredentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        return null;  //TODO
+    public HashMap<String, String> bindUser(SimpleCredentials credentials) throws AuthenticationException {
+
+        LdapConnection anonymousConnection = LdapUtils.getLdapConnection();
+        try {
+            Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_PEOPLE_KEY));
+            String username = LdapUtils.UID_STRING + credentials.getUserID();
+            anonymousConnection.bind();
+
+            /*Search anonymously or with applications credentials*/
+            EntryCursor cursor = anonymousConnection
+                    .search(baseDN, "(" + username + ")", SearchScope.SUBTREE, LdapUtils.ALL_ATTRIB);
+            if(cursor.next()){
+
+                String fullyQualifiedUsername = username +","+ baseDN.toString();
+                BindRequest bindRequest = new BindRequestImpl();
+                bindRequest.setName(fullyQualifiedUsername);
+                bindRequest.setCredentials(new String(credentials.getPassword()).getBytes("UTF-8"));
+
+                /*User authentication connection*/
+                LdapConnection connection = LdapUtils.getUserLdapConnection(fullyQualifiedUsername,
+                        new String(credentials.getPassword()));
+                if(connection.bind(bindRequest).getLdapResult().getResultCode() == ResultCodeEnum.SUCCESS){
+
+                    EntryCursor entryCursor = connection
+                            .search(baseDN, "(" + username + ")", SearchScope.ONELEVEL, LdapUtils.ALL_ATTRIB);
+                    if (entryCursor.next()){
+                        Entry values = entryCursor.get();
+                        HashMap<String, String> userData = new HashMap<>();
+
+                        StringBuilder name = new StringBuilder((((values.get(LdapUtils.COMMON_NAME)
+                                .toString()).split(":"))[1]).trim());
+                        String lastName = (((values.get(LdapUtils.SURNAME).toString()).split(":"))[1]).trim();
+                        userData.put("name", (name.append(" ").append(lastName)).toString());
+
+                        connection.close();
+                        return userData;
+                    } else {
+                        throw new AuthenticationException(LdapUtils.ERROR_INSUFFICIENT_ACCESS);
+                    }
+
+                } else {
+                    throw new AuthenticationException(LdapUtils.ERROR_INVALID_PASSWORD);
+                }
+            } else {
+                throw new AuthenticationException(LdapUtils.ERROR_INVALID_USER);
+            }
+        } catch (AuthenticationException exception) {
+            throw exception;
+        } catch (Exception e) {
+            throw new AuthenticationException(e);
+        } finally {
+            LdapUtils.releaseConnectionQuietly(anonymousConnection);
+        }
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
     public ArrayList<String> getAllUsers() throws AuthenticationException, AuthorizationException {
 
         LdapConnection connection = LdapUtils.getLdapConnection();
-
         try {
             Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_ROLES_KEY));
             String filter = "("+ LdapUtils.CN_STRING + System.getProperty(LdapUtils.DN_USER_ROLE_KEY) + ")";
-
+            connection.bind();
             EntryCursor cursor = connection.search(baseDN, filter, SearchScope.ONELEVEL, LdapUtils.MEMBER_ATTRIB);
             ArrayList<String> users = new ArrayList<>();
             if (cursor.next()){
@@ -90,7 +151,7 @@ public class DirectoryDAOImpl implements DirectoryDAO {
                 }
                 return users;
             } else {
-                throw new AuthorizationException("Searching not allowed for given user");
+                throw new AuthorizationException(LdapUtils.ERROR_INSUFFICIENT_ACCESS);
             }
         } catch (AuthorizationException exception) {
             throw exception;

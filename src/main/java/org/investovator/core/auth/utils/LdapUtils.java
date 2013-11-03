@@ -18,10 +18,7 @@
 
 package org.investovator.core.auth.utils;
 
-import org.apache.directory.ldap.client.api.LdapConnection;
-import org.apache.directory.ldap.client.api.LdapConnectionConfig;
-import org.apache.directory.ldap.client.api.LdapConnectionPool;
-import org.apache.directory.ldap.client.api.PoolableLdapConnectionFactory;
+import org.apache.directory.ldap.client.api.*;
 import org.investovator.core.auth.exceptions.AuthenticationException;
 
 /**
@@ -38,9 +35,17 @@ public class LdapUtils {
     public static final String DN_USER_ROLE_KEY = "org.investovator.core.auth.ldap.dn.gameusers";
 
     /*String related to LDAP*/
-    public static String UID_STRING = "uid=";
-    public static String CN_STRING = "cn=";
-    public static String MEMBER_ATTRIB = "member";
+    public static final String UID_STRING = "uid=";
+    public static final String CN_STRING = "cn=";
+    public static final String MEMBER_ATTRIB = "member";
+    public static final String ALL_ATTRIB = "*";
+    public static final String COMMON_NAME = "cn";
+    public static final String SURNAME = "sn";
+
+    /*custom error messages*/
+    public static final String ERROR_INSUFFICIENT_ACCESS = "Insufficient access permissions";
+    public static final String ERROR_INVALID_PASSWORD = "Invalid password";
+    public static final String ERROR_INVALID_USER = "User not available in the directory";
 
     private static volatile LdapConnectionPool connectionPool;
 
@@ -73,6 +78,19 @@ public class LdapUtils {
         } catch (Exception e) {
             //exception ignored
         }
+    }
+
+    public static LdapConnection getUserLdapConnection(String username, String password){
+        LdapConnectionConfig config = new LdapConnectionConfig();
+        config.setLdapHost(System.getProperty(URL_HOST_KEY));
+
+        if(!System.getProperty(URL_PORT_KEY).equals("")){
+            config.setLdapPort(Integer.valueOf(System.getProperty(URL_PORT_KEY)));
+        }
+        config.setName(username);
+        config.setCredentials(password);
+
+        return new LdapNetworkConnection(config);
     }
 
     private static void createNewConnectionPool(){

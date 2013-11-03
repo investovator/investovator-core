@@ -28,6 +28,7 @@ import org.junit.Test;
 import javax.jcr.SimpleCredentials;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertTrue;
 
@@ -46,6 +47,16 @@ public class TestDirectoryDAO{
         DirectoryDAO dao = new DirectoryDAOImpl();
         SimpleCredentials simpleCredentials = new SimpleCredentials("dexter",("dexter").toCharArray());
         assertTrue(dao.authenticate(simpleCredentials));
+    }
+
+    @Test
+    public void testBindUser() throws ConfigurationException, AuthenticationException {
+
+        DirectoryDAO dao = new DirectoryDAOImpl();
+        SimpleCredentials simpleCredentials = new SimpleCredentials("dexter",("dexter").toCharArray());
+        HashMap<String, String> userData = dao.bindUser(simpleCredentials);
+
+        assertTrue(userData.get("name").equals("Dexter Morgan"));
     }
 
     @Test
