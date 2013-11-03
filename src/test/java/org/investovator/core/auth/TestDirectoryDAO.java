@@ -18,30 +18,48 @@
 
 package org.investovator.core.auth;
 
-import junit.framework.TestCase;
 import org.apache.commons.configuration.ConfigurationException;
 import org.investovator.core.auth.exceptions.AuthenticationException;
+import org.investovator.core.auth.exceptions.AuthorizationException;
 import org.investovator.core.commons.configuration.ConfigLoader;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.jcr.SimpleCredentials;
 import java.io.File;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author rajith
  * @version ${Revision}
  */
-public class TestDirectoryDAO extends TestCase{
+public class TestDirectoryDAO{
 
     private static String RESOURCE_DIR_PATH = "src" + File.separator + "test"
             + File.separator + "resources" + File.separator;
 
+    @Test
     public void testAuthentication() throws ConfigurationException, AuthenticationException {
 
         DirectoryDAO dao = new DirectoryDAOImpl();
-
-        ConfigLoader.loadProperties(RESOURCE_DIR_PATH + "resource.properties");
-
         SimpleCredentials simpleCredentials = new SimpleCredentials("dexter",("dexter").toCharArray());
         assertTrue(dao.authenticate(simpleCredentials));
     }
+
+    @Test
+    public void testGetAllUsers() throws AuthenticationException, AuthorizationException {
+        DirectoryDAO dao = new DirectoryDAOImpl();
+        ArrayList<String> users = dao.getAllUsers();
+
+        assertTrue(users.contains("alex"));
+        assertTrue(users.contains("dexter"));
+    }
+
+    @Before
+    public void setEnvironment() throws ConfigurationException {
+        ConfigLoader.loadProperties(RESOURCE_DIR_PATH + "resource.properties");
+    }
+
 }

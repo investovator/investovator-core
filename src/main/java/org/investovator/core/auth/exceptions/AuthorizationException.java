@@ -16,24 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.auth;
-
-import org.investovator.core.auth.exceptions.AuthenticationException;
-import org.investovator.core.auth.exceptions.AuthorizationException;
-
-import javax.jcr.SimpleCredentials;
-import java.util.ArrayList;
-import java.util.HashMap;
+package org.investovator.core.auth.exceptions;
 
 /**
  * @author rajith
  * @version ${Revision}
  */
-public interface DirectoryDAO {
+public class AuthorizationException extends Exception{
 
-    public boolean authenticate(SimpleCredentials credentials) throws AuthenticationException;
+    public AuthorizationException(String msg){
+        super(msg);
+    }
 
-    public HashMap<String, String> getUserAttributes();
-
-    public ArrayList<String> getAllUsers() throws AuthenticationException, AuthorizationException;
+    public AuthorizationException(Exception e){
+        super(e);
+    }
 }

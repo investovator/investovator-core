@@ -18,7 +18,11 @@
 
 package org.investovator.core.auth.utils;
 
-import org.apache.directory.ldap.client.api.*;
+import org.apache.directory.ldap.client.api.LdapConnection;
+import org.apache.directory.ldap.client.api.LdapConnectionConfig;
+import org.apache.directory.ldap.client.api.LdapConnectionPool;
+import org.apache.directory.ldap.client.api.PoolableLdapConnectionFactory;
+import org.investovator.core.auth.exceptions.AuthenticationException;
 
 /**
  * @author rajith
@@ -28,26 +32,39 @@ public class LdapUtils {
 
     public static final String URL_HOST_KEY = "org.investovator.core.auth.ldap.url.host";
     public static final String URL_PORT_KEY = "org.investovator.core.auth.ldap.url.port";
-    public static final String DN_KEY = "org.investovator.core.auth.ldap.dn";
+    public static final String DN_PEOPLE_KEY = "org.investovator.core.auth.ldap.dn.people";
+    public static final String DN_ROLES_KEY = "org.investovator.core.auth.ldap.dn.roles";
+    public static final String DN_ADMIN_ROLE_KEY = "org.investovator.core.auth.ldap.dn.adminrole";
+    public static final String DN_USER_ROLE_KEY = "org.investovator.core.auth.ldap.dn.gameusers";
 
     /*String related to LDAP*/
     public static String UID_STRING = "uid=";
+    public static String CN_STRING = "cn=";
+    public static String MEMBER_ATTRIB = "member";
 
     private static volatile LdapConnectionPool connectionPool;
 
 
-    public static LdapConnection getLdapConnection() throws Exception {
+    public static LdapConnection getLdapConnection() throws AuthenticationException {
         if(connectionPool == null){
             synchronized(LdapUtils.class){
                 if(connectionPool == null)
                     createNewConnectionPool();
             }
         }
-        return connectionPool.getConnection();
+        try {
+            return connectionPool.getConnection();
+        } catch (Exception e) {
+            throw new AuthenticationException(e);
+        }
     }
 
-    public static void releaseConnection(LdapConnection connection) throws Exception {
-        connectionPool.releaseConnection(connection);
+    public static void releaseConnection(LdapConnection connection) throws AuthenticationException {
+        try {
+            connectionPool.releaseConnection(connection);
+        } catch (Exception e) {
+            throw new AuthenticationException(e);
+        }
     }
 
     public static void releaseConnectionQuietly(LdapConnection connection) {
@@ -66,7 +83,7 @@ public class LdapUtils {
             config.setLdapPort(Integer.valueOf(System.getProperty(URL_PORT_KEY)));
         }
         PoolableLdapConnectionFactory factory = new PoolableLdapConnectionFactory( config );
-        connectionPool = new LdapConnectionPool( factory );
+        connectionPool = new LdapConnectionPool(factory);
         connectionPool.setTestOnBorrow(true);
     }
 }

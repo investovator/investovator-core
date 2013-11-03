@@ -19,13 +19,18 @@
 package org.investovator.core.auth;
 
 import org.apache.directory.api.ldap.model.cursor.EntryCursor;
+import org.apache.directory.api.ldap.model.entry.DefaultAttribute;
+import org.apache.directory.api.ldap.model.entry.StringValue;
 import org.apache.directory.api.ldap.model.message.*;
 import org.apache.directory.api.ldap.model.name.Dn;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.investovator.core.auth.exceptions.AuthenticationException;
+import org.investovator.core.auth.exceptions.AuthorizationException;
 import org.investovator.core.auth.utils.LdapUtils;
 
 import javax.jcr.SimpleCredentials;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author rajith
@@ -36,16 +41,10 @@ public class DirectoryDAOImpl implements DirectoryDAO {
     @Override
     public boolean authenticate(SimpleCredentials credentials) throws AuthenticationException {
 
-        LdapConnection connection;
-        try {
-            connection = LdapUtils.getLdapConnection();
-        } catch (Exception e) {
-            throw new AuthenticationException(e);
-        }
+        LdapConnection connection = LdapUtils.getLdapConnection();
 
         try {
-
-            Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_KEY));
+            Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_PEOPLE_KEY));
             String username = LdapUtils.UID_STRING + credentials.getUserID();
 
             EntryCursor cursor = connection.search(baseDN, "(" + username + ")", SearchScope.SUBTREE, "*");
@@ -59,6 +58,41 @@ public class DirectoryDAOImpl implements DirectoryDAO {
             } else {
                 throw new AuthenticationException("User not available");
             }
+        } catch (Exception e) {
+            throw new AuthenticationException(e);
+        } finally {
+            LdapUtils.releaseConnectionQuietly(connection);
+        }
+    }
+
+    @Override
+    public HashMap<String, String> getUserAttributes() {
+        return null;  //TODO
+    }
+
+    @Override
+    public ArrayList<String> getAllUsers() throws AuthenticationException, AuthorizationException {
+
+        LdapConnection connection = LdapUtils.getLdapConnection();
+
+        try {
+            Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_ROLES_KEY));
+            String filter = "("+ LdapUtils.CN_STRING + System.getProperty(LdapUtils.DN_USER_ROLE_KEY) + ")";
+
+            EntryCursor cursor = connection.search(baseDN, filter, SearchScope.ONELEVEL, LdapUtils.MEMBER_ATTRIB);
+            ArrayList<String> users = new ArrayList<>();
+            if (cursor.next()){
+                DefaultAttribute userIds = (DefaultAttribute) (cursor.get()).get(LdapUtils.MEMBER_ATTRIB);
+                for (Object userId : userIds) {
+                    String username = ((StringValue) userId).getString();
+                    users.add((username.split(",")[0]).split(LdapUtils.UID_STRING)[1]);
+                }
+                return users;
+            } else {
+                throw new AuthorizationException("Searching not allowed for given user");
+            }
+        } catch (AuthorizationException exception) {
+            throw exception;
         } catch (Exception e) {
             throw new AuthenticationException(e);
         } finally {
