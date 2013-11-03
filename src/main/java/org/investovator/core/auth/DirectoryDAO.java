@@ -54,4 +54,6 @@ public interface DirectoryDAO {
      * @throws AuthorizationException
      */
     public ArrayList<String> getAllUsers() throws AuthenticationException, AuthorizationException;
+
+    //TODO adding to adminrole read/write, adding to registered
 }
