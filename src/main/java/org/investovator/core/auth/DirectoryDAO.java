@@ -33,7 +33,8 @@ public interface DirectoryDAO {
 
     public boolean authenticate(SimpleCredentials credentials) throws AuthenticationException;
 
-    public HashMap<String, String> getUserAttributes();
+    public HashMap<String, String> getUserAttributes(SimpleCredentials credentials)
+            throws AuthenticationException, AuthorizationException;
 
     public ArrayList<String> getAllUsers() throws AuthenticationException, AuthorizationException;
 }
