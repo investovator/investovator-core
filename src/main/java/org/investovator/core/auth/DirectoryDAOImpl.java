@@ -66,7 +66,8 @@ public class DirectoryDAOImpl implements DirectoryDAO {
     }
 
     @Override
-    public HashMap<String, String> getUserAttributes() {
+    public HashMap<String, String> getUserAttributes(SimpleCredentials credentials)
+            throws AuthenticationException, AuthorizationException {
         return null;  //TODO
     }
 
