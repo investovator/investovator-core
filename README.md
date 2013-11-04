@@ -11,7 +11,7 @@ core features of the investovator
 
    Ubuntu - sudo apt-get install slapd ldap-utils
 
-   It will prompt to setup your admin user password automatically. This will install slapd with the domain name of 127.0.1.1 in /etc/hosts. In there you can edit domain name or reconfigure it after installation by giving the command sudo dpkg-reconfigure slapd
+   It will prompt to setup your admin user password automatically. This will install slapd with the domain name of 127.0.1.1 in /etc/hosts. In there you can edit domain name before installation or you can reconfigure it after installation by giving the command sudo dpkg-reconfigure slapd
 
  example: dc=investovator,dc=org
 
