@@ -18,6 +18,7 @@
 
 package org.investovator.core.auth;
 
+import org.apache.directory.api.ldap.model.cursor.CursorException;
 import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.entry.DefaultAttribute;
 import org.apache.directory.api.ldap.model.entry.Entry;
@@ -72,6 +73,7 @@ public class DirectoryDAOImpl implements DirectoryDAO {
     /**
      *
      * {@inheritDoc}
+     * @return full name of the user if authentication was successful
      */
     @Override
     public HashMap<String, String> bindUser(SimpleCredentials credentials) throws AuthenticationException {
@@ -100,14 +102,7 @@ public class DirectoryDAOImpl implements DirectoryDAO {
                     EntryCursor entryCursor = connection
                             .search(baseDN, "(" + username + ")", SearchScope.ONELEVEL, LdapUtils.ALL_ATTRIB);
                     if (entryCursor.next()){
-                        Entry values = entryCursor.get();
-                        HashMap<String, String> userData = new HashMap<>();
-
-                        StringBuilder name = new StringBuilder((((values.get(LdapUtils.COMMON_NAME)
-                                .toString()).split(":"))[1]).trim());
-                        String lastName = (((values.get(LdapUtils.SURNAME).toString()).split(":"))[1]).trim();
-                        userData.put("name", (name.append(" ").append(lastName)).toString());
-
+                        HashMap<String, String> userData = getValues(entryCursor);
                         connection.close();
                         return userData;
                     } else {
@@ -161,4 +156,15 @@ public class DirectoryDAOImpl implements DirectoryDAO {
             LdapUtils.releaseConnectionQuietly(connection);
         }
     }
+
+    private HashMap<String, String> getValues(EntryCursor entryCursor) throws CursorException {
+        Entry values = entryCursor.get();
+        HashMap<String, String> userData = new HashMap<>();
+        StringBuilder name = new StringBuilder((((values.get(LdapUtils.COMMON_NAME)
+                .toString()).split(":"))[1]).trim());
+        String lastName = (((values.get(LdapUtils.SURNAME).toString()).split(":"))[1]).trim();
+        userData.put("name", (name.append(" ").append(lastName)).toString());
+        return userData;
+    }
+
 }
