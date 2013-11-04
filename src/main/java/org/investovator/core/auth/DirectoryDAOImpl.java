@@ -64,7 +64,7 @@ public class DirectoryDAOImpl implements DirectoryDAO {
                 BindResponse response = connection.bind(bindRequest);
                 return (response.getLdapResult().getResultCode() == ResultCodeEnum.SUCCESS);
             } else {
-                throw new AuthenticationException("User not available");
+                throw new AuthenticationException(LdapUtils.ERROR_INVALID_USER);
             }
         } catch (Exception e) {
             throw new AuthenticationException(e);
