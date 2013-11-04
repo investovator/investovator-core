@@ -264,6 +264,28 @@ public class MysqlConnector {
         preparedStatement.close();
     }
 
+    public static synchronized void dropDatabase(Connection con) throws SQLException, ClassNotFoundException,
+            IllegalAccessException, InstantiationException, IOException {
+
+        con.close();
+
+        String username = System.getProperty(MYSQL_USERNAME_KEY);
+        String password = System.getProperty(MYSQL_PASSWORD_KEY);
+        String databaseName = System.getProperty(MYSQL_DB_KEY);
+
+        String url = "jdbc:mysql://" + System.getProperty(MYSQL_URL_KEY);
+        Class.forName(System.getProperty(DRIVER_CLASS_NAME_KEY)).newInstance();
+
+        Connection conn = DriverManager.getConnection(url, username, password);
+
+        String sql = "DROP DATABASE IF EXISTS " + databaseName;
+        Statement statement = conn.createStatement();
+        statement.executeUpdate(sql);
+        conn.close();
+
+        mysqlConnector = new MysqlConnector();
+    }
+
     private static void createCompanyInfoTableIfNotExists(Connection con, String table) throws SQLException {
 
         String databaseName = System.getProperty(MYSQL_DB_KEY);

@@ -67,4 +67,6 @@ public interface RSSManager {
     public void addToWatchList(String username, String symbol) throws DataAccessException;
 
     public void deleteFromWatchList(String username, String symbol) throws DataAccessException;
+
+    public void resetDatabase() throws DataAccessException;
 }

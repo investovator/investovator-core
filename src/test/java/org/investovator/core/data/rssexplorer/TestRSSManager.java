@@ -207,6 +207,21 @@ public class TestRSSManager {
         assertTrue(Double.valueOf(temp) == 123.5);
     }
 
+    @Test
+    public void testDropDatabase() throws DataAccessException {
+        RSSManager manager = new RSSManagerImpl();
+        manager.addCompanyData("YHO", "Yahoo Inc", 2210221);
+        assertTrue(manager.getCompanyNoOfShares("YHO")==(2210221));
+
+        manager.resetDatabase();
+
+        try {
+            manager.getCompanyNoOfShares("YHO");
+        } catch (DataAccessException e){
+            assertTrue(e.getMessage().contains("Illegal operation on empty result set"));
+        }
+    }
+
     @Before
     public void setEnvironment() throws ConfigurationException {
         ConfigLoader.loadProperties(RESOURCE_DIR_PATH + "resource.properties");
