@@ -76,7 +76,6 @@ public class DirectoryDAOImpl implements DirectoryDAO {
     /**
      *
      * {@inheritDoc}
-     * @return full name of the user if authentication was successful
      */
     @Override
     public HashMap<Object, Object> bindUser(SimpleCredentials credentials) throws AuthenticationException {
@@ -191,6 +190,12 @@ public class DirectoryDAOImpl implements DirectoryDAO {
         }
     }
 
+    /**
+     *
+     * @param entryCursor cursor
+     * @return only full name
+     * @throws CursorException
+     */
     private HashMap<Object, Object> getValues(EntryCursor entryCursor) throws CursorException {
         Entry values = entryCursor.get();
         HashMap<Object, Object> userData = new HashMap<>();
