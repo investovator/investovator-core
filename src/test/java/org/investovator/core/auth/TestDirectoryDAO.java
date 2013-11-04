@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -54,15 +55,17 @@ public class TestDirectoryDAO{
 
         DirectoryDAO dao = new DirectoryDAOImpl();
         SimpleCredentials simpleCredentials = new SimpleCredentials("dexter",("dexter").toCharArray());
-        HashMap<String, String> userData = dao.bindUser(simpleCredentials);
+        HashMap<Object, Object> userData = dao.bindUser(simpleCredentials);
 
-        assertTrue(userData.get("name").equals("Dexter Morgan"));
+        assertTrue(userData.get(DirectoryDAO.UserDataType.NAME).equals("Dexter Morgan"));
+        assertFalse((boolean) userData.get(DirectoryDAO.UserRole.ADMIN));
+        assertTrue((boolean)userData.get(DirectoryDAO.UserRole.REGISTERED));
     }
 
     @Test
     public void testGetAllUsers() throws AuthenticationException, AuthorizationException {
         DirectoryDAO dao = new DirectoryDAOImpl();
-        ArrayList<String> users = dao.getAllUsers();
+        ArrayList<String> users = dao.getAllUsers(DirectoryDAO.UserRole.REGISTERED);
 
         assertTrue(users.contains("alex"));
         assertTrue(users.contains("dexter"));

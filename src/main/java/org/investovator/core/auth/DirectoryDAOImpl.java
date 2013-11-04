@@ -23,14 +23,17 @@ import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.entry.DefaultAttribute;
 import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.entry.StringValue;
+import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.api.ldap.model.message.*;
 import org.apache.directory.api.ldap.model.name.Dn;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.investovator.core.auth.exceptions.AuthenticationException;
 import org.investovator.core.auth.exceptions.AuthorizationException;
+import org.investovator.core.auth.exceptions.InvalidArgumentException;
 import org.investovator.core.auth.utils.LdapUtils;
 
 import javax.jcr.SimpleCredentials;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -76,7 +79,7 @@ public class DirectoryDAOImpl implements DirectoryDAO {
      * @return full name of the user if authentication was successful
      */
     @Override
-    public HashMap<String, String> bindUser(SimpleCredentials credentials) throws AuthenticationException {
+    public HashMap<Object, Object> bindUser(SimpleCredentials credentials) throws AuthenticationException {
 
         LdapConnection anonymousConnection = LdapUtils.getLdapConnection();
         try {
@@ -98,18 +101,12 @@ public class DirectoryDAOImpl implements DirectoryDAO {
                 LdapConnection connection = LdapUtils.getUserLdapConnection(fullyQualifiedUsername,
                         new String(credentials.getPassword()));
                 if(connection.bind(bindRequest).getLdapResult().getResultCode() == ResultCodeEnum.SUCCESS){
-
-                    EntryCursor entryCursor = connection
-                            .search(baseDN, "(" + username + ")", SearchScope.ONELEVEL, LdapUtils.ALL_ATTRIB);
-                    if (entryCursor.next()){
-                        HashMap<String, String> userData = getValues(entryCursor);
-                        connection.close();
-                        return userData;
-                    } else {
-                        throw new AuthenticationException(LdapUtils.ERROR_INSUFFICIENT_ACCESS);
-                    }
+                    HashMap<Object, Object> userData = getUserDataFilled(credentials, baseDN, username, connection);
+                    connection.close();
+                    return userData;
 
                 } else {
+                    connection.close();
                     throw new AuthenticationException(LdapUtils.ERROR_INVALID_PASSWORD);
                 }
             } else {
@@ -129,25 +126,11 @@ public class DirectoryDAOImpl implements DirectoryDAO {
      * {@inheritDoc}
      */
     @Override
-    public ArrayList<String> getAllUsers() throws AuthenticationException, AuthorizationException {
+    public ArrayList<String> getAllUsers(UserRole type) throws AuthenticationException, AuthorizationException {
 
         LdapConnection connection = LdapUtils.getLdapConnection();
         try {
-            Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_ROLES_KEY));
-            String filter = "("+ LdapUtils.CN_STRING + System.getProperty(LdapUtils.DN_USER_ROLE_KEY) + ")";
-            connection.bind();
-            EntryCursor cursor = connection.search(baseDN, filter, SearchScope.ONELEVEL, LdapUtils.MEMBER_ATTRIB);
-            ArrayList<String> users = new ArrayList<>();
-            if (cursor.next()){
-                DefaultAttribute userIds = (DefaultAttribute) (cursor.get()).get(LdapUtils.MEMBER_ATTRIB);
-                for (Object userId : userIds) {
-                    String username = ((StringValue) userId).getString();
-                    users.add((username.split(",")[0]).split(LdapUtils.UID_STRING)[1]);
-                }
-                return users;
-            } else {
-                throw new AuthorizationException(LdapUtils.ERROR_INSUFFICIENT_ACCESS);
-            }
+            return retrieveUserListOnRoles(connection, type);
         } catch (AuthorizationException exception) {
             throw exception;
         } catch (Exception e) {
@@ -157,13 +140,64 @@ public class DirectoryDAOImpl implements DirectoryDAO {
         }
     }
 
-    private HashMap<String, String> getValues(EntryCursor entryCursor) throws CursorException {
+    private HashMap<Object, Object> getUserDataFilled(SimpleCredentials credentials,
+                                                      Dn baseDN, String fullyQualifiedUsername,
+                                                      LdapConnection connection)
+            throws LdapException, CursorException, AuthorizationException, IOException, AuthenticationException,
+            InvalidArgumentException {
+        EntryCursor entryCursor = connection
+                .search(baseDN, "(" + fullyQualifiedUsername + ")", SearchScope.ONELEVEL, LdapUtils.ALL_ATTRIB);
+        if (entryCursor.next()){
+            HashMap<Object, Object> userData = getValues(entryCursor);
+
+            boolean userInRegisteredRole = (retrieveUserListOnRoles(connection, UserRole.REGISTERED))
+                    .contains(credentials.getUserID());
+            boolean userInAdminRole = (retrieveUserListOnRoles(connection, UserRole.ADMIN))
+                    .contains(credentials.getUserID());
+
+            userData.put(UserRole.REGISTERED, userInRegisteredRole);
+            userData.put(UserRole.ADMIN, userInAdminRole);
+            return userData;
+        } else {
+            throw new AuthenticationException(LdapUtils.ERROR_INSUFFICIENT_ACCESS);
+        }
+    }
+
+    private ArrayList<String> retrieveUserListOnRoles(LdapConnection connection, UserRole role)
+            throws LdapException, CursorException, AuthorizationException, InvalidArgumentException {
+
+        String roleFilter;
+        if(role == UserRole.ADMIN){
+            roleFilter = "("+ LdapUtils.CN_STRING + System.getProperty(LdapUtils.DN_ADMIN_ROLE_KEY) + ")";
+        } else if (role == UserRole.REGISTERED) {
+            roleFilter = "("+ LdapUtils.CN_STRING + System.getProperty(LdapUtils.DN_USER_ROLE_KEY) + ")";
+        } else {
+            throw new InvalidArgumentException("Specified role not defined");
+        }
+
+        Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_ROLES_KEY));
+        connection.bind();
+        EntryCursor cursor = connection.search(baseDN, roleFilter, SearchScope.ONELEVEL, LdapUtils.MEMBER_ATTRIB);
+        ArrayList<String> users = new ArrayList<>();
+        if (cursor.next()){
+            DefaultAttribute userIds = (DefaultAttribute) (cursor.get()).get(LdapUtils.MEMBER_ATTRIB);
+            for (Object userId : userIds) {
+                String username = ((StringValue) userId).getString();
+                users.add((username.split(",")[0]).split(LdapUtils.UID_STRING)[1]);
+            }
+            return users;
+        } else {
+            throw new AuthorizationException(LdapUtils.ERROR_INSUFFICIENT_ACCESS);
+        }
+    }
+
+    private HashMap<Object, Object> getValues(EntryCursor entryCursor) throws CursorException {
         Entry values = entryCursor.get();
-        HashMap<String, String> userData = new HashMap<>();
+        HashMap<Object, Object> userData = new HashMap<>();
         StringBuilder name = new StringBuilder((((values.get(LdapUtils.COMMON_NAME)
                 .toString()).split(":"))[1]).trim());
         String lastName = (((values.get(LdapUtils.SURNAME).toString()).split(":"))[1]).trim();
-        userData.put("name", (name.append(" ").append(lastName)).toString());
+        userData.put(UserDataType.NAME, ((name.append(" ").append(lastName)).toString()));
         return userData;
     }
 

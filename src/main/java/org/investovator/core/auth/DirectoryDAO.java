@@ -31,6 +31,10 @@ import java.util.HashMap;
  */
 public interface DirectoryDAO {
 
+    public enum UserRole{ADMIN, REGISTERED}
+
+    public enum UserDataType{NAME}
+
     /**
      * Check authentication of a user
      * @param credentials credentials
@@ -45,15 +49,16 @@ public interface DirectoryDAO {
      * @return user attributes
      * @throws AuthenticationException
      */
-    public HashMap<String, String> bindUser(SimpleCredentials credentials) throws AuthenticationException;
+    public HashMap<Object, Object> bindUser(SimpleCredentials credentials) throws AuthenticationException;
 
     /**
      * Search all the users registered for the game
+     * @param role role
      * @return List of users
      * @throws AuthenticationException
      * @throws AuthorizationException
      */
-    public ArrayList<String> getAllUsers() throws AuthenticationException, AuthorizationException;
+    public ArrayList<String> getAllUsers(UserRole role) throws AuthenticationException, AuthorizationException;
 
     //TODO adding to adminrole read/write, adding to registered
 }
