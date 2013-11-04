@@ -1,0 +1,71 @@
+version: 1
+
+dn: dc=investovator,dc=org
+objectClass: organization
+objectClass: dcObject
+objectClass: top
+dc: investovator
+o: investovator
+
+dn: cn=admin,dc=investovator,dc=org
+objectClass: organizationalRole
+objectClass: simpleSecurityObject
+cn: admin
+userPassword:: e1NTSEF9TXk1SVF6NVVvY1pqQWxoN0ZsQkFMOFpRM2M1cGZVM3Y=
+description: LDAP administrator
+
+dn: ou=people,dc=investovator,dc=org
+objectClass: organizationalUnit
+objectClass: top
+ou: people
+
+dn: ou=roles,dc=investovator,dc=org
+objectClass: organizationalUnit
+objectClass: top
+ou: roles
+
+dn: cn=adminuser,ou=roles,dc=investovator,dc=org
+objectClass: groupOfNames
+objectClass: top
+cn: adminuser
+member: uid=saman,ou=people,dc=investovator,dc=org
+
+dn: uid=saman,ou=people,dc=investovator,dc=org
+objectClass: simpleSecurityObject
+objectClass: uidObject
+objectClass: person
+objectClass: top
+cn: Saman
+sn: Kumara
+uid: saman
+userPassword:: e3NzaGF9VUVsc0NmZkhwejhUSTZuczlzeDl1OGZPQklDNE01azRxUVk3aUE9P
+ Q==
+
+dn: cn=registered,ou=roles,dc=investovator,dc=org
+objectClass: groupOfNames
+objectClass: top
+cn: registered
+member: uid=alex,ou=people,dc=investovator,dc=org
+member: uid=dexter,ou=people,dc=investovator,dc=org
+description;lang-en-us:: aW52ZXN0b3ZhdG9yIHJlZ2lzdGVyZWQgdXNlcnMg
+
+dn: uid=dexter,ou=people,dc=investovator,dc=org
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+cn: Dexter
+sn: Morgan
+uid: dexter
+userPassword:: e3NzaGF9MEx6dGdBSU5jOUtYa2VaY2xkem9zYXJzVkh0TWs4d3dTbVlHYmc9P
+ Q==
+
+dn: uid=alex,ou=people,dc=investovator,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Alex
+sn: Dunphy
+uid: alex
+
