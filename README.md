@@ -16,6 +16,6 @@ core features of the investovator
  example: dc=investovator,dc=org
 
                
- 2. add the given sample ldif by 
+ 2. add the given sample ldif (/investovator-core/src/test/resources/samples/ldifsample.ldif) by giving the command
 
  ldapadd -f ldifsample.ldif -x -D "cn=admin,dc=investovator,dc=org" -w secret
