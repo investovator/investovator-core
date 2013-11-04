@@ -18,6 +18,8 @@
 
 package org.investovator.core.data.api;
 
+import org.investovator.core.data.cassandraexplorer.CassandraManager;
+import org.investovator.core.data.cassandraexplorer.CassandraManagerImpl;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.rssexplorer.RSSManager;
 import org.investovator.core.data.rssexplorer.RSSManagerImpl;
@@ -29,13 +31,22 @@ import org.investovator.core.data.rssexplorer.RSSManagerImpl;
 public class DataStorageImpl implements DataStorage {
 
     private RSSManager rssManager;
+    private CassandraManager casManager;
 
     public DataStorageImpl() throws DataAccessException {
         rssManager = new RSSManagerImpl();
+        casManager = CassandraManagerImpl.getCassandraManager();
     }
 
     @Override
     public void resetDataStorage() throws DataAccessException {
+
+        /*reset rss data storage*/
         rssManager.resetDatabase();
+
+        /*reset cassandra data storage*/
+        for(CompanyStockTransactionsData.DataType dataType : CompanyStockTransactionsData.DataType.values()){
+            casManager.truncateColumnFamily(CompanyStockTransactionsData.DataType.getString(dataType));
+        }
     }
 }
