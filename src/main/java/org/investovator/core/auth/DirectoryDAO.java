@@ -60,5 +60,26 @@ public interface DirectoryDAO {
      */
     public ArrayList<String> getAllUsers(UserRole role) throws AuthenticationException, AuthorizationException;
 
-    //TODO adding to adminrole read/write, adding to registered
+    /**
+     *
+     * Adding users to roles
+     * @param credentials user credentials of the authorized user to perform this action
+     * @param uid user id of the user to be added
+     * @param role role which should be added
+     * @throws AuthenticationException
+     * @throws AuthorizationException
+     */
+    public void addUserToRole(SimpleCredentials credentials, String uid, UserRole role)
+            throws AuthenticationException, AuthorizationException;
+
+    /**
+     *
+     * @param credentials user credentials of the authorized user to perform this action
+     * @param uid user id of the user to be removed
+     * @param role role which should be removed
+     * @throws AuthenticationException
+     * @throws AuthorizationException
+     */
+    public void removeUserFromRole(SimpleCredentials credentials, String uid, UserRole role)
+            throws AuthenticationException, AuthorizationException;
 }

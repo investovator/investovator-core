@@ -139,6 +139,26 @@ public class DirectoryDAOImpl implements DirectoryDAO {
         }
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void addUserToRole(SimpleCredentials credentials, String uid, UserRole role)
+            throws AuthenticationException, AuthorizationException {
+        //ToDo
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeUserFromRole(SimpleCredentials credentials, String uid, UserRole role)
+            throws AuthenticationException, AuthorizationException {
+        //ToDo
+    }
+
     private HashMap<Object, Object> getUserDataFilled(SimpleCredentials credentials,
                                                       Dn baseDN, String fullyQualifiedUsername,
                                                       LdapConnection connection)
