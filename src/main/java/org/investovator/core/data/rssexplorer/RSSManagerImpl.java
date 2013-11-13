@@ -298,4 +298,15 @@ public class RSSManagerImpl implements RSSManager {
             throw new DataAccessException(e);
         }
     }
+
+    @Override
+    public synchronized void resetDatabase() throws DataAccessException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.dropDatabase(connection);
+            mysqlConnector = MysqlConnector.getConnector();
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
+    }
 }
