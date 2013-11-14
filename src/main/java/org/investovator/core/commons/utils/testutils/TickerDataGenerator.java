@@ -29,9 +29,9 @@ import org.investovator.core.data.exeptions.DataNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author Amila Surendra
@@ -41,8 +41,15 @@ public class TickerDataGenerator {
 
     private String stockID;
     private double priceVariance;
+    private int tradesVariance;
     private String outputFilePath;
     private String dateFormat;
+    private Random randomGenerator;
+    private Date startDate = null;
+    private Date endDate = null;
+
+    private DateFormat dateFormater;
+
 
     //CSV Headings
     String[] columns = {
@@ -56,8 +63,11 @@ public class TickerDataGenerator {
 
         //Creating Default Settings
         priceVariance = 1.5;
+        tradesVariance =10;
         outputFilePath = System.getProperty("user.home");
         dateFormat = "MM/dd/yyyy HH:mm:ss.SSS";
+        randomGenerator = new Random(new Date().getTime());
+        dateFormater = new SimpleDateFormat(dateFormat);
     }
 
     public String getStockID() {
@@ -131,7 +141,7 @@ public class TickerDataGenerator {
                 int shares = Integer.parseInt(oneDayData.get(TradingDataAttribute.SHARES));
                 float closingPrice = Integer.parseInt( oneDayData.get(TradingDataAttribute.CLOSING_PRICE) );
 
-                ArrayList<String[]> day = getSingleDay(trades ,shares,closingPrice );
+                ArrayList<String[]> day = getSingleDay(date, trades ,shares,closingPrice );
                 for(String[] line : day) {
                     writer.writeNext(line);
                 }
@@ -145,17 +155,43 @@ public class TickerDataGenerator {
         }
     }
 
-    private ArrayList<String[]> getSingleDay(int tradesPerDay, int shares, double avgPrice){
+    private ArrayList<String[]> getSingleDay(Date day, int tradesPerDay, int sharesPerDay, double avgPrice){
 
-        String
+        tradesPerDay = tradesPerDay / 1;
+
+        ArrayList<String[]> dayData = new ArrayList<>();
+        long randomTimes[] = new long[tradesPerDay];
+
         int addedTrades;
+        Date time;
+        double price;
+        int shares;
+
+
+        Calendar endTime =  Calendar.getInstance();
+        endTime.setTime(day);
+        endTime.add(Calendar.DATE, 1);
+
+        long minDate = day.getTime();
+        long maxDate = endTime.getTime().getTime();
+
+        for (int i = 0; i < tradesPerDay; i++) {
+            randomTimes[i] = minDate + (long)randomGenerator.nextDouble()*(maxDate-minDate);
+        }
+
+        Arrays.sort(randomTimes);
 
         for (addedTrades = 0; addedTrades < tradesPerDay; addedTrades++) {
 
+            time = new Date(randomTimes[addedTrades]);
+            price = avgPrice + (randomGenerator.nextDouble()-0.5)*priceVariance ;
+            shares = sharesPerDay/tradesPerDay + (int)(randomGenerator.nextDouble()-0.5)*tradesVariance ;
 
+            dayData.add( new String[]{dateFormater.format(time), Double.toString(price), Integer.toString(shares)});
 
         }
 
+        return dayData;
     }
 
 
