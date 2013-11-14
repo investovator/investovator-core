@@ -39,7 +39,8 @@ public enum TradingDataAttribute {
 
     //for ticker data
     TIME,
-    PRICE;
+    PRICE,
+    QUANTITY;
 
     /*This should be removed outside this class later*/
     public static String getAttribName(TradingDataAttribute attribute) {
@@ -72,6 +73,8 @@ public enum TradingDataAttribute {
                 return "Price";
             case TIME:
                 return "Time";
+            case QUANTITY:
+                return "Quantity";
         }
         return null;
     }
