@@ -26,6 +26,7 @@ import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.exeptions.DataNotFoundException;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -64,7 +65,7 @@ public class TickerDataGenerator {
         //Creating Default Settings
         priceVariance = 1.5;
         tradesVariance =10;
-        outputFilePath = System.getProperty("user.home");
+        outputFilePath = System.getProperty("user.home") + File.separator + stockID+".csv";
         dateFormat = "MM/dd/yyyy HH:mm:ss.SSS";
         randomGenerator = new Random(new Date().getTime());
         dateFormater = new SimpleDateFormat(dateFormat);
@@ -102,7 +103,10 @@ public class TickerDataGenerator {
     public String CreateCSV(){
 
         try {
-            CSVWriter csvWriter = new CSVWriter(new FileWriter(outputFilePath));
+            File outPutFile = new File(outputFilePath);
+            outPutFile.createNewFile();
+
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(outPutFile));
             csvWriter.writeNext(columns);
             createDataRows(csvWriter);
             csvWriter.flush();
@@ -137,9 +141,17 @@ public class TickerDataGenerator {
             for(Date date : allTradingData.keySet()){
 
                 HashMap<TradingDataAttribute,String> oneDayData = allTradingData.get(date);
-                int trades = Integer.parseInt(oneDayData.get(TradingDataAttribute.TRADES));
-                int shares = Integer.parseInt(oneDayData.get(TradingDataAttribute.SHARES));
-                float closingPrice = Integer.parseInt( oneDayData.get(TradingDataAttribute.CLOSING_PRICE) );
+
+                String tradesString = oneDayData.get(TradingDataAttribute.TRADES);
+                String sharesString = oneDayData.get(TradingDataAttribute.SHARES);
+                String closingString = oneDayData.get(TradingDataAttribute.CLOSING_PRICE);
+
+                if("".equals(tradesString) || "".equals(sharesString) || "".equals(closingString)) continue;
+
+                int trades = Integer.parseInt(tradesString);
+                int shares = Integer.parseInt(sharesString);
+                double closingPrice = Double.parseDouble(closingString);
+
 
                 ArrayList<String[]> day = getSingleDay(date, trades ,shares,closingPrice );
                 for(String[] line : day) {
