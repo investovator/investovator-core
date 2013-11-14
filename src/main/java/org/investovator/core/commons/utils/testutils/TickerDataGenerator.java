@@ -94,6 +94,21 @@ public class TickerDataGenerator {
         this.outputFilePath = outputFilePath;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
     /**
      * Create CSV file for the given stock
@@ -126,6 +141,9 @@ public class TickerDataGenerator {
             CompanyStockTransactionsData historyData = new CompanyStockTransactionsDataImpl();
 
             Date[] dates = historyData.getDataDaysRange(CompanyStockTransactionsData.DataType.OHLC,stockID);
+            if(startDate==null) startDate = dates[0];
+            if(endDate==null) endDate = dates[1];
+
 
             ArrayList<TradingDataAttribute> dataAttribs = new ArrayList<>();
             dataAttribs.add(TradingDataAttribute.DAY);
@@ -133,7 +151,7 @@ public class TickerDataGenerator {
             dataAttribs.add(TradingDataAttribute.TRADES);
             dataAttribs.add(TradingDataAttribute.SHARES);
 
-            StockTradingData tradingData = historyData.getTradingData(CompanyStockTransactionsData.DataType.OHLC, stockID, dates[0], dates[1], Integer.MAX_VALUE,dataAttribs) ;
+            StockTradingData tradingData = historyData.getTradingData(CompanyStockTransactionsData.DataType.OHLC, stockID, startDate, endDate, Integer.MAX_VALUE,dataAttribs) ;
 
             HashMap<Date, HashMap<TradingDataAttribute, String>>  allTradingData  = tradingData.getTradingData();
 
