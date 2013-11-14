@@ -21,14 +21,17 @@ package org.investovator.core.commons.utils.testutils;
 import au.com.bytecode.opencsv.CSVWriter;
 import org.investovator.core.data.api.CompanyStockTransactionsData;
 import org.investovator.core.data.api.CompanyStockTransactionsDataImpl;
+import org.investovator.core.data.api.utils.StockTradingData;
 import org.investovator.core.data.api.utils.TradingDataAttribute;
 import org.investovator.core.data.exeptions.DataAccessException;
+import org.investovator.core.data.exeptions.DataNotFoundException;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author Amila Surendra
@@ -107,9 +110,9 @@ public class TickerDataGenerator {
 
         try {
 
-            CompanyStockTransactionsData transaction = new CompanyStockTransactionsDataImpl();
+            CompanyStockTransactionsData historyData = new CompanyStockTransactionsDataImpl();
 
-            Date[] dates = transaction.getDataDaysRange(CompanyStockTransactionsData.DataType.OHLC,stockID);
+            Date[] dates = historyData.getDataDaysRange(CompanyStockTransactionsData.DataType.OHLC,stockID);
 
             ArrayList<TradingDataAttribute> dataAttribs = new ArrayList<>();
             dataAttribs.add(TradingDataAttribute.DAY);
@@ -117,17 +120,34 @@ public class TickerDataGenerator {
             dataAttribs.add(TradingDataAttribute.TRADES);
             dataAttribs.add(TradingDataAttribute.SHARES);
 
-            transaction.getTradingData(CompanyStockTransactionsData.DataType.OHLC,stockID, dates[0], dates[1], Integer.MAX_VALUE, )
+            StockTradingData tradingData = historyData.getTradingData(CompanyStockTransactionsData.DataType.OHLC, stockID, dates[0], dates[1], Integer.MAX_VALUE,dataAttribs) ;
 
+            HashMap<Date, HashMap<TradingDataAttribute, String>>  allTradingData  = tradingData.getTradingData();
+
+            for(Date date : allTradingData.keySet()){
+
+                HashMap<TradingDataAttribute,String> oneDayData = allTradingData.get(date);
+                int trades = Integer.parseInt(oneDayData.get(TradingDataAttribute.TRADES));
+                int shares = Integer.parseInt(oneDayData.get(TradingDataAttribute.SHARES));
+                float closingPrice = Integer.parseInt( oneDayData.get(TradingDataAttribute.CLOSING_PRICE) );
+
+                ArrayList<String[]> day = getSingleDay(trades ,shares,closingPrice );
+                for(String[] line : day) {
+                    writer.writeNext(line);
+                }
+            }
 
 
         } catch (DataAccessException e) {
             e.printStackTrace();
+        } catch (DataNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
-    private String[] getSingleDay(int tradesPerDay, int shares, float avgPrice){
+    private ArrayList<String[]> getSingleDay(int tradesPerDay, int shares, double avgPrice){
 
+        String
         int addedTrades;
 
         for (addedTrades = 0; addedTrades < tradesPerDay; addedTrades++) {
@@ -135,9 +155,6 @@ public class TickerDataGenerator {
 
 
         }
-
-
-
 
     }
 
