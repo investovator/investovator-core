@@ -43,6 +43,9 @@ public class TickerDataGeneratorTest {
 
         stockData.importCSV(CompanyStockTransactionsData.DataType.OHLC, "SAMP", "MM/dd/yyyy",file);
 
+        TickerDataGenerator tickGenerator = new TickerDataGenerator("SAMP");
+        tickGenerator.CreateCSV();
+
     }
 
     @Before
