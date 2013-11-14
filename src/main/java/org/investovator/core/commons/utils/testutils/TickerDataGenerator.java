@@ -29,7 +29,6 @@ import org.investovator.core.data.exeptions.DataNotFoundException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -42,7 +41,7 @@ public class TickerDataGenerator {
 
     private String stockID;
     private double priceVariance;
-    private int tradesVariance;
+    private float tradesVariancePct;
     private String outputFilePath;
     private String dateFormat;
     private Random randomGenerator;
@@ -64,7 +63,7 @@ public class TickerDataGenerator {
 
         //Creating Default Settings
         priceVariance = 1.5;
-        tradesVariance =10;
+        tradesVariancePct =0.5f;
         outputFilePath = System.getProperty("user.home") + File.separator + stockID+".csv";
         dateFormat = "MM/dd/yyyy HH:mm:ss.SSS";
         randomGenerator = new Random(new Date().getTime());
@@ -188,7 +187,7 @@ public class TickerDataGenerator {
         long maxDate = endTime.getTime().getTime();
 
         for (int i = 0; i < tradesPerDay; i++) {
-            randomTimes[i] = minDate + (long)randomGenerator.nextDouble()*(maxDate-minDate);
+            randomTimes[i] = minDate + (long)(randomGenerator.nextDouble()*(maxDate-minDate));
         }
 
         Arrays.sort(randomTimes);
@@ -197,7 +196,7 @@ public class TickerDataGenerator {
 
             time = new Date(randomTimes[addedTrades]);
             price = avgPrice + (randomGenerator.nextDouble()-0.5)*priceVariance ;
-            shares = sharesPerDay/tradesPerDay + (int)(randomGenerator.nextDouble()-0.5)*tradesVariance ;
+            shares = sharesPerDay/tradesPerDay + (int)((randomGenerator.nextDouble()-0.5)* tradesVariancePct*tradesPerDay) ;
 
             dayData.add( new String[]{dateFormater.format(time), Double.toString(price), Integer.toString(shares)});
 
