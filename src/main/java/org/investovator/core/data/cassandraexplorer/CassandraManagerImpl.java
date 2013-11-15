@@ -121,7 +121,9 @@ public class CassandraManagerImpl implements CassandraManager{
     public void truncateColumnFamily(String columnFamilyName)  throws DataAccessException{
         Cluster cluster = getClusterInitialized();
         try {
-            CassandraConnector.truncateColumnFamily(cluster, KEYSPACE, columnFamilyName);
+            if(CassandraConnector.isColumnFamilyAvailable(cluster, KEYSPACE, columnFamilyName)){
+                CassandraConnector.truncateColumnFamily(cluster, KEYSPACE, columnFamilyName);
+            }
         } catch (Exception e){
             throw new DataAccessException(e);
         }
@@ -146,7 +148,9 @@ public class CassandraManagerImpl implements CassandraManager{
     public void dropColumnFamily(String columnFamilyName) throws DataAccessException {
         Cluster cluster = getClusterInitialized();
         try {
-            CassandraConnector.dropColumnFamily(cluster, KEYSPACE, columnFamilyName);
+            if(CassandraConnector.isColumnFamilyAvailable(cluster, KEYSPACE, columnFamilyName)){
+                CassandraConnector.dropColumnFamily(cluster, KEYSPACE, columnFamilyName);
+            }
         } catch (Exception e){
             throw new DataAccessException(e);
         }
