@@ -28,6 +28,14 @@ public interface DataStorage {
 
     /**
      * Reset database
+     * @throws DataAccessException
      */
     public void resetDataStorage() throws DataAccessException;
+
+    /**
+     *
+     * Reset RSS only
+     * @throws DataAccessException
+     */
+    public void resetRSS () throws DataAccessException;
 }

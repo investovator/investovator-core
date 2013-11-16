@@ -38,6 +38,10 @@ public class DataStorageImpl implements DataStorage {
         casManager = CassandraManagerImpl.getCassandraManager();
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     */
     @Override
     public void resetDataStorage() throws DataAccessException {
 
@@ -48,5 +52,14 @@ public class DataStorageImpl implements DataStorage {
         for(CompanyStockTransactionsData.DataType dataType : CompanyStockTransactionsData.DataType.values()){
             casManager.truncateColumnFamily(CompanyStockTransactionsData.DataType.getString(dataType));
         }
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public void resetRSS() throws DataAccessException {
+        rssManager.resetDatabase();
     }
 }
