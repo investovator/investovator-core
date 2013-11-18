@@ -113,4 +113,13 @@ public class CompanyStockTransactionsDataImpl implements CompanyStockTransaction
     public void clearAllTradingData(DataType type) throws DataAccessException {
         manager.truncateColumnFamily(DataType.getString(type));
     }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isDataAvailable(DataType type, String stockId) throws DataAccessException {
+        return manager.isRowKeyExists(DataType.getString(type), stockId);
+    }
 }

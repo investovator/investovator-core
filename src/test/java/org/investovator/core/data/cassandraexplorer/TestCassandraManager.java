@@ -189,6 +189,17 @@ public class TestCassandraManager {
         assertEquals(format.parse(endDate), dates[1]);
     }
 
+    @Test
+    public void testRowkeyExists() throws FileNotFoundException, DataAccessException, ParseException {
+        File file = new File(RESOURCE_DIR_PATH + FILENAME);
+
+        CassandraManager cassandraManager = CassandraManagerImpl.getCassandraManager();
+        cassandraManager.importCSV(COLUMNFAMILY, ROWKEY1, OHLC_DATE_FORMAT, new FileInputStream(file));
+
+        assertTrue(cassandraManager.isRowKeyExists(COLUMNFAMILY, ROWKEY1));
+        assertFalse(cassandraManager.isRowKeyExists(COLUMNFAMILY, "NotExistingKey"));
+    }
+
     @Before
     public void setEnvironment() throws InterruptedException, TTransportException,
             org.apache.cassandra.exceptions.ConfigurationException, IOException, ConfigurationException {
