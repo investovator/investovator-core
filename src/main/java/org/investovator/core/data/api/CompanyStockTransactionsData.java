@@ -118,4 +118,14 @@ public interface CompanyStockTransactionsData {
      */
     public void clearAllTradingData(DataType type) throws DataAccessException;
 
+    /**
+     *
+     * Check availability of data
+     * @param type either OHLC or Ticker
+     * @param stockId Stock Id
+     * @return data availability
+     * @throws DataAccessException
+     */
+    public boolean isDataAvailable(DataType type, String stockId) throws DataAccessException;
+
 }

@@ -233,6 +233,28 @@ public class CassandraManagerImpl implements CassandraManager{
         }
     }
 
+    @Override
+    public boolean isRowKeyExists(String dataType, String symbol) throws DataAccessException {
+
+        try {
+            Cluster cluster = getClusterInitialized();
+            Keyspace keyspace =  HFactory.createKeyspace(KEYSPACE, cluster);
+
+            return !HFactory.createSuperSliceQuery(keyspace, StringSerializer.get(), DateSerializer.get(),
+                    StringSerializer.get(), StringSerializer.get())
+                    .setColumnFamily(dataType)
+                    .setKey(symbol)
+                    .setRange(null, null, false, 1)
+                    .execute()
+                    .get()
+                    .getSuperColumns()
+                    .isEmpty();
+
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
+    }
+
     private Cluster getClusterInitialized() {
         String username = System.getProperty(CASS_USERNAME_KEY);
         String password = System.getProperty(CASS_PASSWORD_KEY);
