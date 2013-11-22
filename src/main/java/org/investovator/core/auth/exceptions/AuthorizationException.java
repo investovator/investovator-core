@@ -18,11 +18,13 @@
 
 package org.investovator.core.auth.exceptions;
 
+import org.investovator.core.commons.exceptions.InvestovatorException;
+
 /**
  * @author rajith
  * @version ${Revision}
  */
-public class AuthorizationException extends Exception{
+public class AuthorizationException extends InvestovatorException {
 
     public AuthorizationException(String msg){
         super(msg);

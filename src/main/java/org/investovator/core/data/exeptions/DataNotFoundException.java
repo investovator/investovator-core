@@ -18,13 +18,15 @@
 
 package org.investovator.core.data.exeptions;
 
+import org.investovator.core.commons.exceptions.InvestovatorException;
+
 /**
  * @author rajith
  * @version $Revision$
  *
  * This will only be thrown in case of unavailability of requested data
  */
-public class DataNotFoundException extends Exception{
+public class DataNotFoundException extends InvestovatorException{
 
     public DataNotFoundException() {
         super("Requested data not found");

@@ -18,11 +18,13 @@
 
 package org.investovator.core.data.exeptions;
 
+import org.investovator.core.commons.exceptions.InvestovatorException;
+
 /**
  * @author rajith
  * @version $Revision$
  */
-public class DataAccessException extends Exception {
+public class DataAccessException extends InvestovatorException {
 
     /**
      * Make a new exception.

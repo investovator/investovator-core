@@ -16,21 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.investovator.core.auth.exceptions;
-
-import org.investovator.core.commons.exceptions.InvestovatorException;
+package org.investovator.core.commons.exceptions;
 
 /**
  * @author rajith
  * @version ${Revision}
  */
-public class InvalidArgumentException extends InvestovatorException {
+public class InvestovatorException extends Exception {
 
-    public InvalidArgumentException(String msg){
-        super(msg);
+    public InvestovatorException(Exception e){
+        super(e);
     }
 
-    public InvalidArgumentException(Exception e){
-        super(e);
+    public InvestovatorException(String message) {
+        super(message);
     }
 }
