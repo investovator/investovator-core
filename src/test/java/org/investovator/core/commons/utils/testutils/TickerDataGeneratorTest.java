@@ -22,16 +22,11 @@ import java.io.IOException;
  */
 public class TickerDataGeneratorTest {
 
-    private static String COLUMNFAMILY = "ohlc_data";
-    private static String ROWKEY1 = "SAMP";
-
-    private static String USERNAME = "admin";
-    private static String PASSWORD = "admin";
-    private static String URL = "localhost:9171";
+    static String stock = "SAMP" ;
 
     private static String RESOURCE_DIR_PATH = "src" + File.separator + "test"
             + File.separator + "resources" + File.separator;
-    private static String FILENAME = "SAMP.csv";
+    private static String FILENAME = stock +".csv";
 
 
     @Test
@@ -41,9 +36,9 @@ public class TickerDataGeneratorTest {
 
         File file = new File(RESOURCE_DIR_PATH + FILENAME);
 
-        stockData.importCSV(CompanyStockTransactionsData.DataType.OHLC, "SAMP", "MM/dd/yyyy",file);
+        stockData.importCSV(CompanyStockTransactionsData.DataType.OHLC, stock, "MM/dd/yyyy",file);
 
-        TickerDataGenerator tickGenerator = new TickerDataGenerator("SAMP");
+        TickerDataGenerator tickGenerator = new TickerDataGenerator(stock);
         tickGenerator.CreateCSV();
 
     }
