@@ -1,0 +1,121 @@
+version: 1
+
+dn: dc=investovator,dc=org
+objectClass: organization
+objectClass: dcObject
+objectClass: top
+dc: investovator
+o: investovator
+
+dn: cn=admin,dc=investovator,dc=org
+objectClass: organizationalRole
+objectClass: simpleSecurityObject
+cn: admin
+userPassword:: e1NTSEF9TXk1SVF6NVVvY1pqQWxoN0ZsQkFMOFpRM2M1cGZVM3Y=
+description: LDAP administrator
+
+dn: ou=people,dc=investovator,dc=org
+objectClass: organizationalUnit
+objectClass: top
+ou: people
+
+dn: ou=roles,dc=investovator,dc=org
+objectClass: organizationalUnit
+objectClass: top
+ou: roles
+
+dn: cn=adminuser,ou=roles,dc=investovator,dc=org
+objectClass: groupOfNames
+objectClass: top
+cn: adminuser
+member: uid=saman,ou=people,dc=investovator,dc=org
+member: uid=white,ou=people,dc=investovator,dc=org
+
+dn: uid=saman,ou=people,dc=investovator,dc=org
+objectClass: simpleSecurityObject
+objectClass: uidObject
+objectClass: person
+objectClass: top
+cn: Saman
+sn: Kumara
+uid: saman
+userPassword:: e3NzaGF9VUVsc0NmZkhwejhUSTZuczlzeDl1OGZPQklDNE01azRxUVk3aUE9P
+ Q==
+
+dn: cn=registered,ou=roles,dc=investovator,dc=org
+objectClass: groupOfNames
+objectClass: top
+cn: registered
+member: uid=dexter,ou=people,dc=investovator,dc=org
+member: uid=white,ou=people,dc=investovator,dc=org
+member: uid=quinn,ou=people,dc=investovator,dc=org
+member: uid=patrick,ou=people,dc=investovator,dc=org
+member: uid=monica,ou=people,dc=investovator,dc=org
+description;lang-en-us:: aW52ZXN0b3ZhdG9yIHJlZ2lzdGVyZWQgdXNlcnMg
+
+dn: uid=dexter,ou=people,dc=investovator,dc=org
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+cn: Dexter
+sn: Morgan
+uid: dexter
+userPassword:: e3NzaGF9MEx6dGdBSU5jOUtYa2VaY2xkem9zYXJzVkh0TWs4d3dTbVlHYmc9P
+ Q==
+
+dn: uid=patrick,ou=people,dc=investovator,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Patrick
+sn: Jane
+uid: patrick
+userPassword:: e3NzaGF9K3I4S2NqaTBDTXhlOW0xTG5xK0VuZDd1ZkdKQjJ1QW5reE9mYlE9P
+ Q==
+
+dn: uid=debra,ou=people,dc=investovator,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Debra
+sn: Morgan
+uid: debra
+userPassword:: e3NzaGF9QzdCYlhrV01lOUJLbHQ3MlE0d2E2ZnFWenB4R0FsNFRhVHlPTVE9P
+ Q==
+
+dn: uid=monica,ou=people,dc=investovator,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Monica
+sn: Gellar
+uid: monica
+userPassword:: e3NzaGF9aEh2N1hQd3QyN2VWb040a0g5UFN2bHg1d1hpK2pzKzhyYTNEUGc9P
+ Q==
+
+dn: uid=quinn,ou=people,dc=investovator,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Joseph
+sn: Quinn
+uid: quinn
+userPassword:: e3NzaGF9NUN6cHUwS1dnRk5rTlZkS3dCZWhtVFdzZUFlMUgyeSs3aHRVTlE9P
+ Q==
+
+dn: uid=white,ou=people,dc=investovator,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Walter
+sn: White
+uid: white
+userPassword:: e3NzaGF9dkxYcHdJT3QvUkF6QXlKK2xQSmN4ajMyQUF2UmlDVzIya05TSkE9P
+ Q==
+
