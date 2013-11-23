@@ -18,6 +18,7 @@
 
 package org.investovator.core.commons.simulationengine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -82,4 +83,11 @@ public interface SimulationFacade {
      * @return human agent's funds in the simulation
      */
     public double getUserAgentFunds(String username);
+
+    /**
+     * Get unmatched orders of an username
+     * @param username Username
+     * @return Unmatched orders
+     */
+    public HashMap<String, ArrayList<MarketOrder>> getUserUnmatchedOrders(String username);
 }
