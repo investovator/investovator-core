@@ -232,7 +232,7 @@ public class MysqlConnector {
     }
 
     public static void dropUserPortfolio(Connection con,String username) throws SQLException {
-        String query = "DROP TABLE " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
+        String query = "DROP TABLE IF EXISTS " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
                         MysqlConstants.PORTFOLIO;
 
         Statement statement = con.createStatement();

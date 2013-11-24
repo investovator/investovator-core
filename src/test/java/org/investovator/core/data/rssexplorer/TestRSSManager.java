@@ -20,10 +20,12 @@ package org.investovator.core.data.rssexplorer;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.investovator.core.commons.configuration.ConfigLoader;
+import org.investovator.core.data.api.DataStorageImpl;
 import org.investovator.core.data.api.utils.CompanyInfo;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.exeptions.DataNotFoundException;
 import org.investovator.core.data.rssexplorer.utils.MysqlConstants;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -186,12 +188,12 @@ public class TestRSSManager {
         manager.updatePortfolioValue("saman", 1342.3, 123.5);
         manager.updatePortfolioValue("arun", 12425.2, 234.6);
 
-        assertTrue((manager.getPortfolioValue("saman")).get(MysqlConstants.VALUE)==1342.3);
-        assertTrue((manager.getPortfolioValue("saman")).get(MysqlConstants.BLOCKED_VALUE)==123.5);
+        assertTrue((manager.getPortfolioValue("saman")).get(MysqlConstants.VALUE) == 1342.3);
+        assertTrue((manager.getPortfolioValue("saman")).get(MysqlConstants.BLOCKED_VALUE) == 123.5);
 
         HashMap<String, HashMap<String, Double>> portfolioValues = manager.getAllPortfolioValues();
         assertTrue((portfolioValues.get("saman")).get(MysqlConstants.VALUE)==1342.3);
-        assertTrue((portfolioValues.get("arun")).get(MysqlConstants.VALUE)==12425.2);
+        assertTrue((portfolioValues.get("arun")).get(MysqlConstants.VALUE) == 12425.2);
 
         manager.deletePortfolioValue("arun");
         portfolioValues = manager.getAllPortfolioValues();
@@ -225,5 +227,10 @@ public class TestRSSManager {
     @Before
     public void setEnvironment() throws ConfigurationException {
         ConfigLoader.loadProperties(RESOURCE_DIR_PATH + "resource.properties");
+    }
+
+    @After
+    public void destroy() throws Exception {
+        new DataStorageImpl().resetRSS();
     }
 }

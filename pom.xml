@@ -72,6 +72,7 @@
                 <configuration>
                     <excludes>
                         <!-- skipping RSSManager,DirectoryDAO tests-->
+                        <exclude>**/TestUserDataImpl.java</exclude>
                         <exclude>**/TestRSSManager.java</exclude>
                         <exclude>**/TestDirectoryDAO.java</exclude>
                     </excludes>

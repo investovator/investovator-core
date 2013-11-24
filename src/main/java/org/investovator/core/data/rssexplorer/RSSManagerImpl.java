@@ -188,6 +188,7 @@ public class RSSManagerImpl implements RSSManager {
             throws DataAccessException {
         try {
             Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.dropUserPortfolio(connection, username);
             MysqlConnector.bulkInsertToUserPortfolio(connection, username, portfolio);
         } catch (Exception e) {
             throw new DataAccessException(e);
