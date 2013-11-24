@@ -20,6 +20,7 @@ package org.investovator.core.auth;
 
 import org.investovator.core.auth.exceptions.AuthenticationException;
 import org.investovator.core.auth.exceptions.AuthorizationException;
+import org.investovator.core.auth.utils.LdapUtils;
 
 import javax.jcr.SimpleCredentials;
 import java.util.ArrayList;
@@ -31,7 +32,13 @@ import java.util.HashMap;
  */
 public interface DirectoryDAO {
 
-    public enum UserRole{ADMIN, REGISTERED}
+    public enum UserRole{ADMIN,
+        REGISTERED;
+
+        public static String toLdapKey(UserRole role) {
+            return role==ADMIN ? LdapUtils.DN_ADMIN_ROLE_KEY : LdapUtils.DN_ROLES_KEY;
+        }
+    }
 
     public enum UserDataType{NAME}
 
@@ -69,7 +76,7 @@ public interface DirectoryDAO {
      * @throws AuthenticationException
      * @throws AuthorizationException
      */
-    public void addUserToRole(SimpleCredentials credentials, String uid, UserRole role)
+    public boolean addUserToRole(SimpleCredentials credentials, String uid, UserRole role)
             throws AuthenticationException, AuthorizationException;
 
     /**
@@ -80,6 +87,6 @@ public interface DirectoryDAO {
      * @throws AuthenticationException
      * @throws AuthorizationException
      */
-    public void removeUserFromRole(SimpleCredentials credentials, String uid, UserRole role)
+    public boolean removeUserFromRole(SimpleCredentials credentials, String uid, UserRole role)
             throws AuthenticationException, AuthorizationException;
 }

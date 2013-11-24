@@ -71,6 +71,28 @@ public class TestDirectoryDAO{
         assertTrue(users.contains("dexter"));
     }
 
+    @Test
+    public void testAddUserToRole() throws AuthenticationException, AuthorizationException {
+        DirectoryDAO dao = new DirectoryDAOImpl();
+        SimpleCredentials simpleCredentials = new SimpleCredentials("white",("white").toCharArray());
+
+        assertTrue(dao.addUserToRole(simpleCredentials, "quinn", DirectoryDAO.UserRole.ADMIN));
+
+        ArrayList<String> users = dao.getAllUsers(DirectoryDAO.UserRole.ADMIN);
+        assertTrue(users.contains("quinn"));
+    }
+
+    @Test
+    public void testRemoveUserFromRole() throws AuthenticationException, AuthorizationException {
+        DirectoryDAO dao = new DirectoryDAOImpl();
+        SimpleCredentials simpleCredentials = new SimpleCredentials("white",("white").toCharArray());
+
+        assertTrue(dao.removeUserFromRole(simpleCredentials, "saman", DirectoryDAO.UserRole.ADMIN));
+
+        ArrayList<String> users = dao.getAllUsers(DirectoryDAO.UserRole.ADMIN);
+        assertFalse(users.contains("saman"));
+    }
+
     @Before
     public void setEnvironment() throws ConfigurationException {
         ConfigLoader.loadProperties(RESOURCE_DIR_PATH + "resource.properties");

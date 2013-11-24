@@ -144,9 +144,55 @@ public class DirectoryDAOImpl implements DirectoryDAO {
      * {@inheritDoc}
      */
     @Override
-    public void addUserToRole(SimpleCredentials credentials, String uid, UserRole role)
+    public boolean addUserToRole(SimpleCredentials credentials, String uid, UserRole role)
             throws AuthenticationException, AuthorizationException {
-        //ToDo
+
+        try {
+            Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_PEOPLE_KEY));
+            String username = LdapUtils.UID_STRING + credentials.getUserID();
+
+            String fullyQualifiedUsername = username +","+ baseDN.toString();
+            BindRequest bindRequest = new BindRequestImpl();
+            bindRequest.setName(fullyQualifiedUsername);
+            bindRequest.setCredentials(new String(credentials.getPassword()).getBytes("UTF-8"));
+
+                /*User authentication connection*/
+            LdapConnection connection = LdapUtils.getUserLdapConnection(fullyQualifiedUsername,
+                    new String(credentials.getPassword()));
+
+            Dn roleDN = new Dn(LdapUtils.CN_STRING + System.getProperty(UserRole.toLdapKey(role))
+                    + "," + System.getProperty(LdapUtils.DN_ROLES_KEY));
+
+            ModifyRequest modifyRequest = new ModifyRequestImpl();
+            modifyRequest.setName(roleDN);
+            String usernameToAdd = LdapUtils.UID_STRING + uid;
+
+            String fullyQNameToAdd = usernameToAdd +","+ baseDN.toString();
+
+            modifyRequest.add(LdapUtils.MEMBER_ATTRIB, fullyQNameToAdd);
+            if(connection.bind(bindRequest).getLdapResult().getResultCode() == ResultCodeEnum.SUCCESS){
+                ModifyResponse modifyResponse = connection.modify(modifyRequest);
+                if(modifyResponse.getLdapResult().getResultCode() == ResultCodeEnum.SUCCESS){
+                    connection.close();
+                    return true;
+                } else if(modifyResponse.getLdapResult().getResultCode() == ResultCodeEnum.INSUFFICIENT_ACCESS_RIGHTS){
+                    connection.close();
+                    throw new AuthorizationException(LdapUtils.ERROR_INSUFFICIENT_ACCESS);
+                } else {
+                    connection.close();
+                    throw new AuthenticationException(modifyResponse.getLdapResult().getResultCode().toString());
+                }
+            } else {
+                connection.close();
+                throw new AuthenticationException(LdapUtils.ERROR_INVALID_PASSWORD);
+            }
+
+        } catch (AuthenticationException exception) {
+            throw exception;
+        } catch (Exception e) {
+            throw new AuthenticationException(e);
+        }
+
     }
 
     /**
@@ -154,9 +200,54 @@ public class DirectoryDAOImpl implements DirectoryDAO {
      * {@inheritDoc}
      */
     @Override
-    public void removeUserFromRole(SimpleCredentials credentials, String uid, UserRole role)
+    public boolean removeUserFromRole(SimpleCredentials credentials, String uid, UserRole role)
             throws AuthenticationException, AuthorizationException {
-        //ToDo
+
+        try {
+            Dn baseDN = new Dn(System.getProperty(LdapUtils.DN_PEOPLE_KEY));
+            String username = LdapUtils.UID_STRING + credentials.getUserID();
+
+            String fullyQualifiedUsername = username +","+ baseDN.toString();
+            BindRequest bindRequest = new BindRequestImpl();
+            bindRequest.setName(fullyQualifiedUsername);
+            bindRequest.setCredentials(new String(credentials.getPassword()).getBytes("UTF-8"));
+
+                /*User authentication connection*/
+            LdapConnection connection = LdapUtils.getUserLdapConnection(fullyQualifiedUsername,
+                    new String(credentials.getPassword()));
+
+            Dn roleDN = new Dn(LdapUtils.CN_STRING + System.getProperty(UserRole.toLdapKey(role))
+                    + "," + System.getProperty(LdapUtils.DN_ROLES_KEY));
+
+            ModifyRequest modifyRequest = new ModifyRequestImpl();
+            modifyRequest.setName(roleDN);
+            String usernameToAdd = LdapUtils.UID_STRING + uid;
+
+            String fullyQNameToAdd = usernameToAdd +","+ baseDN.toString();
+
+            modifyRequest.remove(LdapUtils.MEMBER_ATTRIB, fullyQNameToAdd);
+            if(connection.bind(bindRequest).getLdapResult().getResultCode() == ResultCodeEnum.SUCCESS){
+                ModifyResponse modifyResponse = connection.modify(modifyRequest);
+                if(modifyResponse.getLdapResult().getResultCode() == ResultCodeEnum.SUCCESS){
+                    connection.close();
+                    return true;
+                } else if(modifyResponse.getLdapResult().getResultCode() == ResultCodeEnum.INSUFFICIENT_ACCESS_RIGHTS){
+                    connection.close();
+                    throw new AuthorizationException(LdapUtils.ERROR_INSUFFICIENT_ACCESS);
+                } else {
+                    connection.close();
+                    throw new AuthenticationException(modifyResponse.getLdapResult().getResultCode().toString());
+                }
+            } else {
+                connection.close();
+                throw new AuthenticationException(LdapUtils.ERROR_INVALID_PASSWORD);
+            }
+
+        } catch (AuthenticationException exception) {
+            throw exception;
+        } catch (Exception e) {
+            throw new AuthenticationException(e);
+        }
     }
 
     private HashMap<Object, Object> getUserDataFilled(SimpleCredentials credentials,
