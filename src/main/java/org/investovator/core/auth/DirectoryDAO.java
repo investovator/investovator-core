@@ -35,7 +35,7 @@ public interface DirectoryDAO {
     public enum UserRole{ADMIN,
         REGISTERED;
 
-        public static String toLdapKey(UserRole role) {
+        protected static String toLdapKey(UserRole role) {
             return role==ADMIN ? LdapUtils.DN_ADMIN_ROLE_KEY : LdapUtils.DN_ROLES_KEY;
         }
     }
