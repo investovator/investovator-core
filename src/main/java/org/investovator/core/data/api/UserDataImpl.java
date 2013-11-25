@@ -88,6 +88,22 @@ public class UserDataImpl implements UserData{
     }
 
     @Override
+    public void addUserToGameInstance(String gameInstanceName, String username) throws DataAccessException {
+        manager.addUserToGameInstancesTable(gameInstanceName, username);
+
+    }
+
+    @Override
+    public ArrayList<String> getUserJoinedGameInstances(String username) throws DataAccessException {
+        return manager.getUserJoinedGameInstances(username);
+    }
+
+    @Override
+    public ArrayList<String> getGameInstanceUsers(String gameInstanceName) throws DataAccessException {
+        return manager.getGameInstanceUsers(gameInstanceName);
+    }
+
+    @Override
     public void clearUserDataOnGameInstance(String gameInstanceName) throws DataAccessException {
         manager.dropGameInstanceTables(gameInstanceName);
     }

@@ -73,6 +73,12 @@ public interface RSSManager {
     public void deleteFromWatchList(String gameInstanceName, String username, String symbol)
             throws DataAccessException;
 
+    public void addUserToGameInstancesTable(String gameInstanceName, String username) throws DataAccessException;
+
+    public ArrayList<String> getUserJoinedGameInstances(String username) throws DataAccessException;
+
+    public ArrayList<String> getGameInstanceUsers(String gameInstanceName) throws DataAccessException;
+
     public void dropGameInstanceTables(String gameInstanceName) throws DataAccessException;
 
     public void resetDatabase() throws DataAccessException;

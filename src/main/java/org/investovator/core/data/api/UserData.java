@@ -43,5 +43,19 @@ public interface UserData {
     public void updateWatchList(String gameInstanceName, String username, ArrayList<String> watchList)
             throws DataAccessException;
 
+    /**
+     * Add user to a particular game instance.
+     *     IMPORTANT : when an user joins a game, add the user to a game instance;
+     *     then update user portfolio even without buying any stocks.
+     * @param gameInstanceName game instance name
+     * @param username username
+     * @throws DataAccessException
+     */
+    public void addUserToGameInstance(String gameInstanceName, String username) throws DataAccessException;
+
+    public ArrayList<String> getUserJoinedGameInstances(String username) throws DataAccessException;
+
+    public ArrayList<String> getGameInstanceUsers(String gameInstanceName) throws DataAccessException;
+
     public void clearUserDataOnGameInstance(String gameInstanceName) throws DataAccessException;
 }

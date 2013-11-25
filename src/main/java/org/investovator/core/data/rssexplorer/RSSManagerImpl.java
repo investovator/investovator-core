@@ -228,12 +228,14 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public HashMap<String, Double> getPortfolioValue(String gameInstanceName, String username) throws DataAccessException{
+    public HashMap<String, Double> getPortfolioValue(String gameInstanceName, String username)
+            throws DataAccessException{
         try {
             Connection connection = mysqlConnector.getConnection();
             String portfolioValueTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
                     MysqlConstants.PORTFOLIO_VALUES);
-            ResultSet resultSet = MysqlConnector.getValueFromPortfolioValues(connection, portfolioValueTableName, username);
+            ResultSet resultSet = MysqlConnector
+                    .getValueFromPortfolioValues(connection, portfolioValueTableName, username);
 
             HashMap<String, Double> data = new HashMap<String, Double>();
             while (resultSet.next()){
@@ -248,7 +250,8 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public HashMap<String, HashMap<String, Double>> getAllPortfolioValues(String gameInstanceName) throws DataAccessException{
+    public HashMap<String, HashMap<String, Double>> getAllPortfolioValues(String gameInstanceName)
+            throws DataAccessException{
         try {
             Connection connection = mysqlConnector.getConnection();
             String portfolioValueTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
@@ -301,7 +304,8 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public void addToWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException {
+    public void addToWatchList(String gameInstanceName, String username, String symbol)
+            throws DataAccessException {
         try {
             Connection connection = mysqlConnector.getConnection();
             String watchlistTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
@@ -313,13 +317,58 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public void deleteFromWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException {
+    public void deleteFromWatchList(String gameInstanceName, String username, String symbol)
+            throws DataAccessException {
         try {
             Connection connection = mysqlConnector.getConnection();
             String watchlistTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
                     MysqlConstants.WATCHLIST);
             MysqlConnector.deleteFromWatchList(connection, watchlistTableName, username, symbol);
         } catch (Exception e){
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public void addUserToGameInstancesTable(String gameInstanceName, String username) throws DataAccessException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            MysqlConnector.addUserToGameInstanceUsersTable(connection, gameInstanceName, username);
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public ArrayList<String> getUserJoinedGameInstances(String username) throws DataAccessException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            ResultSet resultSet = MysqlConnector.getUserJoinedGames(connection, username);
+
+            ArrayList<String> data = new ArrayList<>();
+            while (resultSet.next()){
+                data.add(resultSet.getString(MysqlConstants.GAME_INSTANCE));
+            }
+            resultSet.close();
+            return data;
+        } catch (Exception e) {
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public ArrayList<String> getGameInstanceUsers(String gameInstanceName) throws DataAccessException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            ResultSet resultSet = MysqlConnector.getGameInstanceUsers(connection, gameInstanceName);
+
+            ArrayList<String> data = new ArrayList<>();
+            while (resultSet.next()){
+                data.add(resultSet.getString(MysqlConstants.USERNAME));
+            }
+            resultSet.close();
+            return data;
+        } catch (Exception e) {
             throw new DataAccessException(e);
         }
     }
@@ -339,6 +388,8 @@ public class RSSManagerImpl implements RSSManager {
             for(String tableName : tablesToDelete){
                 MysqlConnector.dropTableIfExists(connection, tableName);
             }
+
+            MysqlConnector.dropGameInstanceFrmGameInstancesTable(connection, gameInstanceName);
 
         } catch (Exception e){
             throw new DataAccessException(e);

@@ -60,7 +60,7 @@ public class MysqlConnector {
     public static void insertToCompanyInfo(Connection con, String symbol, String companyName,
                                            int noOfShares) throws SQLException {
 
-        String query =  "INSERT INTO " + MysqlConstants.COMPANY_INFO +
+        String query =  "INSERT INTO " + MysqlConstants.COMPANY_INFO_TABLE +
                         " VALUES (?,?,?) ON DUPLICATE KEY UPDATE "+ MysqlConstants.NAME +
                         " = (?), " + MysqlConstants.SHARES + " = (?)";
 
@@ -78,7 +78,7 @@ public class MysqlConnector {
 
     public static ResultSet getAllNameId(Connection con) throws SQLException {
         String query = "SELECT " + MysqlConstants.SYMBOL + ", " + MysqlConstants.NAME
-                + " FROM " + MysqlConstants.COMPANY_INFO;
+                + " FROM " + MysqlConstants.COMPANY_INFO_TABLE;
 
         Statement statement = con.createStatement();
         return statement.executeQuery(query);
@@ -86,14 +86,14 @@ public class MysqlConnector {
 
     public static ResultSet getAllIdShares(Connection con) throws SQLException {
         String query = "SELECT " + MysqlConstants.SYMBOL + ", " + MysqlConstants.SHARES
-                + " FROM " + MysqlConstants.COMPANY_INFO;
+                + " FROM " + MysqlConstants.COMPANY_INFO_TABLE;
 
         Statement statement = con.createStatement();
         return statement.executeQuery(query);
     }
 
     public static ResultSet getCompanyName(Connection con, String symbol) throws SQLException {
-        String query = "SELECT " + MysqlConstants.NAME + " FROM " + MysqlConstants.COMPANY_INFO
+        String query = "SELECT " + MysqlConstants.NAME + " FROM " + MysqlConstants.COMPANY_INFO_TABLE
                 + " WHERE " + MysqlConstants.SYMBOL + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
@@ -102,7 +102,7 @@ public class MysqlConnector {
     }
 
     public static ResultSet getCompanyShares(Connection con, String symbol) throws SQLException {
-        String query = "SELECT " + MysqlConstants.SHARES + " FROM " + MysqlConstants.COMPANY_INFO
+        String query = "SELECT " + MysqlConstants.SHARES + " FROM " + MysqlConstants.COMPANY_INFO_TABLE
                 + " WHERE " + MysqlConstants.SYMBOL + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
@@ -111,7 +111,7 @@ public class MysqlConnector {
     }
 
     public static ResultSet getAllStockIds(Connection con) throws SQLException {
-        String query = "SELECT " + MysqlConstants.SYMBOL + " FROM " + MysqlConstants.COMPANY_INFO;
+        String query = "SELECT " + MysqlConstants.SYMBOL + " FROM " + MysqlConstants.COMPANY_INFO_TABLE;
 
         Statement statement = con.createStatement();
         return statement.executeQuery(query);
@@ -250,6 +250,51 @@ public class MysqlConnector {
         preparedStatement.setString(3, value);
         preparedStatement.executeUpdate();
         preparedStatement.close();
+    }
+
+    public static void addUserToGameInstanceUsersTable(Connection con, String gameInstanceName, String username)
+            throws SQLException {
+
+        String query =  "INSERT INTO " + MysqlConstants.GAME_INSTANCE_USERS_TABLE +
+                        " VALUES (?,?) ON DUPLICATE KEY UPDATE " + MysqlConstants.GAME_INSTANCE +
+                        " = (?), " + MysqlConstants.USERNAME + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, gameInstanceName);
+        preparedStatement.setString(2, username);
+        preparedStatement.setString(3, gameInstanceName);
+        preparedStatement.setString(4, username);
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    public static void dropGameInstanceFrmGameInstancesTable(Connection con, String gameInstanceName)
+            throws SQLException {
+        String query = "DELETE FROM " + MysqlConstants.GAME_INSTANCE_USERS_TABLE + " WHERE " +
+                        MysqlConstants.GAME_INSTANCE + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, StringConverter.keepOnlyAlphaNumeric(gameInstanceName));
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    public static ResultSet getUserJoinedGames(Connection con, String username) throws SQLException {
+        String query = "SELECT " + MysqlConstants.GAME_INSTANCE + " FROM " + MysqlConstants.GAME_INSTANCE_USERS_TABLE +
+                       " WHERE " + MysqlConstants.USERNAME + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, username);
+        return preparedStatement.executeQuery();
+    }
+
+    public static ResultSet getGameInstanceUsers(Connection con, String gameInstanceName) throws SQLException {
+        String query = "SELECT " + MysqlConstants.USERNAME + " FROM " + MysqlConstants.GAME_INSTANCE_USERS_TABLE +
+                " WHERE " + MysqlConstants.GAME_INSTANCE + " = (?)";
+
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        preparedStatement.setString(1, gameInstanceName);
+        return preparedStatement.executeQuery();
     }
 
     public static ResultSet getAllGameInstanceTables(Connection con, String instanceName) throws SQLException {

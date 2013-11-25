@@ -28,6 +28,13 @@ CREATE TABLE IF NOT EXISTS investovator_data.COMPANY_INFO (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table to store users' stock watchlist ids
+CREATE TABLE IF NOT EXISTS investovator_data.GAME_INSTANCE_USERS (
+  GAME_INSTANCE varchar(20) NOT NULL,
+  USERNAME varchar(20)  NOT NULL,
+  PRIMARY KEY (GAME_INSTANCE, USERNAME)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Table to store users' stock watchlist ids
 -- CREATE TABLE IF NOT EXISTS investovator_data.WATCH_LIST (
 --   USERNAME varchar(20) NOT NULL,
 --   SYMBOL varchar(5)  NOT NULL,

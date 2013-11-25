@@ -245,7 +245,9 @@ public class TestRSSManager {
         values.put(MysqlConstants.PRICE, 23.0);
         portfolio.put("YHO", values);
 
+        manager.addUserToGameInstancesTable("ANN", "Saman");
         manager.updateUserPortfolio("ANN", "Saman", portfolio);
+        assertTrue(manager.getGameInstanceUsers("ANN").size()>0);
 
         manager.dropGameInstanceTables("ANN");
 
@@ -267,6 +269,17 @@ public class TestRSSManager {
                 throw new DataAccessException(e);
         }
 
+        assertTrue(manager.getGameInstanceUsers("ANN").size()==0);
+
+    }
+
+    @Test
+    public void addUserToGameInstanceAndCheck() throws DataAccessException {
+        RSSManager manager = new RSSManagerImpl();
+
+        manager.addUserToGameInstancesTable("ANN", "Dexter");
+        assertFalse((manager.getGameInstanceUsers("ANN")).isEmpty());
+        assertTrue((manager.getGameInstanceUsers("ANN")).get(0).equals("Dexter"));
     }
 
     @Before
