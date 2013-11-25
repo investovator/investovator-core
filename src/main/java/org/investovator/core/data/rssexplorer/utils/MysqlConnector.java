@@ -117,19 +117,19 @@ public class MysqlConnector {
         return statement.executeQuery(query);
     }
 
-    public static ResultSet getWatchList(Connection con, String username) throws SQLException {
-        String query = "SELECT " + MysqlConstants.SYMBOL + " FROM " + MysqlConstants.WATCH_LIST
-                + " WHERE " + MysqlConstants.USERNAME + " = (?)";
+    public static ResultSet getWatchList(Connection con, String tableName, String username) throws SQLException {
+        String query = "SELECT " + MysqlConstants.SYMBOL + " FROM " + tableName + " WHERE " +
+                        MysqlConstants.USERNAME + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
         preparedStatement.setString(1, username);
         return preparedStatement.executeQuery();
     }
 
-    public static void insertToWatchList(Connection con, String username, String symbol) throws SQLException {
-
-        String query =  "INSERT INTO " + MysqlConstants.WATCH_LIST +
-                        " VALUES (?,?) ON DUPLICATE KEY UPDATE " + MysqlConstants.USERNAME +
+    public static void insertToWatchList(Connection con, String tableName, String username, String symbol)
+            throws SQLException {
+        createUserWatchlistIfNotExists(con, tableName);
+        String query =  "INSERT INTO " + tableName + " VALUES (?,?) ON DUPLICATE KEY UPDATE " + MysqlConstants.USERNAME +
                         " = (?), " + MysqlConstants.SYMBOL + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
@@ -141,10 +141,11 @@ public class MysqlConnector {
         preparedStatement.close();
     }
 
-    public static void deleteFromWatchList(Connection con, String username, String symbol) throws SQLException {
+    public static void deleteFromWatchList(Connection con, String tableName, String username, String symbol)
+            throws SQLException {
 
-        String query = "DELETE FROM " + MysqlConstants.WATCH_LIST + " WHERE " + MysqlConstants.USERNAME +
-                        " = (?) AND " + MysqlConstants.SYMBOL + " = (?)";
+        String query = "DELETE FROM " + tableName + " WHERE " + MysqlConstants.USERNAME + " = (?) AND " +
+                        MysqlConstants.SYMBOL + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
         preparedStatement.setString(1, username);
@@ -153,10 +154,10 @@ public class MysqlConnector {
         preparedStatement.close();
     }
 
-    public static void addToPortfolioValues(Connection con, String username, double value, double blockedValue)
-            throws SQLException {
-        String query =  "INSERT INTO " + MysqlConstants.PORTFOLIO_VALUES +
-                        " VALUES (?,?,?) ON DUPLICATE KEY UPDATE " + MysqlConstants.VALUE +
+    public static void addToPortfolioValues(Connection con, String tableName, String username, double value,
+                                            double blockedValue) throws SQLException {
+        createUserPortfolioValuesIfNotExists(con, tableName);
+        String query =  "INSERT INTO " + tableName + " VALUES (?,?,?) ON DUPLICATE KEY UPDATE " + MysqlConstants.VALUE +
                         " = (?), " + MysqlConstants.BLOCKED_VALUE + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
@@ -169,28 +170,26 @@ public class MysqlConnector {
         preparedStatement.close();
     }
 
-    public static ResultSet getValueFromPortfolioValues(Connection con, String username)
+    public static ResultSet getValueFromPortfolioValues(Connection con, String tableName,  String username)
             throws SQLException {
         String query = "SELECT " + MysqlConstants.VALUE +", "+ MysqlConstants.BLOCKED_VALUE +
-                       " FROM " + MysqlConstants.PORTFOLIO_VALUES +
-                       " WHERE " + MysqlConstants.USERNAME + " = (?)";
+                       " FROM " + tableName + " WHERE " + MysqlConstants.USERNAME + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
         preparedStatement.setString(1, username);
         return preparedStatement.executeQuery();
     }
 
-    public static ResultSet getAllValuesFromPortfolioValues(Connection con) throws SQLException {
-        String query = "SELECT * FROM " + MysqlConstants.PORTFOLIO_VALUES;
+    public static ResultSet getAllValuesFromPortfolioValues(Connection con, String tableName) throws SQLException {
+        String query = "SELECT * FROM " +tableName;
 
         Statement statement = con.createStatement();
         return statement.executeQuery(query);
     }
 
-    public static void deleteValueFrmPortfolioValues(Connection con, String username)
+    public static void deleteValueFrmPortfolioValues(Connection con, String tablename, String username)
             throws SQLException {
-        String query = "DELETE FROM " + MysqlConstants.PORTFOLIO_VALUES + " WHERE "
-                + MysqlConstants.USERNAME + " = (?)";
+        String query = "DELETE FROM " + tablename + " WHERE " + MysqlConstants.USERNAME + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
         preparedStatement.setString(1, username);
@@ -198,12 +197,11 @@ public class MysqlConnector {
         preparedStatement.close();
     }
 
-    public static void bulkInsertToUserPortfolio(Connection con, String username,
+    public static void bulkInsertToUserPortfolio(Connection con, String tableName,
                                                  HashMap<String, HashMap<String, Double>> portfolio)
             throws SQLException {
-        createUserPortfolioIfNotExists(con, username);
-        String query =  "INSERT INTO " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
-                        MysqlConstants.PORTFOLIO + " VALUES (?,?,?) ON DUPLICATE KEY UPDATE "+ MysqlConstants.QNTY +
+        createUserPortfolioIfNotExists(con, tableName);
+        String query =  "INSERT INTO " + tableName + " VALUES (?,?,?) ON DUPLICATE KEY UPDATE "+ MysqlConstants.QNTY +
                         " = (?), " + MysqlConstants.PRICE + " = (?)";
 
         PreparedStatement preparedStatement = con.prepareStatement(query);
@@ -223,21 +221,11 @@ public class MysqlConnector {
         preparedStatement.close();
     }
 
-    public static ResultSet getUserPortfolio(Connection con,String username) throws SQLException {
-        String query = "SELECT * FROM " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
-                        MysqlConstants.PORTFOLIO;
+    public static ResultSet getUserPortfolio(Connection con, String tableName) throws SQLException {
+        String query = "SELECT * FROM " + tableName;
 
         Statement statement = con.createStatement();
         return statement.executeQuery(query);
-    }
-
-    public static void dropUserPortfolio(Connection con,String username) throws SQLException {
-        String query = "DROP TABLE IF EXISTS " + StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
-                        MysqlConstants.PORTFOLIO;
-
-        Statement statement = con.createStatement();
-        statement.executeUpdate(query);
-        statement.close();
     }
 
     public static ResultSet getCompanyInfo(Connection con,String table, String symbol) throws SQLException {
@@ -262,6 +250,22 @@ public class MysqlConnector {
         preparedStatement.setString(3, value);
         preparedStatement.executeUpdate();
         preparedStatement.close();
+    }
+
+    public static ResultSet getAllGameInstanceTables(Connection con, String instanceName) throws SQLException {
+        String pattern = "'" + StringConverter.keepOnlyAlphaNumeric(instanceName) + MysqlConstants.WILDCARD + "'";
+        String query = "SHOW TABLES LIKE "+ pattern;
+
+        Statement statement = con.createStatement();
+        return statement.executeQuery(query);
+    }
+
+    public static void dropTableIfExists(Connection con, String tableName) throws SQLException {
+        String query = "DROP TABLE IF EXISTS " + tableName;
+
+        Statement statement = con.createStatement();
+        statement.executeUpdate(query);
+        statement.close();
     }
 
     public static synchronized void dropDatabase(Connection con) throws SQLException, ClassNotFoundException,
@@ -299,16 +303,41 @@ public class MysqlConnector {
         statement.close();
     }
 
-    private static void createUserPortfolioIfNotExists(Connection con, String username) throws SQLException {
+    private static void createUserPortfolioIfNotExists(Connection con, String tableName) throws SQLException {
 
         String databaseName = System.getProperty(MYSQL_DB_KEY);
-        String query = "CREATE TABLE IF NOT EXISTS "+ databaseName + "." +
-                StringConverter.keepOnlyAlphaNumeric(username.toUpperCase()) +
-                MysqlConstants.PORTFOLIO + "(" +
+        String query = "CREATE TABLE IF NOT EXISTS "+ databaseName + "." + tableName + "(" +
                 MysqlConstants.SYMBOL + " varchar(5) NOT NULL, "+
                 MysqlConstants.QNTY +" double NOT NULL, "+
                 MysqlConstants.PRICE +" double NOT NULL, PRIMARY KEY ("+
                 MysqlConstants.SYMBOL +")) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+        Statement statement = con.createStatement();
+        statement.executeUpdate(query);
+        statement.close();
+    }
+
+    private static void createUserWatchlistIfNotExists(Connection con, String tableName) throws SQLException {
+
+        String databaseName = System.getProperty(MYSQL_DB_KEY);
+        String query = "CREATE TABLE IF NOT EXISTS "+ databaseName + "." + tableName + "(" +
+                MysqlConstants.USERNAME + " varchar(20) NOT NULL, "+
+                MysqlConstants.SYMBOL +" varchar(5) NOT NULL,  PRIMARY KEY ("+
+                MysqlConstants.USERNAME + ", " + MysqlConstants.SYMBOL +")) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+        Statement statement = con.createStatement();
+        statement.executeUpdate(query);
+        statement.close();
+    }
+
+    private static void createUserPortfolioValuesIfNotExists(Connection con, String tableName) throws SQLException {
+
+        String databaseName = System.getProperty(MYSQL_DB_KEY);
+        String query = "CREATE TABLE IF NOT EXISTS "+ databaseName + "." + tableName + "(" +
+                MysqlConstants.USERNAME + " varchar(20) NOT NULL, "+
+                MysqlConstants.VALUE +" double NOT NULL, "+
+                MysqlConstants.BLOCKED_VALUE +" double NOT NULL, PRIMARY KEY ("+
+                MysqlConstants.USERNAME +")) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
         Statement statement = con.createStatement();
         statement.executeUpdate(query);

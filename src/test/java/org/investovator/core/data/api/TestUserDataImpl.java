@@ -41,17 +41,17 @@ public class TestUserDataImpl {
     public void testUserDataPersistence() throws DataAccessException {
         Portfolio newPortfolio = new PortfolioImpl("testUser1",1000000,0);
         UserData userData = new UserDataImpl();
-        userData.updateUserPortfolio("testUser1", newPortfolio);
+        userData.updateUserPortfolio("ANN", "testUser1", newPortfolio);
 
-        Portfolio portfolio =  userData.getUserPortfolio("testUser1");
+        Portfolio portfolio =  userData.getUserPortfolio("ANN", "testUser1");
         portfolio.boughtShares("GOOG", 1, 1000);
-        userData.updateUserPortfolio("testUser1", portfolio);
-        portfolio =  userData.getUserPortfolio("testUser1");
+        userData.updateUserPortfolio("ANN", "testUser1", portfolio);
+        portfolio =  userData.getUserPortfolio("ANN", "testUser1");
         portfolio.soldShares("GOOG", 1, 1000);
         assert(portfolio.getShares().size()==0);
 
-        userData.updateUserPortfolio("testUser1", portfolio);
-        portfolio =  userData.getUserPortfolio("testUser1");
+        userData.updateUserPortfolio("ANN", "testUser1", portfolio);
+        portfolio =  userData.getUserPortfolio("ANN", "testUser1");
         assert(portfolio.getShares().size()==0);
     }
 

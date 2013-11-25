@@ -41,48 +41,55 @@ public class UserDataImpl implements UserData{
     }
 
     @Override
-    public Portfolio getUserPortfolio(String username) throws DataAccessException {
-        HashMap <String, HashMap<String, Double>> shares = manager.getUserPortfolio(username);
-        HashMap <String, Double> values = manager.getPortfolioValue(username);
+    public Portfolio getUserPortfolio(String gameInstanceName, String username) throws DataAccessException {
+        HashMap <String, HashMap<String, Double>> shares = manager.getUserPortfolio(gameInstanceName, username);
+        HashMap <String, Double> values = manager.getPortfolioValue(gameInstanceName, username);
         return new PortfolioImpl(username, values.get(Terms.VALUE), values.get(Terms.BLOCKED_VALUE), shares);
     }
 
     @Override
-    public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException {
-        manager.updatePortfolioValue(username, portfolio.getCashBalance(), portfolio.getBlockedCash());
-        manager.updateUserPortfolio(username, portfolio.getShares());
+    public void updateUserPortfolio(String gameInstanceName, String username, Portfolio portfolio)
+            throws DataAccessException {
+        manager.updatePortfolioValue(gameInstanceName, username, portfolio.getCashBalance(), portfolio.getBlockedCash());
+        manager.updateUserPortfolio(gameInstanceName, username, portfolio.getShares());
     }
 
     @Override
-    public ArrayList<String> getWatchList(String username) throws DataAccessException {
-        return manager.getWatchList(username);
+    public ArrayList<String> getWatchList(String gameInstanceName, String username) throws DataAccessException {
+        return manager.getWatchList(gameInstanceName, username);
     }
 
     @Override
-    public void addToWatchList(String username, String symbol) throws DataAccessException {
-        manager.addToWatchList(username, symbol);
+    public void addToWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException {
+        manager.addToWatchList(gameInstanceName, username, symbol);
     }
 
     @Override
-    public void deleteFromWatchList(String username, String symbol) throws DataAccessException {
-        manager.deleteFromWatchList(username, symbol);
+    public void deleteFromWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException {
+        manager.deleteFromWatchList(gameInstanceName, username, symbol);
     }
 
     @Override
-    public void updateWatchList(String username, ArrayList<String> watchList) throws DataAccessException {
-        ArrayList<String> previousList = manager.getWatchList(username);
+    public void updateWatchList(String gameInstanceName, String username, ArrayList<String> watchList)
+            throws DataAccessException {
+        ArrayList<String> previousList = manager.getWatchList(gameInstanceName, username);
 
         for (String id : watchList){
             if (!previousList.contains(id)){
-                 manager.addToWatchList(username, id);
+                 manager.addToWatchList(gameInstanceName, username, id);
             }
         }
 
         for (String id: previousList){
             if (!watchList.contains(id)){
-                manager.deleteFromWatchList(username, id);
+                manager.deleteFromWatchList(gameInstanceName, username, id);
             }
         }
+    }
+
+    @Override
+    public void clearUserDataOnGameInstance(String gameInstanceName) throws DataAccessException {
+        manager.dropGameInstanceTables(gameInstanceName);
     }
 
 }

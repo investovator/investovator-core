@@ -47,26 +47,33 @@ public interface RSSManager {
 
     public ArrayList<String> getAvailableStockIds() throws DataAccessException;
 
-    public HashMap<String, HashMap<String, Double>> getUserPortfolio(String username) throws DataAccessException;
-
-    public void updateUserPortfolio(String username, HashMap<String, HashMap<String, Double>> portfolio)
+    public HashMap<String, HashMap<String, Double>> getUserPortfolio(String gameInstanceName, String username)
             throws DataAccessException;
 
-    public void deleteUserPortfolio(String username) throws DataAccessException;
+    public void updateUserPortfolio(String gameInstanceName, String username, HashMap<String,
+            HashMap<String, Double>> portfolio) throws DataAccessException;
 
-    public void updatePortfolioValue(String username, double value, double blockedValue) throws DataAccessException;
+    public void deleteUserPortfolio(String gameInstanceName, String username) throws DataAccessException;
 
-    public HashMap<String, Double> getPortfolioValue(String username) throws DataAccessException;
+    public void updatePortfolioValue(String gameInstanceName, String username, double value, double blockedValue)
+            throws DataAccessException;
 
-    public HashMap<String, HashMap<String, Double>> getAllPortfolioValues() throws DataAccessException;
+    public HashMap<String, Double> getPortfolioValue(String gameInstanceName, String username)
+            throws DataAccessException;
 
-    public void deletePortfolioValue(String username) throws DataAccessException;
+    public HashMap<String, HashMap<String, Double>> getAllPortfolioValues(String gameInstanceName)
+            throws DataAccessException;
 
-    public ArrayList<String> getWatchList(String username) throws DataAccessException;
+    public void deletePortfolioValue(String gameInstanceName, String username) throws DataAccessException;
 
-    public void addToWatchList(String username, String symbol) throws DataAccessException;
+    public ArrayList<String> getWatchList(String gameInstanceName, String username) throws DataAccessException;
 
-    public void deleteFromWatchList(String username, String symbol) throws DataAccessException;
+    public void addToWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException;
+
+    public void deleteFromWatchList(String gameInstanceName, String username, String symbol)
+            throws DataAccessException;
+
+    public void dropGameInstanceTables(String gameInstanceName) throws DataAccessException;
 
     public void resetDatabase() throws DataAccessException;
 }

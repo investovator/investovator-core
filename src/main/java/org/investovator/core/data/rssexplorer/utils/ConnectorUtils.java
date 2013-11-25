@@ -19,6 +19,7 @@
 package org.investovator.core.data.rssexplorer.utils;
 
 import org.investovator.core.commons.utils.fileutils.FileManager;
+import org.investovator.core.commons.utils.fileutils.StringConverter;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -35,6 +36,8 @@ public class ConnectorUtils {
     private static final String COMMENT_PATTERN = "--";
     private static final String DELIMITER = ";";
 
+    private static final String TABLE_CONNECTOR_STRING = "_";
+
     public static void executeSQLFile(String username, String password, String url, String relativeFilePath)
             throws IOException, SQLException {
         String sqlStatement = FileManager.readFileOmitComments(relativeFilePath, COMMENT_PATTERN);
@@ -50,5 +53,15 @@ public class ConnectorUtils {
         }
         statement.close();
         conn.close();
+    }
+
+    public static String getFullyQualifiedTableName(String prefix, String suffix){
+        return StringConverter.keepOnlyAlphaNumeric(prefix.toUpperCase()) + TABLE_CONNECTOR_STRING +
+                StringConverter.keepOnlyAlphaNumeric(suffix.toUpperCase());
+    }
+
+    public static String getFullyQualifiedTableName(String prefix,String midString, String suffix){
+        return getFullyQualifiedTableName(prefix, midString) + TABLE_CONNECTOR_STRING +
+                StringConverter.keepOnlyAlphaNumeric(suffix.toUpperCase());
     }
 }

@@ -25,8 +25,8 @@ package org.investovator.core.data.rssexplorer.utils;
 public class MysqlConstants {
 
     public static final String COMPANY_INFO = "COMPANY_INFO";
-    public static final String WATCH_LIST = "WATCH_LIST";
-    public static final String PORTFOLIO_VALUES = "PORTFOLIO_VALUES";
+    public static final String WATCHLIST = "WATCHLIST";
+    public static final String PORTFOLIO_VALUES = "PFVALUES";
 
     public static final String SYMBOL = "SYMBOL";
     public static final String NAME = "NAME";
@@ -37,5 +37,7 @@ public class MysqlConstants {
     public static final String PRICE = "PRICE";
     public static final String QNTY = "QUANTITY";
 
-    public static final String PORTFOLIO = "_PORTFOLIO";
+    public static final String PORTFOLIO = "PORTFOLIO";
+
+    public static final String WILDCARD = "%";
 }

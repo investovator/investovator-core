@@ -29,15 +29,19 @@ import java.util.ArrayList;
  */
 public interface UserData {
 
-    public Portfolio getUserPortfolio(String username) throws DataAccessException;
+    public Portfolio getUserPortfolio(String gameInstanceName, String username) throws DataAccessException;
 
-    public void updateUserPortfolio(String username, Portfolio portfolio) throws DataAccessException;
+    public void updateUserPortfolio(String gameInstanceName, String username, Portfolio portfolio)
+            throws DataAccessException;
 
-    public ArrayList<String> getWatchList(String username) throws DataAccessException;
+    public ArrayList<String> getWatchList(String gameInstanceName, String username) throws DataAccessException;
 
-    public void addToWatchList(String username, String symbol) throws DataAccessException;
+    public void addToWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException;
 
-    public void deleteFromWatchList(String username, String symbol) throws DataAccessException;
+    public void deleteFromWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException;
 
-    public void updateWatchList(String username, ArrayList<String> watchList) throws DataAccessException;
+    public void updateWatchList(String gameInstanceName, String username, ArrayList<String> watchList)
+            throws DataAccessException;
+
+    public void clearUserDataOnGameInstance(String gameInstanceName) throws DataAccessException;
 }

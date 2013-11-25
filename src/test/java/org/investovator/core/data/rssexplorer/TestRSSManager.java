@@ -102,11 +102,11 @@ public class TestRSSManager {
     @Test
     public void testAddDataToWatchListNRead() throws DataAccessException {
         RSSManager manager = new RSSManagerImpl();
-        manager.addToWatchList("arun", "GOOG");
-        manager.addToWatchList("arun", "IBM");
-        manager.addToWatchList("arun", "YHO");
+        manager.addToWatchList("ANN", "arun", "GOOG");
+        manager.addToWatchList("ANN", "arun", "IBM");
+        manager.addToWatchList("ANN", "arun", "YHO");
 
-        ArrayList<String> ids = manager.getWatchList("arun");
+        ArrayList<String> ids = manager.getWatchList("ANN", "arun");
         assertTrue(ids.contains("GOOG"));
         assertTrue(ids.contains("IBM"));
         assertTrue(ids.contains("YHO"));
@@ -115,13 +115,13 @@ public class TestRSSManager {
     @Test
     public void testAddDataToWatchListDeleteNRead() throws DataAccessException {
         RSSManager manager = new RSSManagerImpl();
-        manager.addToWatchList("arun", "GOOG");
-        manager.addToWatchList("arun", "IBM");
-        manager.addToWatchList("arun", "YHO");
+        manager.addToWatchList("ANN", "arun", "GOOG");
+        manager.addToWatchList("ANN", "arun", "IBM");
+        manager.addToWatchList("ANN", "arun", "YHO");
 
-        manager.deleteFromWatchList("arun", "IBM");
+        manager.deleteFromWatchList("ANN", "arun", "IBM");
 
-        ArrayList<String> ids = manager.getWatchList("arun");
+        ArrayList<String> ids = manager.getWatchList("ANN", "arun");
         assertTrue(ids.contains("GOOG"));
         assertFalse(ids.contains("IBM"));
         assertTrue(ids.contains("YHO"));
@@ -143,9 +143,9 @@ public class TestRSSManager {
         values.put(MysqlConstants.PRICE, 23.0);
         portfolio.put("YHO", values);
 
-        manager.updateUserPortfolio("Saman", portfolio);
+        manager.updateUserPortfolio("ANN", "Saman", portfolio);
 
-        portfolio = manager.getUserPortfolio("Saman");
+        portfolio = manager.getUserPortfolio("ANN", "Saman");
 
         assertTrue((portfolio.get("GOOG")).get(MysqlConstants.PRICE) == 25.0);
         assertTrue((portfolio.get("GOOG")).get(MysqlConstants.QNTY) == 1224.0);
@@ -169,13 +169,13 @@ public class TestRSSManager {
         values.put(MysqlConstants.PRICE, 23.0);
         portfolio.put("YHO", values);
 
-        manager.updateUserPortfolio("Saman", portfolio);
-        manager.deleteUserPortfolio("Saman");
+        manager.updateUserPortfolio("ANN", "Saman", portfolio);
+        manager.deleteUserPortfolio("ANN", "Saman");
 
         try {
-            manager.getUserPortfolio("Saman");
+            manager.getUserPortfolio("ANN", "Saman");
         } catch (DataAccessException e){
-            if(e.getMessage().contains("Table 'investovator_data.SAMAN_PORTFOLIO' doesn't exist")){
+            if(e.getMessage().contains("Table 'investovator_data.ANN_SAMAN_PORTFOLIO' doesn't exist")){
                 assertTrue(true);
             } else
                 throw new DataAccessException(e);
@@ -185,18 +185,18 @@ public class TestRSSManager {
     @Test
     public void addPortfolioValuesAndAssert() throws DataAccessException {
         RSSManager manager = new RSSManagerImpl();
-        manager.updatePortfolioValue("saman", 1342.3, 123.5);
-        manager.updatePortfolioValue("arun", 12425.2, 234.6);
+        manager.updatePortfolioValue("ANN", "saman", 1342.3, 123.5);
+        manager.updatePortfolioValue("ANN", "arun", 12425.2, 234.6);
 
-        assertTrue((manager.getPortfolioValue("saman")).get(MysqlConstants.VALUE) == 1342.3);
-        assertTrue((manager.getPortfolioValue("saman")).get(MysqlConstants.BLOCKED_VALUE) == 123.5);
+        assertTrue((manager.getPortfolioValue("ANN", "saman")).get(MysqlConstants.VALUE) == 1342.3);
+        assertTrue((manager.getPortfolioValue("ANN", "saman")).get(MysqlConstants.BLOCKED_VALUE) == 123.5);
 
-        HashMap<String, HashMap<String, Double>> portfolioValues = manager.getAllPortfolioValues();
+        HashMap<String, HashMap<String, Double>> portfolioValues = manager.getAllPortfolioValues("ANN");
         assertTrue((portfolioValues.get("saman")).get(MysqlConstants.VALUE)==1342.3);
         assertTrue((portfolioValues.get("arun")).get(MysqlConstants.VALUE) == 12425.2);
 
-        manager.deletePortfolioValue("arun");
-        portfolioValues = manager.getAllPortfolioValues();
+        manager.deletePortfolioValue("ANN", "arun");
+        portfolioValues = manager.getAllPortfolioValues("ANN");
         assertFalse(portfolioValues.containsKey("arun"));
     }
 
@@ -222,6 +222,51 @@ public class TestRSSManager {
         } catch (DataAccessException e){
             assertTrue(e.getMessage().contains("Illegal operation on empty result set"));
         }
+    }
+
+    @Test
+    public void testDropAllTableInstances() throws DataAccessException {
+        RSSManager manager = new RSSManagerImpl();
+
+        manager.addToWatchList("ANN", "arun", "GOOG");
+        manager.addToWatchList("ANN", "arun", "IBM");
+        manager.addToWatchList("ANN", "arun", "YHO");
+
+        HashMap<String, HashMap<String, Double>> portfolio = new HashMap<String, HashMap<String, Double>>();
+        HashMap<String, Double> values = new HashMap<String, Double>();
+
+        values.put(MysqlConstants.QNTY, 1224.0);
+        values.put(MysqlConstants.PRICE, 25.0);
+        portfolio.put("GOOG", values);
+
+        values = new HashMap<String, Double>();
+
+        values.put(MysqlConstants.QNTY, 1243.0);
+        values.put(MysqlConstants.PRICE, 23.0);
+        portfolio.put("YHO", values);
+
+        manager.updateUserPortfolio("ANN", "Saman", portfolio);
+
+        manager.dropGameInstanceTables("ANN");
+
+        try {
+            manager.getUserPortfolio("ANN", "Saman");
+        } catch (DataAccessException e){
+            if(e.getMessage().contains("Table 'investovator_data.ANN_SAMAN_PORTFOLIO' doesn't exist")){
+                assertTrue(true);
+            } else
+                throw new DataAccessException(e);
+        }
+
+        try {
+            manager.getWatchList("ANN", "arun");
+        } catch (DataAccessException e){
+            if(e.getMessage().contains("Table 'investovator_data.ANN_WATCHLIST' doesn't exist")){
+                assertTrue(true);
+            } else
+                throw new DataAccessException(e);
+        }
+
     }
 
     @Before

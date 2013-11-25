@@ -21,6 +21,7 @@ package org.investovator.core.data.rssexplorer;
 import org.investovator.core.data.api.utils.CompanyInfo;
 import org.investovator.core.data.exeptions.DataAccessException;
 import org.investovator.core.data.exeptions.DataNotFoundException;
+import org.investovator.core.data.rssexplorer.utils.ConnectorUtils;
 import org.investovator.core.data.rssexplorer.utils.MysqlConnector;
 import org.investovator.core.data.rssexplorer.utils.MysqlConstants;
 
@@ -164,10 +165,13 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public HashMap<String, HashMap<String, Double>> getUserPortfolio(String username) throws DataAccessException {
+    public HashMap<String, HashMap<String, Double>> getUserPortfolio(String gameInstanceName, String username)
+            throws DataAccessException {
         try {
             Connection connection = mysqlConnector.getConnection();
-            ResultSet resultSet = MysqlConnector.getUserPortfolio(connection, username);
+            String portfolioName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName, username,
+                    MysqlConstants.PORTFOLIO);
+            ResultSet resultSet = MysqlConnector.getUserPortfolio(connection, portfolioName);
 
             HashMap<String, HashMap<String, Double>> data = new HashMap<String, HashMap<String, Double>>();
             while (resultSet.next()){
@@ -184,42 +188,52 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public void updateUserPortfolio(String username, HashMap<String, HashMap<String, Double>> portfolio)
+    public void updateUserPortfolio(String gameInstanceName, String username,
+                                    HashMap<String, HashMap<String, Double>> portfolio)
             throws DataAccessException {
         try {
             Connection connection = mysqlConnector.getConnection();
-            MysqlConnector.dropUserPortfolio(connection, username);
-            MysqlConnector.bulkInsertToUserPortfolio(connection, username, portfolio);
+            String portfolioName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName, username,
+                    MysqlConstants.PORTFOLIO);
+            MysqlConnector.dropTableIfExists(connection, portfolioName);
+            MysqlConnector.bulkInsertToUserPortfolio(connection, portfolioName, portfolio);
         } catch (Exception e) {
             throw new DataAccessException(e);
         }
     }
 
     @Override
-    public void deleteUserPortfolio(String username) throws DataAccessException{
+    public void deleteUserPortfolio(String gameInstanceName, String username) throws DataAccessException{
         try {
             Connection connection = mysqlConnector.getConnection();
-            MysqlConnector.dropUserPortfolio(connection, username);
+            String portfolioName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName, username,
+                    MysqlConstants.PORTFOLIO);
+            MysqlConnector.dropTableIfExists(connection, portfolioName);
         } catch (Exception e) {
             throw new DataAccessException(e);
         }
     }
 
     @Override
-    public void updatePortfolioValue(String username, double value, double blockedValue) throws DataAccessException{
+    public void updatePortfolioValue(String gameInstanceName, String username, double value, double blockedValue)
+            throws DataAccessException{
         try {
             Connection connection = mysqlConnector.getConnection();
-            MysqlConnector.addToPortfolioValues(connection, username, value, blockedValue);
+            String portfolioValueTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
+                    MysqlConstants.PORTFOLIO_VALUES);
+            MysqlConnector.addToPortfolioValues(connection,portfolioValueTableName, username, value, blockedValue);
         } catch (Exception e){
              throw new DataAccessException(e);
         }
     }
 
     @Override
-    public HashMap<String, Double> getPortfolioValue(String username) throws DataAccessException{
+    public HashMap<String, Double> getPortfolioValue(String gameInstanceName, String username) throws DataAccessException{
         try {
             Connection connection = mysqlConnector.getConnection();
-            ResultSet resultSet = MysqlConnector.getValueFromPortfolioValues(connection, username);
+            String portfolioValueTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
+                    MysqlConstants.PORTFOLIO_VALUES);
+            ResultSet resultSet = MysqlConnector.getValueFromPortfolioValues(connection, portfolioValueTableName, username);
 
             HashMap<String, Double> data = new HashMap<String, Double>();
             while (resultSet.next()){
@@ -234,10 +248,12 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public HashMap<String, HashMap<String, Double>> getAllPortfolioValues() throws DataAccessException{
+    public HashMap<String, HashMap<String, Double>> getAllPortfolioValues(String gameInstanceName) throws DataAccessException{
         try {
             Connection connection = mysqlConnector.getConnection();
-            ResultSet resultSet = MysqlConnector.getAllValuesFromPortfolioValues(connection);
+            String portfolioValueTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
+                    MysqlConstants.PORTFOLIO_VALUES);
+            ResultSet resultSet = MysqlConnector.getAllValuesFromPortfolioValues(connection, portfolioValueTableName);
 
             HashMap<String, HashMap<String, Double>> data = new HashMap<String, HashMap<String, Double>>();
             while (resultSet.next()){
@@ -254,20 +270,24 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public void deletePortfolioValue(String username) throws DataAccessException{
+    public void deletePortfolioValue(String gameInstanceName, String username) throws DataAccessException{
         try {
             Connection connection = mysqlConnector.getConnection();
-            MysqlConnector.deleteValueFrmPortfolioValues(connection, username);
+            String portfolioValueTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
+                    MysqlConstants.PORTFOLIO_VALUES);
+            MysqlConnector.deleteValueFrmPortfolioValues(connection, portfolioValueTableName, username);
         } catch (Exception e){
             throw new DataAccessException(e);
         }
     }
 
     @Override
-    public ArrayList<String> getWatchList(String username) throws DataAccessException{
+    public ArrayList<String> getWatchList(String gameInstanceName, String username) throws DataAccessException{
         try {
             Connection connection = mysqlConnector.getConnection();
-            ResultSet resultSet = MysqlConnector.getWatchList(connection, username);
+            String watchlistTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
+                    MysqlConstants.WATCHLIST);
+            ResultSet resultSet = MysqlConnector.getWatchList(connection, watchlistTableName, username);
 
             ArrayList<String> data = new ArrayList<String>();
             while (resultSet.next()){
@@ -281,20 +301,45 @@ public class RSSManagerImpl implements RSSManager {
     }
 
     @Override
-    public void addToWatchList(String username, String symbol) throws DataAccessException {
+    public void addToWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException {
         try {
             Connection connection = mysqlConnector.getConnection();
-            MysqlConnector.insertToWatchList(connection, username, symbol);
+            String watchlistTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
+                    MysqlConstants.WATCHLIST);
+            MysqlConnector.insertToWatchList(connection, watchlistTableName, username, symbol);
         } catch (Exception e){
             throw new DataAccessException(e);
         }
     }
 
     @Override
-    public void deleteFromWatchList(String username, String symbol) throws DataAccessException {
+    public void deleteFromWatchList(String gameInstanceName, String username, String symbol) throws DataAccessException {
         try {
             Connection connection = mysqlConnector.getConnection();
-            MysqlConnector.deleteFromWatchList(connection, username, symbol);
+            String watchlistTableName = ConnectorUtils.getFullyQualifiedTableName(gameInstanceName,
+                    MysqlConstants.WATCHLIST);
+            MysqlConnector.deleteFromWatchList(connection, watchlistTableName, username, symbol);
+        } catch (Exception e){
+            throw new DataAccessException(e);
+        }
+    }
+
+    @Override
+    public void dropGameInstanceTables(String gameInstanceName) throws DataAccessException {
+        try {
+            Connection connection = mysqlConnector.getConnection();
+            ResultSet resultSet = MysqlConnector.getAllGameInstanceTables(connection, gameInstanceName);
+            ArrayList<String> tablesToDelete = new ArrayList<>();
+            while (resultSet.next()){
+                tablesToDelete.add(resultSet.getString(1));
+
+            }
+            resultSet.close();
+
+            for(String tableName : tablesToDelete){
+                MysqlConnector.dropTableIfExists(connection, tableName);
+            }
+
         } catch (Exception e){
             throw new DataAccessException(e);
         }
