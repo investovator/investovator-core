@@ -6,14 +6,11 @@ import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.investovator.core.commons.configuration.ConfigLoader;
 import org.investovator.core.data.api.CompanyStockTransactionsData;
 import org.investovator.core.data.api.CompanyStockTransactionsDataImpl;
-import org.investovator.core.data.api.utils.StockTradingData;
-import org.investovator.core.data.api.utils.StockTradingDataImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
