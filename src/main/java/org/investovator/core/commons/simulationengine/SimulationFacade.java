@@ -18,6 +18,8 @@
 
 package org.investovator.core.commons.simulationengine;
 
+import org.investovator.core.commons.utils.ExecutionResult;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -54,7 +56,7 @@ public interface SimulationFacade {
      * @param price single stock price
      * @return adding order successful
      */
-    public boolean putLimitOrder(String username, String stockId, int quantity,
+    public ExecutionResult putLimitOrder(String username, String stockId, int quantity,
                                  double price, boolean isBuy);
 
     /**
@@ -65,7 +67,7 @@ public interface SimulationFacade {
      * @param isBuy buy = true, sell=false;
      * @return adding order successful
      */
-    public boolean putMarketOrder(String username, String stockId, int quantity,
+    public ExecutionResult putMarketOrder(String username, String stockId, int quantity,
                                   boolean isBuy);
 
     //TODO throwing an event when the orders get matched
