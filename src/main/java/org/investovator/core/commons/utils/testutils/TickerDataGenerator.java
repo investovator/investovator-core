@@ -114,7 +114,7 @@ public class TickerDataGenerator {
      * Create CSV file for the given stock
      * @return output file path if success null if fails.
      */
-    public String CreateCSV(){
+    public String createCSV(){
 
         try {
             File outPutFile = new File(outputFilePath);

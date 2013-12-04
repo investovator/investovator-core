@@ -36,7 +36,7 @@ public class TickerDataGeneratorTest {
         stockData.importCSV(CompanyStockTransactionsData.DataType.OHLC, stock, "MM/dd/yyyy",file);
 
         TickerDataGenerator tickGenerator = new TickerDataGenerator(stock);
-        tickGenerator.CreateCSV();
+        tickGenerator.createCSV();
 
     }
 
